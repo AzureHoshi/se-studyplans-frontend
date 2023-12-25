@@ -105,7 +105,7 @@ function StudyPlanSimulatorPage() {
 
   const handleCheckLimitCredit = term => {
     const currentTerm = term
-    console.log('currentTerm', currentTerm)
+    // console.log('currentTerm', currentTerm)
     const simInterm = simSubjects?.filter(s => s.term === currentTerm)
 
     const creditTotal = simInterm.reduce((accumulator, currentValue) => {
@@ -113,7 +113,7 @@ function StudyPlanSimulatorPage() {
       return accumulator + currentValue.subject_credit
     }, 0)
     setTotalCredit(creditTotal)
-    console.log('term ' + currentTerm + ' total credit is :', creditTotal)
+    // console.log('term ' + currentTerm + ' total credit is :', creditTotal)
   }
 
   const handleCheckPreviousSubject = subject => {
@@ -729,9 +729,9 @@ function StudyPlanSimulatorPage() {
             countScope:
               uniqueUpdate && item.countScope - uniqueUpdate.countScope > 0
                 ? item.countScope - uniqueUpdate.countScope
-                : uniqueUpdate && item.countScope - uniqueUpdate.countScope < 0
+                : uniqueUpdate && item.countScope - uniqueUpdate.countScope === 0
                 ? 0
-                : 0
+                : item.countScope
           }
         })
 
