@@ -15,7 +15,7 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import { grey } from '@mui/material/colors'
 
-import { Button, Typography } from '@mui/material'
+import { Button, Hidden, Typography } from '@mui/material'
 import { mdiExitToApp } from '@mdi/js'
 import Icon from '@mdi/react'
 
@@ -51,7 +51,7 @@ const AppBarContent = props => {
         <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center', width: { xs: '100%', lg: 800 } }}>
           <Box
             sx={{
-              width: '20%',
+              width: { xs: '40%', md: '20%' },
               height: 70,
               display: 'flex',
               flexDirection: 'row',
@@ -68,25 +68,42 @@ const AppBarContent = props => {
               Logout
             </Typography>
           </Box>
-          <Box sx={{ width: '40%', background: grey[200], height: 70 }}>
-            <Typography sx={{ textAlign: 'center', mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
-              Simulation Stydyplan
-            </Typography>
-          </Box>
-          <Box sx={{ width: '40%', background: grey[900], height: 70 }}>
+          <Hidden only={'xs'}>
+            <Box sx={{ width: '40%', background: grey[200], height: 70 }}>
+              <Typography sx={{ textAlign: 'center', mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
+                Simulation Stydyplan
+              </Typography>
+            </Box>
+          </Hidden>
+          <Box sx={{ width: { xs: '60%', md: '40%' }, background: grey[900], height: 70 }}>
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'row',
+                flexDirection: { xs: 'column', md: 'row' },
                 justifyContent: 'center'
               }}
             >
-              <Typography variant='body2' sx={{ color: grey[500], mr: 2, mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
+              <Typography
+                variant='body2'
+                sx={{
+                  color: grey[500],
+                  mr: 2,
+                  mt: { xs: 4, md: 6.5 },
+                  fontSize: { xs: 12, md: 14 },
+                  mx: { xs: 'auto', md: 2 }
+                }}
+              >
                 #635432060XXX
               </Typography>
               <Typography
                 variant='body2'
-                sx={{ fontWeight: 'bold', color: 'white', mt: 6.5, fontSize: { xs: 12, md: 14 } }}
+                sx={{
+                  fontWeight: 'bold',
+                  color: 'white',
+                  mt: { xs: 0, md: 6.5 },
+                  fontSize: { xs: 12, md: 14 },
+                  mx: { xs: 'auto', md: 0 }
+                }}
               >
                 Profile Name
               </Typography>

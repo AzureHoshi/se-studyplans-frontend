@@ -1,27 +1,44 @@
-import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { PieChart } from '@mui/x-charts'
-
+import { Box, Button, Card, Divider, Grid, Hidden, LinearProgress, Typography } from '@mui/material'
+import { grey, orange } from '@mui/material/colors'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { CustomLayout } from 'src/views/custom-layout-student-systems'
 
-function StudentSystems() {
-  const data = [
-    { value: 5, label: 'A' },
-    { value: 10, label: 'B' },
-    { value: 15, label: 'C' },
-    { value: 20, label: 'D' }
-  ]
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Doughnut } from 'react-chartjs-2'
+import { BoxCutter } from 'mdi-material-ui'
 
-  const size = {
-    width: 400,
-    height: 200
+ChartJS.register(ArcElement, Tooltip, Legend)
+
+function StudentSystems() {
+  const data = {
+    labels: ['Software Engineering', 'IT Support', 'Programmer'],
+    datasets: [
+      {
+        label: '  % Interested',
+        data: [60, 30, 10],
+        backgroundColor: ['rgba(40, 40, 40, 1)', 'rgba(160, 160, 160, 1)', 'rgba(200, 200, 200, 1)'], // 40% opacity gray],
+        borderWidth: 6,
+        borderRadius: 100
+      }
+    ]
+  }
+
+  let options = {
+    // responsive: true,
+    cutout: '80%',
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+        position: 'bottom'
+      }
+    }
   }
 
   return (
     <CustomLayout
       content={
-        <Box sx={{ width: '100%', position: 'relative', background: grey[200], p: 12 }}>
+        <Box sx={{ width: '100%', position: 'relative', background: grey[200], p: { xs: 6, md: 12 } }}>
           <Box sx={{ position: 'absolute', top: 360, right: 30, height: 80, width: 20 }}>
             <Button
               variant='contained'
@@ -34,18 +51,159 @@ function StudentSystems() {
           <Grid container>
             {/* dashbord  */}
             <Grid container item spacing={10} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 10 } }}>
-              <Grid item xs={12} md={5} lg={4}>
-                <Card sx={{ p: 3, pt: 4, minWidth: 260 }}>
-                  <Typography sx={{ fontWeight: 'bold' }}> Interested Result</Typography>
-                  <Box sx={{ width: '100%', height: 380, background: grey[400], mt: 6 }}>
-                    <PieChart series={[{ data, innerRadius: 80 }]} {...size} />
+              <Grid item xs={12} sm={5} lg={4}>
+                <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
+                  <Typography sx={{ color: 'black' }}>Interested Result</Typography>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      mt: 6,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative'
+                    }}
+                  >
+                    {/* <PieChart series={[{ data, innerRadius: 80 }]} {...size} /> */}
+                    <Box sx={{ width: '100%', height: 180, mt: 12 }}>
+                      <Doughnut data={data} options={options} />
+                    </Box>
+                    <Typography
+                      sx={{
+                        color: 'black',
+                        fontSize: 24,
+                        fontWeight: 'medium',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                    >
+                      60%
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      mt: 6,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                      <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
+                        Software Engineer
+                      </Typography>
+                      <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
+                        60%
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                      <Typography variant='body2'>IT Support</Typography>
+                      <Typography variant='body2'>30% </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                      <Typography variant='body2'>Programmer</Typography>
+                      <Typography variant='body2'>10% </Typography>
+                    </Box>
                   </Box>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={7} lg={8}>
-                <Card sx={{ p: 3, pt: 4 }}>
-                  <Typography sx={{ fontWeight: 'bold' }}> Study Plan</Typography>
-                  <Box sx={{ width: '100%', height: 380, background: grey[400], mt: 6 }}></Box>
+              <Grid item xs={12} sm={7} lg={8}>
+                <Card sx={{ height: 420, p: 6, pt: 4 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+                      <Typography sx={{ color: 'black' }} noWrap>
+                        Study Plan
+                      </Typography>
+                      <Typography sx={{ ml: { xs: 0, md: 2.5 }, color: 'gray' }} noWrap>
+                        Curriculum SE.66
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ alignItems: 'end' }}>
+                      <Button
+                        size='medium'
+                        variant={'contained'}
+                        sx={{
+                          px: 4,
+                          mx: 'auto',
+                          letterSpacing: 0.5,
+                          fontSize: 12,
+                          backgroundColor: 'black'
+                        }}
+                      >
+                        Update Plan
+                      </Button>
+                    </Box>
+                  </Box>
+                  {/* show percentage of studyplan */}
+                  <Box sx={{ width: '100%', mt: 6 }}>
+                    <Typography variant='body2' sx={{ mb: 2 }}>
+                      50% inprocess
+                    </Typography>
+                    <LinearProgress
+                      variant='determinate'
+                      value={25}
+                      sx={{ height: 10, borderRadius: 24, border: 1, borderColor: orange[200] }}
+                    />
+                  </Box>
+                  {/* show studyplan */}
+                  <Box sx={{ mt: 6, display: 'flex', justifyContent: 'space-between' }}>
+                    <Grid container>
+                      <Grid item xs={12} lg={8}>
+                        <Box sx={{ display: 'flex', justifyContent: { xs: 'space-between', lg: 'start' } }}>
+                          <Typography variant='caption' mr={6} noWrap>
+                            2/2023
+                          </Typography>
+                          <Typography variant='caption' mr={6} noWrap>
+                            3 subjects
+                          </Typography>
+                          <Typography variant='caption' noWrap>
+                            9 total credit
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} lg={4} sx={{ textAlign: 'end' }}>
+                        <Typography variant='caption' noWrap>
+                          2026-11-05 08:15:30
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                  <Box sx={{ mt: 3.5, display: 'flex', justifyContent: 'space-between' }}>
+                    <Box sx={{ width: '60%', display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant='caption' sx={{ width: '30%', fontWeight: 'bold' }}>
+                        Code
+                      </Typography>
+                      <Typography variant='caption' sx={{ width: '70%', fontWeight: 'bold' }}>
+                        Subject
+                      </Typography>
+                    </Box>
+                    <Typography variant='caption' sx={{ width: '40%', fontWeight: 'bold', textAlign: 'end' }}>
+                      Credit
+                    </Typography>
+                  </Box>
+
+                  <Divider />
+                  {Array.from({ length: 3 }, (_, index) => (
+                    <Box key={index}>
+                      <Box sx={{ mt: 3.5, display: 'flex', justifyContent: 'space-between' }}>
+                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant='caption' sx={{ width: '30%' }} noWrap>
+                            ENGCEXXX
+                          </Typography>
+                          <Typography variant='caption' sx={{ width: '70%' }} noWrap>
+                            Something...................
+                          </Typography>
+                        </Box>
+                        <Typography variant='caption' sx={{ width: '40%', fontWeight: 'bold', textAlign: 'end' }}>
+                          3
+                        </Typography>
+                      </Box>
+                      {index + 1 !== 3 && <Divider />}
+                    </Box>
+                  ))}
                 </Card>
               </Grid>
               <Grid item xs={12}>
