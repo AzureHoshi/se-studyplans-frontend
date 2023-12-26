@@ -13,10 +13,15 @@ import Magnify from 'mdi-material-ui/Magnify'
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
+import { grey } from '@mui/material/colors'
+
+import { Button, Typography } from '@mui/material'
+import { mdiExitToApp } from '@mdi/js'
+import Icon from '@mdi/react'
 
 const AppBarContent = props => {
   // ** Props
-  const { hidden, settings, saveSettings, toggleNavVisibility } = props
+  const { hidden, settings, saveSettings, toggleNavVisibility, hideTextSearch, hideUserAvatar, showStudentMenu } = props
 
   // ** Hook
   const hiddenSm = useMediaQuery(theme => theme.breakpoints.down('sm'))
@@ -41,36 +46,71 @@ const AppBarContent = props => {
           </IconButton>
         ) : null}
       </Box>
-      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        <TextField
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            )
-          }}
-        />
-        {/* {hiddenSm ? null : (
+      {/* menu for student system */}
+      {showStudentMenu && (
+        <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center', width: { xs: '100%', lg: 800 } }}>
           <Box
-            component='a'
-            target='_blank'
-            rel='noreferrer'
-            sx={{ mr: 4, display: 'flex' }}
-            href='https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free'
+            sx={{
+              width: '20%',
+              height: 70,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
           >
-            <img
-              height={24}
-              alt='github stars'
-              src='https://img.shields.io/github/stars/themeselection/materio-mui-react-nextjs-admin-template-free?style=social'
-            />
+            <Box sx={{ mr: 2, mt: 2 }}>
+              <Icon path={mdiExitToApp} size={1} color={grey[500]} />
+            </Box>
+            <Typography
+              sx={{ fontWeight: 'bold', color: grey[500], textAlign: 'center', fontSize: { xs: 12, md: 14 } }}
+            >
+              Logout
+            </Typography>
           </Box>
-        )} */}
-        {/* <ModeToggler settings={settings} saveSettings={saveSettings} />
-        <NotificationDropdown /> */}
-        <UserDropdown />
+          <Box sx={{ width: '40%', background: grey[200], height: 70 }}>
+            <Typography sx={{ textAlign: 'center', mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
+              Simulation Stydyplan
+            </Typography>
+          </Box>
+          <Box sx={{ width: '40%', background: grey[900], height: 70 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}
+            >
+              <Typography variant='body2' sx={{ color: grey[500], mr: 2, mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
+                #635432060XXX
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{ fontWeight: 'bold', color: 'white', mt: 6.5, fontSize: { xs: 12, md: 14 } }}
+              >
+                Profile Name
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      )}
+      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* textsearch */}
+        {!hideTextSearch && (
+          <TextField
+            size='small'
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Magnify fontSize='small' />
+                </InputAdornment>
+              )
+            }}
+          />
+        )}
+        {/* useravatar */}
+        {!hideUserAvatar && <UserDropdown />}
       </Box>
     </Box>
   )

@@ -82,6 +82,7 @@ const Navigation = props => {
 
   return (
     <Drawer {...props}>
+      {/* logo  */}
       <VerticalNavHeader {...props} />
       <StyledBoxForShadow
         ref={shadowRef}
@@ -110,7 +111,7 @@ const Navigation = props => {
             {userVerticalNavMenuContent ? (
               userVerticalNavMenuContent(props)
             ) : (
-              <List className='nav-items' sx={{ transition: 'padding .25s ease', pr: 4.5 }}>
+              <List className='nav-items' sx={{ transition: 'padding .25s ease' }}>
                 <VerticalNavItems
                   groupActive={groupActive}
                   setGroupActive={setGroupActive}

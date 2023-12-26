@@ -89,3 +89,27 @@ export const jobSubjectRelatedNavigation = () => {
     }
   ]
 }
+export const studentSystemNavigation = () => {
+  return [
+    {
+      title: 'Dashboard',
+      // icon: BookOutline,
+      path: '/pages/studentsystems'
+    },
+    {
+      title: 'Study Plan'
+      // icon: BookOutline,
+      // path: '/pages/studentsystems'
+    },
+    {
+      title: 'Projects Recommended'
+      // // icon: BookOutline,
+      // path: '/pages/studentsystems'
+    },
+    {
+      title: 'Competencies'
+      // icon: BookOutline,
+      // path: '/pages/studentsystems'
+    }
+  ]
+}

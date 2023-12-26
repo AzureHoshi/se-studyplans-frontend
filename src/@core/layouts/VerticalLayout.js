@@ -72,22 +72,22 @@ const VerticalLayout = props => {
         />
         <MainContentWrapper className='layout-content-wrapper'>
           <AppBar toggleNavVisibility={toggleNavVisibility} {...props} />
+          <Box sx={{ ml: 6 }}>
+            <ContentWrapper
+              className='layout-page-content'
+              sx={{
+                ...(contentWidth === 'boxed' && {
+                  mx: 'auto',
+                  '@media (min-width:1440px)': { maxWidth: '100%' },
+                  '@media (min-width:1200px)': { maxWidth: '100%' }
+                })
+              }}
+            >
+              {children}
+            </ContentWrapper>
 
-          <ContentWrapper
-            className='layout-page-content'
-            sx={{
-              ...(contentWidth === 'boxed' && {
-                mx: 'auto',
-                '@media (min-width:1440px)': { maxWidth: 1440 },
-                '@media (min-width:1200px)': { maxWidth: '100%' }
-              })
-            }}
-          >
-            {children}
-          </ContentWrapper>
-
-          <Footer {...props} />
-
+            <Footer {...props} />
+          </Box>
           <DatePickerWrapper sx={{ zIndex: 11 }}>
             <Box id='react-datepicker-portal'></Box>
           </DatePickerWrapper>

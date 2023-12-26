@@ -53,6 +53,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.14.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.6",
+    "@mui/x-charts": "^6.18.4",
     "@mui/x-data-grid": "^6.10.2",
     "@mui/x-tree-view": "^6.17.0",
     "@popperjs/core": "^2.11.2",
