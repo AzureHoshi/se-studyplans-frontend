@@ -1,9 +1,9 @@
-import { Box, Button, Card, CardHeader, Grid, Typography } from '@mui/material'
+import { Box, Button, Card, Fab, Grid, Hidden, Typography } from '@mui/material'
 
 const Recommendation = () => {
   return (
     <Box className='content-center'>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         <Grid item xs={12}>
           <Typography variant='h5' sx={{ color: '#909094' }}>
             Job Position{' '}
@@ -17,58 +17,66 @@ const Recommendation = () => {
             maintainability of software..{' '}
           </Typography>
         </Grid>
-        <Grid item xs={5}>
-          <Card sx={{ backgroundColor: '#ebebeb', color: '#ffffff' }}>
-            <Box sx={{ marginTop: 5, backgroundColor: '#ffffff', display: 'flex' }}>
-              <Typography variant='body1' sx={{ fontWeight: 'bold', paddingLeft: 2 }}>
+        <Grid item xs={12} sm={6} md={5}>
+          <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
+            <Box
+              sx={{
+                marginTop: 5,
+                backgroundColor: '#FFF',
+                height: 40,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                 ENGCEXXX
               </Typography>
-              <Typography variant='body2' sx={{ padding: 0.25, marginLeft: 2, maxWidth: { xs: 400, md: 400 } }} noWrap>
+              <Typography variant='body2' sx={{ marginLeft: 2, maxWidth: { xs: 400, md: 400 } }} noWrap>
                 Lorem ipsum dolor sit amet.......
               </Typography>
-              <Box sx={{ marginLeft: 4 }}>
-                <Typography
-                  variant='body2'
-                  align='center'
-                  sx={{
-                    fontWeight: 'regular',
-                    color: '#aaaaaa',
-                    backgroundColor: '#ebebeb',
-                    borderRadius: 1.5,
-                    height: '20px',
-                    marginTop: 0.5
-                  }}
-                >
-                  General
-                </Typography>
-              </Box>
+              <Hidden mdDown>
+                <Box sx={{ marginLeft: 4 }}>
+                  <Fab
+                    variant='extended'
+                    size='small'
+                    disabled
+                    sx={{ backgroundColor: '#EBEBEB', color: '#AAA', height: 16 }}
+                  >
+                    General
+                  </Fab>
+                </Box>
+              </Hidden>
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={5} sx={{ marginLeft: 4 }}>
-          <Card sx={{ backgroundColor: '#ebebeb', color: '#ffffff' }}>
-            <Box sx={{ marginTop: 5, backgroundColor: '#ffffff', display: 'flex' }}>
-              <Typography variant='body1' sx={{ fontWeight: 'bold', paddingLeft: 2 }}>
+        <Grid item xs={12} sm={6} md={5}>
+          <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
+            <Box
+              sx={{
+                marginTop: 5,
+                backgroundColor: '#FFF',
+                height: 40,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                 ENGCEXXX
               </Typography>
-              <Typography variant='body2' sx={{ padding: 0.25, marginLeft: 2, maxWidth: { xs: 400, md: 400 } }} noWrap>
+              <Typography variant='body2' sx={{ marginLeft: 2, maxWidth: { xs: 400, md: 400 } }} noWrap>
                 Lorem ipsum dolor sit amet.......
               </Typography>
               <Box sx={{ marginLeft: 4 }}>
-                <Typography
-                  variant='body2'
-                  align='center'
-                  sx={{
-                    fontWeight: 'regular',
-                    color: '#aaaaaa',
-                    backgroundColor: '#ebebeb',
-                    borderRadius: 1.5,
-                    height: '20px',
-                    marginTop: 0.5
-                  }}
+                <Fab
+                  variant='extended'
+                  size='small'
+                  disabled
+                  sx={{ backgroundColor: '#EBEBEB', color: '#AAA', height: 16 }}
                 >
                   General
-                </Typography>
+                </Fab>
               </Box>
             </Box>
           </Card>

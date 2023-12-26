@@ -13,6 +13,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import AssistantPhotoIcon from '@mui/icons-material/AssistantPhoto'
+import MenuIcon from '@mui/icons-material/Menu'
 
 // ** Custom Components
 import Roadmap from 'src/views/front-office/Roadmap'
@@ -68,7 +69,7 @@ const FrontOffice = () => {
           <Hidden mdUp>
             <Box sx={{ height: '5%', display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton>
-                <ChevronLeftIcon />
+                <ChevronLeftIcon onClick={handleDrawerClose} />
               </IconButton>
             </Box>
           </Hidden>
@@ -94,17 +95,20 @@ const FrontOffice = () => {
             </Grid>
           </Box>
           <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
-            <Button variant='text' startIcon={<ChevronLeftIcon />} onClick={handleDrawerClose}>
+            <Button variant='text' startIcon={<ChevronLeftIcon />}>
               CE Reform
             </Button>
           </Box>
         </Box>
       </Drawer>
       <Main open={open}>
-        <Button variant='text' startIcon={<ChevronLeftIcon />} onClick={handleDrawerOpen}>
-          {' '}
-          open{' '}
-        </Button>
+        <Hidden mdUp>
+          <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'flex-start' }}>
+            <IconButton>
+              <MenuIcon onClick={handleDrawerOpen} />
+            </IconButton>
+          </Box>
+        </Hidden>
         {pageState === 0 && <Roadmap />}
         {pageState === 1 && <Recommendation />}
         {pageState === 2 && <StudentSystems />}

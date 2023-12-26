@@ -14,7 +14,9 @@ const Roadmap = () => {
     <Box className='content-center'>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant='h5'>Curriculum .......................... </Typography>
+          <Typography variant='h5' sx={{ color: '#909094' }}>
+            Curriculum ..........................{' '}
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <HeadTypography>Introduction to Computer Science:</HeadTypography>
