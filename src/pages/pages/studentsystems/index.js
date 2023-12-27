@@ -1,15 +1,37 @@
-import { Box, Button, Card, Divider, Grid, Hidden, LinearProgress, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  Hidden,
+  IconButton,
+  LinearProgress,
+  TextField,
+  Typography
+} from '@mui/material'
 import { grey, orange } from '@mui/material/colors'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { CustomLayout } from 'src/views/custom-layout-student-systems'
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
-import { BoxCutter } from 'mdi-material-ui'
+import { useState } from 'react'
+import { mdiClose } from '@mdi/js'
+import Icon from '@mdi/react'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 function StudentSystems() {
+  const [openFeedBack, setOpenFeedBack] = useState(false)
+
+  const handleOpenFeedBack = () => {
+    setOpenFeedBack(true)
+  }
+
   const data = {
     labels: ['Software Engineering', 'IT Support', 'Programmer'],
     datasets: [
@@ -41,6 +63,7 @@ function StudentSystems() {
         <Box sx={{ width: '100%', position: 'relative', background: grey[200], p: { xs: 6, md: 12 } }}>
           <Box sx={{ position: 'absolute', top: 360, right: 30, height: 80, width: 20 }}>
             <Button
+              onClick={handleOpenFeedBack}
               variant='contained'
               color='primary'
               sx={{ textTransform: 'capitalize', transform: 'rotate(-90deg)' }}
@@ -53,7 +76,7 @@ function StudentSystems() {
             <Grid container item spacing={10} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 10 } }}>
               <Grid item xs={12} sm={5} lg={4}>
                 <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
-                  <Typography sx={{ color: 'black' }}>Interested Result</Typography>
+                  <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
                   <Box
                     sx={{
                       width: '100%',
@@ -113,7 +136,7 @@ function StudentSystems() {
                 <Card sx={{ height: 420, p: 6, pt: 4 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-                      <Typography sx={{ color: 'black' }} noWrap>
+                      <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }} noWrap>
                         Study Plan
                       </Typography>
                       <Typography sx={{ ml: { xs: 0, md: 2.5 }, color: 'gray' }} noWrap>
@@ -140,7 +163,7 @@ function StudentSystems() {
                   {/* show percentage of studyplan */}
                   <Box sx={{ width: '100%', mt: 6 }}>
                     <Typography variant='body2' sx={{ mb: 2 }}>
-                      50% inprocess
+                      25% inprocess
                     </Typography>
                     <LinearProgress
                       variant='determinate'
@@ -322,6 +345,78 @@ function StudentSystems() {
               <Divider />
             </Grid>
           </Grid>
+          <Dialog maxWidth={'md'} fullWidth open={openFeedBack} onClose={() => setOpenFeedBack(false)}>
+            <DialogContent sx={{ height: 500, overflow: 'hidden' }}>
+              <Grid container sx={{ px: 6, pl: 2, pt: 3, position: 'relative' }}>
+                <IconButton
+                  sx={{
+                    p: 0,
+                    color: grey[700],
+                    borderRadius: 1,
+                    m: 1,
+                    ml: 6,
+                    fontSize: 16,
+                    p: 2,
+                    position: 'absolute',
+                    right: 0,
+                    top: 0
+                  }}
+                  onClick={() => {
+                    setOpenFeedBack(false)
+                  }}
+                >
+                  <Icon path={mdiClose} size={1} />
+                </IconButton>
+                <Hidden mdDown>
+                  <Grid item xs={6} sx={{ position: 'relative' }}>
+                    <Box sx={{ position: 'absolute', left: -15, bottom: -60 }}>
+                      <img
+                        src='https://img.freepik.com/free-vector/like-icon-3d-vector-illustration-heart-symbol-red-bubble-social-media-applications-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1695.jpg?w=826&t=st=1703657164~exp=1703657764~hmac=2c8cfdfa08d33fb0e7742e6ffeb4b26a3b993686189011951b21a64d7ba87236'
+                        alt='Description of the image'
+                        style={{ width: '105%', height: 'auto' }}
+                      />
+                    </Box>
+                  </Grid>
+                </Hidden>
+                <Grid item xs={12} md={6} sx={{ px: 3.5, py: 8 }}>
+                  <Typography
+                    variant='h3'
+                    sx={{
+                      fontSize: { xs: 38, md: 36 },
+                      pl: { xs: 0, md: 2 },
+                      py: 3.5,
+                      fontWeight: 'bold',
+                      letterSpacing: 0.5,
+                      // fontFamily: 'Segoe UI',
+                      fontFamily: 'Inter',
+                      textAlign: { xs: 'center', md: 'start' }
+                    }}
+                  >
+                    Feedback
+                  </Typography>
+                  <Box sx={{ m: 3.5 }}>
+                    <TextField
+                      multiline
+                      label={'message'}
+                      fullWidth
+                      size='small'
+                      inputProps={{
+                        style: {
+                          height: 180,
+                          padding: '0 2px'
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', m: 3.5, mt: 6 }}>
+                    <Button variant='contained' fullWidth>
+                      Send Feedback
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Dialog>
         </Box>
       }
     />

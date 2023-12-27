@@ -16,7 +16,7 @@ import NotificationDropdown from 'src/@core/layouts/components/shared-components
 import { grey } from '@mui/material/colors'
 
 import { Button, Hidden, Typography } from '@mui/material'
-import { mdiExitToApp } from '@mdi/js'
+import { mdiExitToApp, mdiFlagCheckered, mdiFlagPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 
 const AppBarContent = props => {
@@ -56,7 +56,8 @@ const AppBarContent = props => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              cursor: 'pointer'
             }}
           >
             <Box sx={{ mr: 2, mt: 2 }}>
@@ -69,9 +70,24 @@ const AppBarContent = props => {
             </Typography>
           </Box>
           <Hidden only={'xs'}>
-            <Box sx={{ width: '40%', background: grey[200], height: 70 }}>
-              <Typography sx={{ textAlign: 'center', mt: 6.5, fontSize: { xs: 12, md: 14 } }}>
-                Simulation Stydyplan
+            <Box
+              sx={{
+                width: '40%',
+                background: grey[200],
+                height: 70,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer',
+                ':hover': {
+                  background: grey[50]
+                }
+              }}
+            >
+              <Icon path={mdiFlagPlus} size={1} color={grey[500]} />
+              <Typography sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}>
+                Simulation Studyplan
               </Typography>
             </Box>
           </Hidden>
@@ -80,7 +96,8 @@ const AppBarContent = props => {
               sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
-                justifyContent: 'center'
+                justifyContent: 'center',
+                cursor: 'pointer'
               }}
             >
               <Typography
