@@ -117,18 +117,18 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
   }
 
   return (
-    <Box sx={{ paddingX: { xs: 10, md: 24 } }}>
+    <Box sx={{ paddingX: { xs: 10, lg: 42 } }}>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Grid container spacing={4} direction={{ xs: 'column-reverse', md: 'row' }}>
-            <Grid item xs={12} md={8}>
+          <Grid container spacing={4} direction={{ xs: 'column-reverse', lg: 'row' }}>
+            <Grid item xs={12} lg={8}>
               <Box sx={{ paddingTop: 10 }}>
                 <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
                   Interest Survey Study Plan System
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} lg={4}>
               <Box
                 sx={{
                   backgroundColor: '#000',
@@ -138,10 +138,18 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                 }}
               >
                 <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Typography variant='subtitle1' sx={{ fontWeight: 'bold', color: '#7A7A7A' }}>
+                  <Typography
+                    noWrap
+                    variant='body2'
+                    sx={{ fontWeight: 'bold', color: '#7A7A7A', mr: 2, fontSize: { xs: 16, lg: 14 } }}
+                  >
                     #{collegianCode}
                   </Typography>
-                  <Typography variant='subtitle1' sx={{ fontWeight: 'bold', color: '#FFF' }}>
+                  <Typography
+                    variant='body2'
+                    sx={{ fontWeight: 'bold', color: '#FFF', fontSize: { xs: 16, lg: 14 } }}
+                    noWrap
+                  >
                     {''}Profile name
                   </Typography>
                 </CardContent>
@@ -151,13 +159,13 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} lg={8}>
               <Box>
                 <form onSubmit={handleSubmit}>
                   {Questions.map((question, index) => (
                     <Card key={index} sx={{ marginBottom: 4 }}>
                       <CardContent>
-                        <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 14, lg: 15 } }}>
                           {index + 1}
                           {'). '} {question.interest_question_title}
                         </Typography>
@@ -176,7 +184,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                                   value={answer}
                                   control={<Radio />}
                                   label={answer}
-                                  sx={{ fontWeight: 'bold' }}
+                                  sx={{ fontWeight: 'bold', mr: 3 }}
                                 />
                               ))}
                             </RadioGroup>
@@ -205,8 +213,8 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                 </form>
               </Box>
             </Grid>
-            <Hidden mdDown>
-              <Grid item xs={12} md={4}>
+            <Hidden lgDown>
+              <Grid item xs={12} lg={4}>
                 <Card>
                   <CardContent>
                     <Box>
@@ -214,9 +222,11 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                         Information describe interest survey
                       </Typography>
                       <Typography variant='body2'>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-                        alteration in some form, by injected humour, or randomised words which don't look even slightly
-                        believable.
+                        <p style={{ textAlign: 'justify' }}>
+                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                          alteration in some form, by injected humour, or randomised words which don't look even
+                          slightly believable.
+                        </p>
                       </Typography>
                     </Box>
                     <Box sx={{ marginTop: 4 }}>
@@ -224,9 +234,11 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                         Information describe study plan system
                       </Typography>
                       <Typography variant='body2'>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-                        alteration in some form, by injected humour, or randomised words which don't look even slightly
-                        believable.
+                        <p style={{ textAlign: 'justify' }}>
+                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                          alteration in some form, by injected humour, or randomised words which don't look even
+                          slightly believable.
+                        </p>
                       </Typography>
                     </Box>
                     <Box sx={{ marginTop: 4 }}>
@@ -263,16 +275,16 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
             </Hidden>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ py: 8 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginY: 4 }}>
-            <Button variant='text' size='large' sx={{ marginRight: 4, color: '#AAA' }}>
+            <Button variant='text' size='large' sx={{ width: 160, marginRight: 4, color: '#AAA' }}>
               Reset
             </Button>
             <Button
               variant='contained'
               size='large'
               type='submit'
-              sx={{ backgroundColor: '#EBEBEB', color: '#7A7A7A' }}
+              sx={{ width: 160, backgroundColor: '#EBEBEB', color: '#7A7A7A' }}
             >
               Submit
             </Button>

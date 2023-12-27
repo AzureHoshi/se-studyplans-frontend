@@ -61,7 +61,7 @@ export async function getServerSideProps() {
   return {
     props: {
       dataSurvey: res.data.data,
-      collegianCode: '1'
+      collegianCode: '635432060XXXX'
     }
   }
 }
