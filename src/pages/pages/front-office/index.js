@@ -164,7 +164,7 @@ const FrontOffice = () => {
           </Box>
         </Drawer>
       )}
-      <SwipeableDrawer open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
+      <SwipeableDrawer onOpen={() => null} open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
         <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6 }}>
           <Grid item xs={12}>
             <Button

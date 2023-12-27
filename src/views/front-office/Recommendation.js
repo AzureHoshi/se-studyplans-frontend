@@ -1,13 +1,12 @@
 import { Box, Button, Card, Divider, Fab, Grid, Hidden, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import TypographyHeadings from '../typography/TypographyHeadings'
 
 const Recommendation = () => {
   return (
     <Box className='content-center' sx={{ maxWidth: 1200 }}>
-      <Grid container spacing={4} sx={{ minHeight: 500 }}>
+      <Grid container spacing={4} sx={{ pb: 60 }}>
         <Grid item xs={6}>
-          <Typography variant='h5' sx={{ fontWeight: 'bold', color: grey[800] }}>
+          <Typography variant='h5' sx={{ fontWeight: 'bold', color: grey[800], mt: { xs: 2, md: 0 } }}>
             Job Position
           </Typography>
         </Grid>
@@ -26,7 +25,7 @@ const Recommendation = () => {
             {'>'}
           </Typography>
         </Grid>
-        <Grid item xs={12} sx={{ mt: -18 }}>
+        <Grid item xs={12}>
           <Typography variant='caption' sx={{ textAlign: 'justify' }}>
             Software engineering is a discipline within the broader field of computer science that focuses on the
             systematic design, development, testing, and maintenance of software applications and systems. It involves
@@ -34,7 +33,7 @@ const Recommendation = () => {
             maintainability of software..
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={6} lg={4} sx={{ mt: -12 }}>
+        <Grid item xs={12} sm={6} lg={4}>
           <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
             <Box
               sx={{
@@ -68,7 +67,7 @@ const Recommendation = () => {
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} lg={4} sx={{ mt: -12 }}>
+        <Grid item xs={12} sm={6} lg={4}>
           <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
             <Box
               sx={{
@@ -102,7 +101,7 @@ const Recommendation = () => {
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} lg={4} sx={{ mt: -12 }}>
+        <Grid item xs={12} sm={6} lg={4}>
           <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
             <Box
               sx={{
@@ -136,8 +135,17 @@ const Recommendation = () => {
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={12} sx={{ mt: -12 }}>
-          <Button variant='contained' sx={{ width: 200, marginTop: '1rem', backgroundColor: '#000000' }}>
+        <Grid item xs={12}>
+          <Button
+            variant='contained'
+            sx={{
+              marginTop: '1rem',
+              backgroundColor: '#000000',
+              width: 200,
+              fontFamily: 'Segoe UI',
+              letterSpacing: 0.5
+            }}
+          >
             More Details
           </Button>
         </Grid>

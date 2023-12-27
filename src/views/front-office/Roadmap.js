@@ -114,10 +114,12 @@ const Roadmap = () => {
               Curriculum: Software Engineering
             </Typography>
             <Typography variant='caption'>
-              Software engineering is a discipline that involves the systematic design, development, testing,
-              maintenance, and documentation of software in a methodical way. It applies engineering principles to
-              software development, aiming to create reliable, efficient, and scalable software solutions. Here are key
-              aspects and concepts related to software engineering:
+              <p style={{ textAlign: 'justify' }}>
+                Software engineering is a discipline that involves the systematic design, development, testing,
+                maintenance, and documentation of software in a methodical way. It applies engineering principles to
+                software development, aiming to create reliable, efficient, and scalable software solutions. Here are
+                key aspects and concepts related to software engineering:
+              </p>
             </Typography>
             <ul style={{ paddingLeft: -12 }}>
               <li style={{ marginRight: 6, paddingBottom: 12, fontSize: 14, textAlign: 'justify' }}>
@@ -136,7 +138,17 @@ const Roadmap = () => {
             </ul>
           </Grid>
           <Grid item xs={6} sm={4} sx={{ mt: { xs: -24, sm: 6, md: 0 } }}>
-            <Button variant='contained' fullWidth sx={{ maxWidth: 250, marginTop: '1rem', backgroundColor: '#000000' }}>
+            <Button
+              variant='contained'
+              fullWidth
+              sx={{
+                maxWidth: 250,
+                marginTop: '1rem',
+                backgroundColor: '#000000',
+                letterSpacing: 0.5,
+                fontFamily: 'Segoe UI'
+              }}
+            >
               Subjects
             </Button>
           </Grid>
@@ -145,7 +157,14 @@ const Roadmap = () => {
               variant='contained'
               color='primary'
               fullWidth
-              sx={{ maxWidth: 250, marginTop: '1rem', marginLeft: '1rem', backgroundColor: '#000000' }}
+              sx={{
+                maxWidth: 250,
+                marginTop: '1rem',
+                marginLeft: '1rem',
+                backgroundColor: '#000000',
+                letterSpacing: 0.5,
+                fontFamily: 'Segoe UI'
+              }}
             >
               Study Plan
             </Button>
