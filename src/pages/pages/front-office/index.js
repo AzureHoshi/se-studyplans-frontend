@@ -1,7 +1,7 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Box, Button, Grid, Drawer, Hidden, IconButton } from '@mui/material'
+import { Box, Button, Grid, Drawer, Hidden, IconButton, SwipeableDrawer, Typography } from '@mui/material'
 
 import { styled } from '@mui/material/styles'
 
@@ -40,7 +40,8 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
 }))
 
 const FrontOffice = () => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(true) // for large screen drawer
+  const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
 
   const handleDrawerOpen = () => {
@@ -51,67 +52,203 @@ const FrontOffice = () => {
     setOpen(false)
   }
 
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  useEffect(() => {
+    // Function to check if the screen is small
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 600) // Adjust the threshold as needed
+    }
+
+    // Initial check on mount
+    checkScreenSize()
+
+    // Event listener to update when the window is resized
+    window.addEventListener('resize', checkScreenSize)
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', checkScreenSize)
+    }
+  }, []) // Empty dependency array ensures that this effect runs only on mount and unmount
+
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box'
-          }
-        }}
-        variant='persistent'
-        anchor='left'
-        open={open}
-      >
-        <Box sx={{ height: '100%' }}>
-          <Hidden mdUp>
-            <Box sx={{ height: '5%', display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton>
-                <ChevronLeftIcon onClick={handleDrawerClose} />
-              </IconButton>
+      {!isSmallScreen && (
+        <Drawer
+          sx={{
+            width: { xs: 70, md: 400 },
+            '& .MuiDrawer-paper': {
+              width: { xs: 70, md: 400 },
+              boxSizing: 'border-box'
+            }
+          }}
+          variant='persistent'
+          anchor='left'
+          open={open}
+        >
+          <Box sx={{ height: '100%', overflow: 'hidden' }}>
+            {/* <Hidden mdUp>
+              <Box sx={{ mt: 8, mr: 2, height: '5%', display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton>
+                  <ChevronLeftIcon onClick={handleDrawerClose} />
+                </IconButton>
+              </Box>
+            </Hidden> */}
+            <Box
+              sx={{
+                ml: { xs: 2, md: -12 },
+                mt: 24,
+                height: '100%',
+                display: 'grid',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
+                <Hidden mdDown>
+                  <Grid item xs={12}>
+                    <Button
+                      sx={{ fontSize: 12 }}
+                      variant='text'
+                      startIcon={<LibraryBooksIcon />}
+                      onClick={() => setPageState(0)}
+                    >
+                      Roadmap
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      sx={{ fontSize: 12 }}
+                      variant='text'
+                      startIcon={<DashboardIcon />}
+                      onClick={() => setPageState(1)}
+                    >
+                      Recommendation
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      sx={{ fontSize: 12 }}
+                      variant='text'
+                      startIcon={<AssistantPhotoIcon />}
+                      onClick={() => setPageState(2)}
+                    >
+                      Student Systems
+                    </Button>
+                  </Grid>
+                </Hidden>
+                <Hidden mdUp>
+                  <Grid item xs={12}>
+                    <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}></Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant='text' startIcon={<DashboardIcon />} onClick={() => setPageState(1)}></Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant='text' startIcon={<AssistantPhotoIcon />} onClick={() => setPageState(2)}></Button>
+                  </Grid>
+                </Hidden>
+              </Grid>
+              <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Hidden mdDown>
+                  <Button variant='text' startIcon={<ChevronLeftIcon />}>
+                    CE Reform
+                  </Button>
+                </Hidden>
+                <Hidden mdUp>
+                  <Button variant='text' startIcon={<ChevronLeftIcon />}></Button>
+                </Hidden>
+              </Box>
             </Box>
-          </Hidden>
-          <Box
-            sx={{ height: { xs: '90%', md: '95%' }, display: 'grid', justifyContent: 'center', alignItems: 'center' }}
-          >
-            <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
-              <Grid item xs={12}>
-                <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}>
-                  Roadmap
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button variant='text' startIcon={<DashboardIcon />} onClick={() => setPageState(1)}>
-                  Recommendation
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button variant='text' startIcon={<AssistantPhotoIcon />} onClick={() => setPageState(2)}>
-                  Student Systems
-                </Button>
-              </Grid>
-            </Grid>
           </Box>
-          <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
-            <Button variant='text' startIcon={<ChevronLeftIcon />}>
-              CE Reform
+        </Drawer>
+      )}
+      <SwipeableDrawer open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
+        <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6 }}>
+          <Grid item xs={12}>
+            <Button
+              // fullWidth
+              sx={{
+                pr: 18,
+                fontSize: 12,
+                color: 'gray',
+                ':hover': {
+                  color: 'orange'
+                }
+              }}
+              variant='text'
+              startIcon={<LibraryBooksIcon />}
+              onClick={() => {
+                setPageState(0)
+                setOpenSmallDrawer(false)
+              }}
+            >
+              Roadmap
             </Button>
-          </Box>
-        </Box>
-      </Drawer>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              fullWidth
+              sx={{
+                fontSize: 12,
+                color: 'gray',
+                ':hover': {
+                  color: 'orange'
+                }
+              }}
+              variant='text'
+              startIcon={<DashboardIcon />}
+              onClick={() => {
+                setPageState(1)
+                setOpenSmallDrawer(false)
+              }}
+            >
+              Recommendation
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              fullWidth
+              sx={{
+                fontSize: 12,
+                color: 'gray',
+                ':hover': {
+                  color: 'orange'
+                }
+              }}
+              variant='text'
+              startIcon={<AssistantPhotoIcon />}
+              onClick={() => {
+                setPageState(2)
+                setOpenSmallDrawer(false)
+              }}
+            >
+              Student Systems
+            </Button>
+          </Grid>
+        </Grid>
+      </SwipeableDrawer>
       <Main open={open}>
-        <Hidden mdUp>
+        {/* <Hidden mdUp>
           <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'flex-start' }}>
             <IconButton>
               <MenuIcon onClick={handleDrawerOpen} />
             </IconButton>
           </Box>
-        </Hidden>
-        {pageState === 0 && <Roadmap />}
-        {pageState === 1 && <Recommendation />}
-        {pageState === 2 && <StudentSystems />}
+        </Hidden> */}
+        <Box sx={{ ml: { xs: 2, md: 12 }, mt: 0 }}>
+          {isSmallScreen && (
+            <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
+              <IconButton onClick={() => setOpenSmallDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+            </Box>
+          )}
+          {pageState === 0 && <Roadmap />}
+          {pageState === 1 && <Recommendation />}
+          {pageState === 2 && <StudentSystems />}
+        </Box>
       </Main>
     </Box>
   )
