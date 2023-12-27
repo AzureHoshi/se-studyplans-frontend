@@ -12,7 +12,7 @@ import InterestResult from 'src/views/InterestSurvey/InterestResult'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
-  const [resultDisplay, setResultDisplay] = useState(false)
+  const [resultDisplay, setResultDisplay] = useState(null)
   const [alertAnswer, setAlertAnswer] = useState(false)
 
   const handleClose = (event, reason) => {
@@ -25,16 +25,16 @@ const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {resultDisplay ? (
+      {/* {resultDisplay ? (
         <InterestResult />
-      ) : (
-        <InterestForm
-          dataSurvey={dataSurvey}
-          collegianCode={collegianCode}
-          setAlertAnswer={setAlertAnswer}
-          setResultDisplay={setResultDisplay}
-        />
-      )}
+      ) : ( */}
+      <InterestForm
+        dataSurvey={dataSurvey}
+        collegianCode={collegianCode}
+        setAlertAnswer={setAlertAnswer}
+        setResultDisplay={setResultDisplay}
+      />
+      {/* )} */}
 
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar
@@ -61,7 +61,7 @@ export async function getServerSideProps() {
   return {
     props: {
       dataSurvey: res.data.data,
-      collegianCode: '635432060XXXX'
+      collegianCode: '63543206000'
     }
   }
 }

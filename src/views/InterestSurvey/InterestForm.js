@@ -19,14 +19,16 @@ import {
 
 // ** axios
 import axios from 'axios'
+import { url } from 'src/configs/urlConfig'
+import { useRouter } from 'next/router'
 
 const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisplay }) => {
+  const router = useRouter()
   const Questions = dataSurvey[0].interestQuestions
   const [isLoading, setIsLoading] = useState(false)
 
   const [answers, setAnswers] = useState(
     Questions.map(question => ({
-      collegian_code: collegianCode,
       question_type: question.interest_question_type,
       interest_answer_id: null,
       interest_question_score: null
@@ -82,19 +84,23 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
       setIsLoading(true)
 
       const payload = {
-        interest_records: answers
+        collegian_code: collegianCode,
+        interest_results: answers
       }
+
+      console.log('payload', payload)
 
       try {
         // ทำการ POST ไปยัง API
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}interest-records`, payload, {
+        const res = await axios.post(`${url.BASE_URL}/interest-results`, payload, {
           headers: {
             'Content-Type': 'application/json'
           }
         })
 
         console.log(res)
-        setResultDisplay(true)
+        router.push('/pages/front-office/student-systems/dashboard/')
+        // setResultDisplay(true)
       } catch (err) {
         console.log(err)
         setResultDisplay(false)
@@ -108,10 +114,21 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
     console.log('answers: ', answers)
   }, [answers])
 
+  // useEffect(() => {
+  //   if (isLoading && ) {
+  //     setTimeout(() => {
+  //       setIsLoading(false)
+  //     }, 2000)
+  //   }
+  // }, [isLoading, resultDisplay])
+
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', m: 24 }}>
         <CircularProgress />
+        <Typography variant='h5' sx={{ ml: 6, mt: 1 }}>
+          Sending Answer
+        </Typography>
       </Box>
     )
   }
@@ -281,6 +298,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
               Reset
             </Button>
             <Button
+              onClick={handleSubmit}
               variant='contained'
               size='large'
               type='submit'
