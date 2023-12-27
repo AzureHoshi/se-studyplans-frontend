@@ -77,9 +77,9 @@ const FrontOffice = () => {
       {!isSmallScreen && (
         <Drawer
           sx={{
-            width: { xs: 70, md: 400 },
+            width: { xs: 70, sm: 120, lg: 400 },
             '& .MuiDrawer-paper': {
-              width: { xs: 70, md: 400 },
+              width: { xs: 70, sm: 120, lg: 400 },
               boxSizing: 'border-box'
             }
           }}
@@ -88,7 +88,7 @@ const FrontOffice = () => {
           open={open}
         >
           <Box sx={{ height: '100%', overflow: 'hidden' }}>
-            {/* <Hidden mdUp>
+            {/* <Hidden lgUp>
               <Box sx={{ mt: 8, mr: 2, height: '5%', display: 'flex', justifyContent: 'flex-end' }}>
                 <IconButton>
                   <ChevronLeftIcon onClick={handleDrawerClose} />
@@ -97,7 +97,7 @@ const FrontOffice = () => {
             </Hidden> */}
             <Box
               sx={{
-                ml: { xs: 2, md: -12 },
+                ml: { xs: 2, lg: -12 },
                 mt: 24,
                 height: '100%',
                 display: 'grid',
@@ -106,7 +106,7 @@ const FrontOffice = () => {
               }}
             >
               <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
-                <Hidden mdDown>
+                <Hidden lgDown>
                   <Grid item xs={12}>
                     <Button
                       sx={{ fontSize: 12 }}
@@ -138,7 +138,7 @@ const FrontOffice = () => {
                     </Button>
                   </Grid>
                 </Hidden>
-                <Hidden mdUp>
+                <Hidden lgUp>
                   <Grid item xs={12}>
                     <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}></Button>
                   </Grid>
@@ -151,12 +151,12 @@ const FrontOffice = () => {
                 </Hidden>
               </Grid>
               <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Hidden mdDown>
+                <Hidden lgDown>
                   <Button variant='text' startIcon={<ChevronLeftIcon />}>
                     CE Reform
                   </Button>
                 </Hidden>
-                <Hidden mdUp>
+                <Hidden lgUp>
                   <Button variant='text' startIcon={<ChevronLeftIcon />}></Button>
                 </Hidden>
               </Box>
@@ -230,7 +230,7 @@ const FrontOffice = () => {
         </Grid>
       </SwipeableDrawer>
       <Main open={open}>
-        {/* <Hidden mdUp>
+        {/* <Hidden lgUp>
           <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'flex-start' }}>
             <IconButton>
               <MenuIcon onClick={handleDrawerOpen} />

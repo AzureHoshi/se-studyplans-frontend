@@ -19,7 +19,13 @@ const Roadmap = () => {
           <Grid item xs={12}>
             <Typography
               variant='h5'
-              sx={{ color: grey[800], fontFamily: 'Segoe UI', mb: 2.5, fontSize: { xs: 28, md: 24 } }}
+              sx={{
+                fontWeight: 'bold',
+                color: grey[800],
+                fontFamily: 'Segoe UI',
+                mb: 2.5,
+                fontSize: { xs: 28, md: 24 }
+              }}
             >
               Curriculum: Software Engineering
             </Typography>
