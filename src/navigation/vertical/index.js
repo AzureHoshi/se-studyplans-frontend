@@ -94,7 +94,7 @@ export const studentSystemNavigation = () => {
     {
       title: 'Dashboard',
       // icon: BookOutline,
-      path: '/pages/studentsystems'
+      path: '/pages/front-office/student-systems/dashboard/'
     },
     {
       title: 'Study Plan'
