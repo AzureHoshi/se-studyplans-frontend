@@ -52,26 +52,32 @@ const Recommendation = ({ jobRecommended }) => {
               fontWeight: 'bold',
               color: grey[800],
               mt: { xs: 2, md: 0 },
-              maxWidth: { xs: 300, sm: 600, lg: 1200 }
+              maxWidth: { xs: '100%', sm: 600, lg: 1200 },
+              textAlign: { xs: 'center', sm: 'start' }
             }}
           >
             {jobPosition[currentIndex]?.job_position_name}
           </Typography>
         </Grid>
 
-        <Grid item xs={12} sm={4} sx={{ height: 55, display: 'flex', justifyContent: 'flex-end' }}>
-          {currentIndex !== 0 && (
-            <Button
-              onClick={handleMinusIndex}
-              sx={{
-                m: 0.5,
-                borderRadius: 2,
-                ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } }
-              }}
-            >
-              {'<'}
-            </Button>
-          )}
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{ height: 55, display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' } }}
+        >
+          <Button
+            onClick={handleMinusIndex}
+            disabled={currentIndex === 0 && true}
+            sx={{
+              m: 0.5,
+              borderRadius: 2,
+              ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } }
+            }}
+          >
+            {'<'}
+          </Button>
+
           <Typography
             variant='h5'
             sx={{
@@ -79,20 +85,19 @@ const Recommendation = ({ jobRecommended }) => {
               mx: { xs: 1, md: 2 },
               mt: 2,
               fontWeight: 'bold',
-              color: grey[800],
-              pr: currentIndex === jobPosition.length - 1 && 6
+              color: grey[800]
             }}
           >
             {currentIndex + 1}/{jobPosition?.length}
           </Typography>
-          {currentIndex !== jobPosition.length - 1 && (
-            <Button
-              onClick={handlePlusIndex}
-              sx={{ m: 0.5, borderRadius: 2, ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } } }}
-            >
-              {'>'}
-            </Button>
-          )}
+
+          <Button
+            disabled={currentIndex === jobPosition.length - 1 && true}
+            onClick={handlePlusIndex}
+            sx={{ m: 0.5, borderRadius: 2, ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } } }}
+          >
+            {'>'}
+          </Button>
         </Grid>
         <Grid item xs={12}>
           <Typography variant='caption'>

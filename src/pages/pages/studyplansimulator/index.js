@@ -2148,8 +2148,18 @@ function StudyPlanSimulatorPage() {
                     borderColor: grey[500]
                   }}
                 >
-                  <Typography variant='h6'>Subject Details</Typography>
-                  <Typography variant='h5'>{subjectSelected.subject_code}</Typography>
+                  <Typography variant='h6'>{subjectSelected.subject_code}</Typography>
+                  <Button
+                    onClick={() => {
+                      setOpenDetails(false)
+                      setTimeout(() => {
+                        setSubjectSelected([])
+                      }, 200)
+                    }}
+                    sx={{ fontFamily: 'Segoe UI', color: 'white', fontWeight: 'bold', letterSpacing: 1, opacity: 0.8 }}
+                  >
+                    Close
+                  </Button>
                 </DialogTitle>
                 <DialogContent sx={{ minHeight: 600, background: grey[200], p: 10 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'row', mt: 6 }}>
@@ -2283,8 +2293,18 @@ function StudyPlanSimulatorPage() {
                     borderColor: grey[500]
                   }}
                 >
-                  <Typography variant='h6'>Subject Details</Typography>
-                  <Typography variant='h5'>{subjectSelected.subject_code}</Typography>
+                  <Typography variant='h6'>{subjectSelected.subject_code}</Typography>
+                  <Button
+                    onClick={() => {
+                      setOpenDetails(false)
+                      setTimeout(() => {
+                        setSubjectSelected([])
+                      }, 200)
+                    }}
+                    sx={{ fontFamily: 'Segoe UI', color: 'white', fontWeight: 'bold', letterSpacing: 1, opacity: 0.8 }}
+                  >
+                    Close
+                  </Button>
                 </DialogTitle>
                 <DialogContent sx={{ minHeight: 600, background: grey[200], p: 10 }}>
                   <Box sx={{ mt: 6 }}>
