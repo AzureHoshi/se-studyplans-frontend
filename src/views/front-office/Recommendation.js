@@ -46,7 +46,14 @@ const Recommendation = ({ jobRecommended }) => {
         <Grid item xs={12} sm={8}>
           <Typography
             variant='h5'
-            sx={{ mt: 4, height: 60, fontWeight: 'bold', color: grey[800], mt: { xs: 2, md: 0 } }}
+            sx={{
+              mt: 4,
+              height: 60,
+              fontWeight: 'bold',
+              color: grey[800],
+              mt: { xs: 2, md: 0 },
+              maxWidth: { xs: 300, sm: 600, lg: 1200 }
+            }}
           >
             {jobPosition[currentIndex]?.job_position_name}
           </Typography>
@@ -137,7 +144,7 @@ const Recommendation = ({ jobRecommended }) => {
                 )
             )}
         </Grid>
-        <Grid item xs={12} sx={{ mt: { xs: 6, sm: 0 } }}>
+        <Grid item xs={12} sx={{ mt: { xs: 2, sm: 0 } }}>
           <Button
             variant='contained'
             sx={{

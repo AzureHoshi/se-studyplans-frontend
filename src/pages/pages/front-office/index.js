@@ -41,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
   })
 }))
 
-const FrontOffice = ({ jobRecommended }) => {
+const FrontOffice = ({ jobRecommended, curriculumTree }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
@@ -73,6 +73,8 @@ const FrontOffice = ({ jobRecommended }) => {
       window.removeEventListener('resize', checkScreenSize)
     }
   }, []) // Empty dependency array ensures that this effect runs only on mount and unmount
+
+  console.log('curriculumTree', curriculumTree)
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -267,7 +269,7 @@ const FrontOffice = ({ jobRecommended }) => {
               </IconButton>
             </Box>
           )}
-          {pageState === 0 && <Roadmap />}
+          {pageState === 0 && <Roadmap curriculumTree={curriculumTree} />}
           {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
           {pageState === 2 && <StudentSystems />}
         </Box>
@@ -280,10 +282,12 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
   const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
+  const resCurriculumTree = await axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + 2) // for se 66
 
   return {
     props: {
-      jobRecommended: resJobRecommended.data.data
+      jobRecommended: resJobRecommended.data.data,
+      curriculumTree: resCurriculumTree.data.data
     }
   }
 }
