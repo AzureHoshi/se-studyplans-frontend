@@ -22,7 +22,7 @@ import StudentSystems from 'src/views/front-office/StudentSystems'
 import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
 
-const drawerWidth = 400
+const drawerWidth = 350
 
 const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ theme, open }) => ({
   flexGrow: 1,

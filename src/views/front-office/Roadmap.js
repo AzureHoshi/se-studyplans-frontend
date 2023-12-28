@@ -6,8 +6,11 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   Grid,
   Hidden,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
   alpha
@@ -38,6 +41,12 @@ const Roadmap = ({ curriculumTree }) => {
 
   const [subjectSelected, setSubjectSelected] = useState([])
   const URL_GET_SUBJECTS_RELATIONS = `${url.BASE_URL}/continue-subjects-subject/`
+
+  const [subjectView, setSubjectView] = useState('treeview')
+
+  const handleChangeView = e => {
+    setSubjectView(e.target.value)
+  }
 
   const {
     error: SubjectsRelationsError,
@@ -335,14 +344,45 @@ const Roadmap = ({ curriculumTree }) => {
         </Hidden>
         {displayMode === 1 && (
           <Grid container item xs={12}>
-            <Grid item xs={2}>
+            <Hidden mdDown>
+              <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
+                  RMUTL Software Engineering 2566
+                </Typography>
+              </Grid>
+            </Hidden>
+            <Grid item xs={12} md={3}>
               <Button onClick={() => handleChangeDisplayMode(0)} variant={'contained'} sx={{ mb: 6 }}>
                 Back
               </Button>
             </Grid>
-            <Grid item xs={10} sm={8} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Hidden mdUp>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, px: 4 }}>
+                <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
+                  RMUTL SE 2566
+                </Typography>
+              </Grid>
+            </Hidden>
+            <Grid item xs={12} md={7} sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 4, md: 0 } }}>
+              <RadioGroup
+                name='radioOptions'
+                value={subjectView}
+                onChange={handleChangeView}
+                row
+                sx={{
+                  width: { xs: '50%', lg: '30%' },
+                  pb: 6,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  pr: 2
+                }}
+              >
+                <FormControlLabel value='treeview' control={<Radio />} label='tree' />
+                <FormControlLabel value='normalview' control={<Radio />} label='grid' />
+              </RadioGroup>
               <Autocomplete
-                sx={{ width: { xs: 250, sm: 600 } }}
+                sx={{ width: { xs: '50%', lg: '70%' } }}
+                // sx={{ width: { xs: 250, sm: 600 } }}
                 value={subjectSelected || []}
                 size='small'
                 disablePortal
@@ -364,7 +404,7 @@ const Roadmap = ({ curriculumTree }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={10} sx={{ m: 2 }}>
+            <Grid item xs={12} md={10} sx={{ m: 2 }}>
               {expandedNodes && (
                 <TreeView
                   expanded={expandedNodes} // expand node by nodeId
