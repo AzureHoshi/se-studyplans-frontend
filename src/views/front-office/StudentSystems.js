@@ -4,7 +4,7 @@ import { grey } from '@mui/material/colors'
 const StudentSystems = () => {
   return (
     <Box className='content-center' sx={{ maxWidth: 1200 }}>
-      <Grid container spacing={2} sx={{ pb: 60 }}>
+      <Grid container spacing={2} sx={{ pb: 58 }}>
         <Grid item xs={12}>
           <Typography variant='h5' sx={{ color: grey[800], fontWeight: 'bold' }}>
             Login for use Student Systems

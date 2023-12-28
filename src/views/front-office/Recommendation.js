@@ -1,141 +1,143 @@
 import { Box, Button, Card, Divider, Fab, Grid, Hidden, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
-const Recommendation = () => {
+const Recommendation = ({ jobRecommended }) => {
+  const [jobPosition, setJobPosition] = useState([])
+  const [currentIndex, setCurentIndex] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const handlePlusIndex = () => {
+    if (currentIndex >= jobPosition?.length) return
+    setCurentIndex(pre => pre + 1)
+    setIsVisible(true)
+  }
+  const handleMinusIndex = () => {
+    if (currentIndex === 0) return
+    setCurentIndex(pre => pre - 1)
+    setIsVisible(true)
+  }
+
+  useEffect(() => {
+    if (isVisible)
+      setTimeout(() => {
+        setIsVisible(false)
+      }, 100)
+  }, [isVisible])
+
+  useEffect(() => {
+    if (jobRecommended) {
+      console.log('jobRecommended', jobRecommended)
+      const uniqueJobPositions = jobRecommended.reduce((result, currentItem) => {
+        const { job_position_id, job_position } = currentItem
+        if (!result[job_position_id]) {
+          result[job_position_id] = job_position
+        }
+        return result
+      }, {})
+      setJobPosition(Object.values(uniqueJobPositions))
+      console.log(Object.values(uniqueJobPositions))
+    }
+  }, [jobRecommended])
   return (
     <Box className='content-center' sx={{ maxWidth: 1200 }}>
-      <Grid container spacing={4} sx={{ pb: 60 }}>
-        <Grid item xs={6}>
-          <Typography variant='h5' sx={{ fontWeight: 'bold', color: grey[800], mt: { xs: 2, md: 0 } }}>
-            Job Position
+      <Grid container spacing={4} sx={{ pb: 46 }}>
+        <Grid item xs={12} sm={8}>
+          <Typography
+            variant='h5'
+            sx={{ mt: 4, height: 60, fontWeight: 'bold', color: grey[800], mt: { xs: 2, md: 0 } }}
+          >
+            {jobPosition[currentIndex]?.job_position_name}
           </Typography>
         </Grid>
-        <Grid item xs={6} sx={{ height: 55, display: 'flex', justifyContent: 'flex-end' }}>
+
+        <Grid item xs={12} sm={4} sx={{ height: 55, display: 'flex', justifyContent: 'flex-end' }}>
+          {currentIndex !== 0 && (
+            <Button
+              onClick={handleMinusIndex}
+              sx={{
+                m: 0.5,
+                borderRadius: 2,
+                ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } }
+              }}
+            >
+              {'<'}
+            </Button>
+          )}
           <Typography
-            sx={{ width: 40, borderRadius: 2, p: 1.5, pl: 3.5, ':hover': { cursor: 'pointer', background: grey[200] } }}
+            variant='h5'
+            sx={{
+              letterSpacing: 1,
+              mx: { xs: 1, md: 2 },
+              mt: 2,
+              fontWeight: 'bold',
+              color: grey[800],
+              pr: currentIndex === jobPosition.length - 1 && 6
+            }}
           >
-            {'<'}
+            {currentIndex + 1}/{jobPosition?.length}
           </Typography>
-          <Typography variant='h5' sx={{ letterSpacing: 1, mx: 4, mt: 1, fontWeight: 'bold', color: grey[800] }}>
-            1/8
-          </Typography>
-          <Typography
-            sx={{ width: 40, borderRadius: 2, p: 1.5, pl: 3.5, ':hover': { cursor: 'pointer', background: grey[200] } }}
-          >
-            {'>'}
-          </Typography>
+          {currentIndex !== jobPosition.length - 1 && (
+            <Button
+              onClick={handlePlusIndex}
+              sx={{ m: 0.5, borderRadius: 2, ':hover': { cursor: 'pointer', background: { xs: null, sm: grey[200] } } }}
+            >
+              {'>'}
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12}>
-          <Typography variant='caption' sx={{ textAlign: 'justify' }}>
-            Software engineering is a discipline within the broader field of computer science that focuses on the
-            systematic design, development, testing, and maintenance of software applications and systems. It involves
-            applying engineering principles to software development in order to ensure the reliability, efficiency, and
-            maintainability of software..
+          <Typography variant='caption'>
+            <p style={{ textAlign: 'justify' }}>
+              Software engineering is a discipline within the broader field of computer science that focuses on the
+              systematic design, development, testing, and maintenance of software applications and systems. It involves
+              applying engineering principles to software development in order to ensure the reliability, efficiency,
+              and maintainability of software..
+            </p>
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
-          <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
-            <Box
-              sx={{
-                mt: { xs: 1, md: 5 },
-                p: 2.5,
-                backgroundColor: '#FFF',
-                height: 40,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                  ENGCEXXX
-                </Typography>
-                <Typography variant='body2' sx={{ marginLeft: 6, maxWidth: { xs: 400, md: 400 } }} noWrap>
-                  Lorem ipsum dolor sit amet.......
-                </Typography>
-              </Box>
-              {/* <Box sx={{ marginLeft: 4 }}>
-                <Fab
-                  variant='extended'
-                  size='small'
-                  disabled
-                  sx={{ p: 2.5, backgroundColor: '#EBEBEB', color: '#AAA', height: 16, fontSize: 12 }}
-                >
-                  General
-                </Fab>
-              </Box> */}
-            </Box>
-          </Card>
+        <Grid container spacing={4} sx={{ pl: 3, pt: 3 }}>
+          {jobRecommended
+            ?.filter(jobSubject => jobSubject.job_position_id === jobPosition[currentIndex]?.job_position_id)
+            .map(
+              (sjRecommend, index) =>
+                index < 3 && (
+                  <Grid key={sjRecommend.subject_id} item xs={12} sm={6} lg={4}>
+                    <motion.div
+                      initial='hidden'
+                      animate={!isVisible ? 'visible' : 'hidden'}
+                      variants={{ hidden: { opacity: 0.5 }, visible: { opacity: 1 } }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
+                        <Box
+                          sx={{
+                            mt: 5,
+                            p: 2.5,
+                            backgroundColor: '#FFF',
+                            height: 40,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
+                              {sjRecommend.subject.subject_code}
+                            </Typography>
+                            <Typography variant='body2' sx={{ marginLeft: 6, maxWidth: { xs: 300, sm: 250 } }} noWrap>
+                              {sjRecommend.subject.subject_name_en}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Card>
+                    </motion.div>
+                  </Grid>
+                )
+            )}
         </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
-          <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
-            <Box
-              sx={{
-                mt: { xs: 1, md: 5 },
-                p: 2.5,
-                backgroundColor: '#FFF',
-                height: 40,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                  ENGCEXXX
-                </Typography>
-                <Typography variant='body2' sx={{ marginLeft: 6, maxWidth: { xs: 400, md: 400 } }} noWrap>
-                  Lorem ipsum dolor sit amet.......
-                </Typography>
-              </Box>
-              {/* <Box sx={{ marginLeft: 4 }}>
-                <Fab
-                  variant='extended'
-                  size='small'
-                  disabled
-                  sx={{ p: 2.5, backgroundColor: '#EBEBEB', color: '#AAA', height: 16, fontSize: 12 }}
-                >
-                  General
-                </Fab>
-              </Box> */}
-            </Box>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
-          <Card sx={{ backgroundColor: '#EBEBEB', color: '#FFF' }}>
-            <Box
-              sx={{
-                mt: { xs: 1, md: 5 },
-                p: 2.5,
-                backgroundColor: '#FFF',
-                height: 40,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                  ENGCEXXX
-                </Typography>
-                <Typography variant='body2' sx={{ marginLeft: 6, maxWidth: { xs: 400, md: 400 } }} noWrap>
-                  Lorem ipsum dolor sit amet.......
-                </Typography>
-              </Box>
-              {/* <Box sx={{ marginLeft: 4 }}>
-                <Fab
-                  variant='extended'
-                  size='small'
-                  disabled
-                  sx={{ p: 2.5, backgroundColor: '#EBEBEB', color: '#AAA', height: 16, fontSize: 12 }}
-                >
-                  General
-                </Fab>
-              </Box> */}
-            </Box>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ mt: { xs: 6, sm: 0 } }}>
           <Button
             variant='contained'
             sx={{

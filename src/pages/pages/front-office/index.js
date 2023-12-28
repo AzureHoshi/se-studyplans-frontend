@@ -19,6 +19,8 @@ import MenuIcon from '@mui/icons-material/Menu'
 import Roadmap from 'src/views/front-office/Roadmap'
 import Recommendation from 'src/views/front-office/Recommendation'
 import StudentSystems from 'src/views/front-office/StudentSystems'
+import { url } from 'src/configs/urlConfig'
+import axios from 'axios'
 
 const drawerWidth = 400
 
@@ -39,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
   })
 }))
 
-const FrontOffice = () => {
+const FrontOffice = ({ jobRecommended }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
@@ -227,6 +229,26 @@ const FrontOffice = () => {
               Student Systems
             </Button>
           </Grid>
+          <Grid item xs={12} sx={{ mt: 6 }}>
+            <Button
+              sx={{
+                pr: 16,
+                fontSize: 12,
+                color: 'gray',
+                ':hover': {
+                  color: 'orange'
+                }
+              }}
+              variant='text'
+              startIcon={<ChevronLeftIcon />}
+              onClick={() => {
+                // setPageState(2)
+                setOpenSmallDrawer(false)
+              }}
+            >
+              CE Reform
+            </Button>
+          </Grid>
         </Grid>
       </SwipeableDrawer>
       <Main open={open}>
@@ -237,7 +259,7 @@ const FrontOffice = () => {
             </IconButton>
           </Box>
         </Hidden> */}
-        <Box sx={{ ml: { xs: 2, md: 12 }, mt: 0 }}>
+        <Box sx={{ ml: { xs: 0, md: 12 }, mt: 0 }}>
           {isSmallScreen && (
             <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
               <IconButton onClick={() => setOpenSmallDrawer(true)}>
@@ -246,7 +268,7 @@ const FrontOffice = () => {
             </Box>
           )}
           {pageState === 0 && <Roadmap />}
-          {pageState === 1 && <Recommendation />}
+          {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
           {pageState === 2 && <StudentSystems />}
         </Box>
       </Main>
@@ -254,5 +276,16 @@ const FrontOffice = () => {
   )
 }
 FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
+
+// ssr
+export async function getServerSideProps() {
+  const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
+
+  return {
+    props: {
+      jobRecommended: resJobRecommended.data.data
+    }
+  }
+}
 
 export default FrontOffice
