@@ -345,7 +345,7 @@ const Roadmap = ({ curriculumTree }) => {
         {displayMode === 1 && (
           <Grid container item xs={12}>
             <Hidden mdDown>
-              <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+              <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3.5 }}>
                 <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
                   RMUTL Software Engineering 2566
                 </Typography>
@@ -357,52 +357,62 @@ const Roadmap = ({ curriculumTree }) => {
               </Button>
             </Grid>
             <Hidden mdUp>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, px: 4 }}>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3.5, px: 4 }}>
                 <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
                   RMUTL SE 2566
                 </Typography>
               </Grid>
             </Hidden>
-            <Grid item xs={12} md={7} sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 4, md: 0 } }}>
-              <RadioGroup
-                name='radioOptions'
-                value={subjectView}
-                onChange={handleChangeView}
-                row
-                sx={{
-                  width: { xs: '50%', lg: '30%' },
-                  pb: 6,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  pr: 2
-                }}
-              >
-                <FormControlLabel value='treeview' control={<Radio />} label='tree' />
-                <FormControlLabel value='normalview' control={<Radio />} label='grid' />
-              </RadioGroup>
-              <Autocomplete
-                sx={{ width: { xs: '50%', lg: '70%' } }}
-                // sx={{ width: { xs: 250, sm: 600 } }}
-                value={subjectSelected || []}
-                size='small'
-                disablePortal
-                fullWidth
-                freeSolo
-                options={curriculumTree}
-                getOptionLabel={option =>
-                  option ? `${option?.subjects?.subject_code || ''} ${option?.subjects?.subject_name_th || ''}` : ''
-                }
-                renderInput={params => <TextField {...params} label='Subject Name, Code' />}
-                onChange={(e, value) => {
-                  if (value !== null) {
-                    setSubjectSelected(value)
-                    // setState(pre => ({ ...pre, subject_group_id: value.subject_group_id }))
-                  } else {
-                    setSubjectSelected([])
-                    // setState(pre => ({ ...pre, subject_group_id: null }))
+            <Grid
+              container
+              item
+              xs={12}
+              md={7}
+              sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 2, md: 0 } }}
+            >
+              <Grid item xs={12} sm={6}>
+                <RadioGroup
+                  name='radioOptions'
+                  value={subjectView}
+                  onChange={handleChangeView}
+                  row
+                  sx={{
+                    // width: { xs: '50%', lg: '30%' },
+                    pb: 6,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    pr: 2
+                  }}
+                >
+                  <FormControlLabel value='treeview' control={<Radio />} label='tree' />
+                  <FormControlLabel value='normalview' control={<Radio />} label='grid' />
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  // sx={{ width: { xs: '50%', lg: '70%' } }}
+                  // sx={{ width: { xs: 250, sm: 600 } }}
+                  value={subjectSelected || []}
+                  size='small'
+                  disablePortal
+                  fullWidth
+                  freeSolo
+                  options={curriculumTree}
+                  getOptionLabel={option =>
+                    option ? `${option?.subjects?.subject_code || ''} ${option?.subjects?.subject_name_th || ''}` : ''
                   }
-                }}
-              />
+                  renderInput={params => <TextField {...params} label='Subject Name, Code' />}
+                  onChange={(e, value) => {
+                    if (value !== null) {
+                      setSubjectSelected(value)
+                      // setState(pre => ({ ...pre, subject_group_id: value.subject_group_id }))
+                    } else {
+                      setSubjectSelected([])
+                      // setState(pre => ({ ...pre, subject_group_id: null }))
+                    }
+                  }}
+                />
+              </Grid>
             </Grid>
             <Grid item xs={12} md={10} sx={{ m: 2 }}>
               {expandedNodes && (
