@@ -515,7 +515,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
                 item
                 xs={12}
                 md={10}
-                sx={{ m: { xs: 0, sm: 2 }, height: 600, maxWidth: { xs: 320, xm: 1200 } }}
+                sx={{ m: { xs: 0, sm: 2 }, height: 600, maxWidth: { xs: 320, sm: 1200 } }}
               >
                 {/* Filter */}
                 {/* gridview */}
