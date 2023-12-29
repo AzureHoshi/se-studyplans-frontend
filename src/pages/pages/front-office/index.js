@@ -41,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
   })
 }))
 
-const FrontOffice = ({ jobRecommended, curriculumTree }) => {
+const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66 }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
@@ -269,7 +269,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree }) => {
               </IconButton>
             </Box>
           )}
-          {pageState === 0 && <Roadmap curriculumTree={curriculumTree} />}
+          {pageState === 0 && <Roadmap curriculumTree={curriculumTree} subjectsSE66={subjectsSE66} />}
           {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
           {pageState === 2 && <StudentSystems />}
         </Box>
@@ -283,11 +283,13 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 export async function getServerSideProps() {
   const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
   const resCurriculumTree = await axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + 2) // for se 66
+  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // for se 66
 
   return {
     props: {
       jobRecommended: resJobRecommended.data.data,
-      curriculumTree: resCurriculumTree.data.data
+      curriculumTree: resCurriculumTree.data.data,
+      subjectsSE66: resSubjectsSE66.data.data
     }
   }
 }

@@ -9,8 +9,10 @@ import {
   FormControlLabel,
   Grid,
   Hidden,
+  MenuItem,
   Radio,
   RadioGroup,
+  TablePagination,
   TextField,
   Typography,
   alpha
@@ -21,6 +23,7 @@ import { styled } from '@mui/material/styles'
 import { TreeItem, TreeView, treeItemClasses } from '@mui/x-tree-view'
 import { ChevronDown, ChevronRight } from 'mdi-material-ui'
 import { useEffect, useState } from 'react'
+import { CircleLoading, Selection } from 'src/components'
 import { url } from 'src/configs/urlConfig'
 import { useFetch } from 'src/hooks'
 
@@ -32,7 +35,7 @@ const HeadTypography = styled(Typography)(({ theme }) => ({
   fontSize: 14
 }))
 
-const Roadmap = ({ curriculumTree }) => {
+const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
   const [displayMode, setDisplayMode] = useState(0) // 0 : roadmap detail, 1: Subjects ,2: Study Plan
   const [expandedNodes, setExpandedNodes] = useState([])
   const [anchorEl, setAnchorEl] = useState(null)
@@ -42,7 +45,23 @@ const Roadmap = ({ curriculumTree }) => {
   const [subjectSelected, setSubjectSelected] = useState([])
   const URL_GET_SUBJECTS_RELATIONS = `${url.BASE_URL}/continue-subjects-subject/`
 
-  const [subjectView, setSubjectView] = useState('treeview')
+  const [subjectView, setSubjectView] = useState('treeview') // show treeview as default
+
+  // for gridview
+  const [SubjectsTemp, setSubjectsTemp] = useState([])
+  const [page, setPage] = useState(0)
+  const [categoriesSelected, setCategoriesSelected] = useState(0)
+  const [typesSelected, setTypesSelected] = useState(0)
+  const [groupsSelected, setGroupsSelected] = useState(0)
+
+  const [categoriesSubject, setCategoriesSubject] = useState([])
+  const [typesSubject, setTypesSubject] = useState([])
+  const [groupsSubject, setGroupsSubject] = useState([])
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+  // for gridview
 
   const handleChangeView = e => {
     setSubjectView(e.target.value)
@@ -157,6 +176,50 @@ const Roadmap = ({ curriculumTree }) => {
       return store
     })
   }
+
+  useEffect(() => {
+    if (subjectsSE66) {
+      setSubjectsTemp(subjectsSE66)
+      // console.log('Subjects', Subjects)
+
+      // Use Set to store unique values
+      const uniqueCategories = new Set()
+      const uniqueTypes = new Set()
+      const uniqueGroups = new Set()
+
+      const subjectStructure = subjectsSE66?.map(v => v.subject_structures)
+
+      // console.log('subjectStructure', subjectStructure)
+
+      //   // Iterate over the array and populate the sets
+      Object.values(subjectStructure)?.forEach(subject => {
+        uniqueCategories.add(subject[0]?.subjectCategory?.subject_category_name)
+        uniqueTypes.add(subject[0]?.subjectType?.subject_type_name)
+        uniqueGroups.add(subject[0]?.subjectGroup?.subject_group_name)
+      })
+
+      // Convert sets to arrays if needed
+      const uniqueCategoriesArray = Array.from(uniqueCategories)
+      const uniqueTypesArray = Array.from(uniqueTypes)
+      const uniqueGroupsArray = Array.from(uniqueGroups)
+
+      setCategoriesSubject(uniqueCategoriesArray)
+      setTypesSubject(uniqueTypesArray)
+      setGroupsSubject(uniqueGroupsArray)
+
+      // console.log('Unique Subject Categories:', uniqueCategoriesArray)
+      // console.log('Unique Subject Types:', uniqueTypesArray)
+      // console.log('Unique Subject Groups:', uniqueGroupsArray)
+    } else {
+      return
+    }
+  }, [subjectsSE66, SubjectsTemp])
+
+  useEffect(() => {
+    if (displayMode === 0) {
+      setSubjectSelected([])
+    }
+  }, [displayMode])
 
   useEffect(() => {
     if (curriculumTree) {
@@ -342,6 +405,7 @@ const Roadmap = ({ curriculumTree }) => {
             </Grid>
           )}
         </Hidden>
+        {/* show curriculum in treeview and gridview */}
         {displayMode === 1 && (
           <Grid container item xs={12}>
             <Hidden mdDown>
@@ -414,24 +478,150 @@ const Roadmap = ({ curriculumTree }) => {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={12} md={10} sx={{ m: 2 }}>
-              {expandedNodes && (
-                <TreeView
-                  expanded={expandedNodes} // expand node by nodeId
-                  defaultCollapseIcon={<ChevronDown />}
-                  defaultExpandIcon={<ChevronRight />}
-                  sx={{
-                    flexGrow: 1,
-                    overflowY: 'auto',
-                    maxWidth: 1200,
-                    maxHeight: 600,
-                    overflowY: 'auto',
-                    overflowX: 'hidden'
-                  }}
-                >
-                  {curriculumTree?.length !== 0 && subjectSelected.subject_id === undefined
-                    ? Object.values(curriculumTree).map(nodes => recursionContinueSubjects(nodes))
-                    : Object.values(curriculumTree)
+            {/* treeview */}
+            {subjectView === 'treeview' ? (
+              <Grid item xs={12} md={10} sx={{ m: 2 }}>
+                {expandedNodes && (
+                  <TreeView
+                    expanded={expandedNodes} // expand node by nodeId
+                    defaultCollapseIcon={<ChevronDown />}
+                    defaultExpandIcon={<ChevronRight />}
+                    sx={{
+                      flexGrow: 1,
+                      overflowY: 'auto',
+                      maxWidth: 1200,
+                      height: 600,
+                      overflowY: 'auto',
+                      overflowX: 'hidden'
+                    }}
+                  >
+                    {curriculumTree?.length !== 0 && subjectSelected.subject_id === undefined
+                      ? Object.values(curriculumTree).map(nodes => recursionContinueSubjects(nodes))
+                      : Object.values(curriculumTree)
+                          .sort((a, b) =>
+                            a.subject_id === subjectSelected.subject_id
+                              ? -1
+                              : b.id === subjectSelected.subject_id
+                              ? 1
+                              : a.id - b.id
+                          )
+                          .map(nodes => recursionContinueSubjects(nodes))}
+                  </TreeView>
+                )}
+              </Grid>
+            ) : (
+              <Grid
+                container
+                item
+                xs={12}
+                md={10}
+                sx={{ m: { xs: 0, sm: 2 }, height: 600, maxWidth: { xs: 320, xm: 1200 } }}
+              >
+                {/* Filter */}
+                {/* gridview */}
+                <Grid item xs={12} sm={12} md={6} lg={4}>
+                  {/* Pagination */}
+                  <TablePagination
+                    rowsPerPageOptions={[]}
+                    component='div'
+                    size='small'
+                    count={
+                      subjectsSE66.filter(
+                        f =>
+                          // case 1 select all filters
+                          (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                            f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                            f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected) ||
+                          // case 2 select two of three
+                          // category and type
+                          (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                            f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                            !groupsSelected) ||
+                          // category and group
+                          (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                            f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                            !typesSelected) ||
+                          // type and group
+                          (f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                            f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                            !categoriesSelected) ||
+                          // case 3 select only one of three
+                          // only category
+                          (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                            !typesSelected &&
+                            !groupsSelected) ||
+                          // only type
+                          (f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                            !categoriesSelected &&
+                            !groupsSelected) ||
+                          // only group
+                          (f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                            !categoriesSelected &&
+                            !typesSelected) ||
+                          (!categoriesSelected && !typesSelected && !groupsSelected)
+                      ).length
+                    }
+                    rowsPerPage={16}
+                    page={page}
+                    onPageChange={handleChangePage}
+                  />
+                </Grid>
+                <Grid container item xs={12} sm={12} lg={8} spacing={2}>
+                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                    <Selection
+                      disabled={categoriesSubject[0] === undefined}
+                      label={'Category'}
+                      height={40}
+                      width={'100%'}
+                      selectionValue={categoriesSelected}
+                      firstItemText={'แสดงทั้งหมด'}
+                      handleChange={e => {
+                        setCategoriesSelected(e.target.value)
+                      }}
+                      Items={Object.values(categoriesSubject).map(menu => (
+                        <MenuItem key={menu} value={menu}>
+                          {menu}
+                        </MenuItem>
+                      ))}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                    <Selection
+                      disabled={typesSubject[0] === undefined}
+                      label={'Type'}
+                      height={40}
+                      width={'100%'}
+                      selectionValue={typesSelected}
+                      firstItemText={'แสดงทั้งหมด'}
+                      handleChange={e => setTypesSelected(e.target.value)}
+                      Items={Object.values(typesSubject).map(menu => (
+                        <MenuItem key={menu} value={menu}>
+                          {menu}
+                        </MenuItem>
+                      ))}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                    <Selection
+                      disabled={groupsSubject[0] === undefined}
+                      label={'Group'}
+                      height={40}
+                      width={'100%'}
+                      selectionValue={groupsSelected}
+                      firstItemText={'แสดงทั้งหมด'}
+                      handleChange={e => setGroupsSelected(e.target.value)}
+                      Items={Object.values(groupsSubject).map(menu => (
+                        <MenuItem key={menu} value={menu}>
+                          {menu}
+                        </MenuItem>
+                      ))}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ mt: 6, overflow: 'auto' }}>
+                    <Grid container spacing={6} sx={{ p: 2 }}>
+                      {subjectsSE66
                         .sort((a, b) =>
                           a.subject_id === subjectSelected.subject_id
                             ? -1
@@ -439,10 +629,102 @@ const Roadmap = ({ curriculumTree }) => {
                             ? 1
                             : a.id - b.id
                         )
-                        .map(nodes => recursionContinueSubjects(nodes))}
-                </TreeView>
-              )}
-            </Grid>
+                        .filter(
+                          f =>
+                            // case 1 select all filters
+                            (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                              f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                              f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected) ||
+                            // case 2 select two of three
+                            // category and type
+                            (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                              f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                              !groupsSelected) ||
+                            // category and group
+                            (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                              f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                              !typesSelected) ||
+                            // type and group
+                            (f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                              f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                              !categoriesSelected) ||
+                            // case 3 select only one of three
+                            // only category
+                            (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
+                              !typesSelected &&
+                              !groupsSelected) ||
+                            // only type
+                            (f.subject_structures[0]?.subjectType?.subject_type_name === typesSelected &&
+                              !categoriesSelected &&
+                              !groupsSelected) ||
+                            // only group
+                            (f.subject_structures[0]?.subjectGroup?.subject_group_name === groupsSelected &&
+                              !categoriesSelected &&
+                              !typesSelected) ||
+                            (!categoriesSelected && !typesSelected && !groupsSelected)
+                        )
+                        .slice(page * 16, page * 16 + 16)
+
+                        .map(value => (
+                          <Grid item xs={12} sm={12} md={6} lg={4} key={value.subject_id}>
+                            <Card
+                              sx={{
+                                height: 65,
+                                background: 'white',
+                                border: subjectSelected.subject_id === value.subject_id ? 1 : 0
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  height: 30,
+
+                                  background: 'lightgray',
+                                  display: 'flex',
+                                  justifyContent: 'space-between'
+                                }}
+                              >
+                                <Typography
+                                  variant='body2'
+                                  sx={{
+                                    m: 1,
+                                    ml: 2,
+                                    fontWeight: 'bold',
+                                    // color: simSubjects.find(v => v.subject_id === value.subject_id) && 'gray',
+                                    color: 'gray',
+                                    display: 'inline' // Ensure inline display
+                                  }}
+                                >
+                                  {value.subject_code}
+                                </Typography>
+                              </Box>
+                              <Box
+                                onClick={() => handleOpenDetails(value)}
+                                sx={{
+                                  height: 35,
+                                  ml: 1.5,
+                                  p: 1,
+                                  display: 'flex',
+                                  direction: 'column',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                <Typography
+                                  variant='body2'
+                                  // color={simSubjects.find(v => v.subject_id === value.subject_id) && 'lightgray'}
+                                  noWrap
+                                >
+                                  {/* Subject ................................................................... */}
+                                  {value.subject_name_en}
+                                </Typography>
+                              </Box>
+                            </Card>
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </Box>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         )}
       </Grid>
@@ -556,7 +838,7 @@ const Roadmap = ({ curriculumTree }) => {
                 </Typography>
               </Grid>
               {[1, 2, 3, 4].map((item, index) => (
-                <Grid key={item} item xs={6} lg={4}>
+                <Grid key={item} item xs={12} sm={6} lg={4}>
                   <Card sx={{ height: 65, background: 'white' }}>
                     <Box
                       sx={{
