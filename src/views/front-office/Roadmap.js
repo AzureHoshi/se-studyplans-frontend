@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControlLabel,
   Grid,
   Hidden,
@@ -35,7 +36,7 @@ const HeadTypography = styled(Typography)(({ theme }) => ({
   fontSize: 14
 }))
 
-const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
+const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66 }) => {
   const [displayMode, setDisplayMode] = useState(0) // 0 : roadmap detail, 1: Subjects ,2: Study Plan
   const [expandedNodes, setExpandedNodes] = useState([])
   const [anchorEl, setAnchorEl] = useState(null)
@@ -57,6 +58,18 @@ const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
   const [categoriesSubject, setCategoriesSubject] = useState([])
   const [typesSubject, setTypesSubject] = useState([])
   const [groupsSubject, setGroupsSubject] = useState([])
+
+  // for display study plan
+  const yearSemesterArray = [
+    { year: 1, semester: 1 },
+    { year: 1, semester: 2 },
+    { year: 2, semester: 1 },
+    { year: 2, semester: 2 },
+    { year: 3, semester: 1 },
+    { year: 3, semester: 2 },
+    { year: 4, semester: 1 },
+    { year: 4, semester: 2 }
+  ]
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -176,6 +189,84 @@ const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
       return store
     })
   }
+
+  function getUniqueValues(arr, propertyPath) {
+    const uniqueValuesSet = new Set()
+
+    arr?.forEach(obj => {
+      // Use propertyPath to access nested properties
+      const nestedProperties = propertyPath.split('.')
+      let propertyValue = obj
+
+      for (let prop of nestedProperties) {
+        if (propertyValue && propertyValue.hasOwnProperty(prop)) {
+          propertyValue = propertyValue[prop]
+        } else {
+          // Handle cases where the nested property doesn't exist
+          propertyValue = undefined
+          break
+        }
+      }
+
+      // Add the value to the Set
+      uniqueValuesSet.add(propertyValue)
+    })
+
+    // Convert the Set back to an array and return it
+
+    const uniqueValuesArray = Array.from(uniqueValuesSet)
+
+    return uniqueValuesArray
+  }
+  const getUniqueMultiValues = (arr, propertyPath1, propertyPath2, outputName1, outputName2) => {
+    const uniqueValuesSet = new Set()
+
+    arr.forEach(obj => {
+      const nestedProperties1 = propertyPath1.split('.')
+      const nestedProperties2 = propertyPath2.split('.')
+      let propertyValue1 = obj
+      let propertyValue2 = obj
+
+      for (let prop of nestedProperties1) {
+        if (propertyValue1 && propertyValue1.hasOwnProperty(prop)) {
+          propertyValue1 = propertyValue1[prop]
+        } else {
+          propertyValue1 = undefined
+          break
+        }
+      }
+
+      for (let prop of nestedProperties2) {
+        if (propertyValue2 && propertyValue2.hasOwnProperty(prop)) {
+          propertyValue2 = propertyValue2[prop]
+        } else {
+          propertyValue2 = undefined
+          break
+        }
+      }
+
+      const uniqueObject = {
+        [outputName1]: propertyValue1,
+        [outputName2]: propertyValue2
+      }
+
+      uniqueValuesSet.add(JSON.stringify(uniqueObject))
+    })
+
+    const uniqueValuesArray = Array.from(uniqueValuesSet).map(str => JSON.parse(str))
+
+    return uniqueValuesArray
+  }
+
+  const UniqueCategories = getUniqueValues(curriculumScopeSE66, 'subjectCategory.subject_category_name')
+
+  const UniqueTypes = getUniqueMultiValues(
+    curriculumScopeSE66,
+    'subjectCategory.subject_category_name',
+    'subjectType.subject_type_name',
+    'subject_category_name',
+    'subject_type_name'
+  )
 
   useEffect(() => {
     if (subjectsSE66) {
@@ -725,6 +816,200 @@ const Roadmap = ({ curriculumTree, subjectsSE66 }) => {
                 </Grid>
               </Grid>
             )}
+          </Grid>
+        )}
+        {displayMode === 2 && (
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
+              <Grid item xs={12} sx={{ pb: 12 }}>
+                <Button onClick={() => handleChangeDisplayMode(0)} variant={'contained'}>
+                  Back
+                </Button>
+              </Grid>
+              <Box>
+                <Typography variant='h6' sx={{ fontFamily: 'Segoe UI', mb: 6 }}>
+                  แผนแนะนำ มคอ.2 Software Engineering 66
+                </Typography>
+              </Box>
+              <Grid container sx={{ width: '100%', px: 4 }}>
+                {UniqueCategories.map(categoryHeader => (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    key={categoryHeader}
+                    maxWidth={'100%'}
+                    sx={{ pl: 3, pr: 6, mb: 6, borderLeft: 1, borderColor: 'lightgrey' }}
+                  >
+                    {curriculumScopeSE66?.filter(
+                      categoryHasCredit =>
+                        categoryHasCredit.subject_category_id !== null &&
+                        categoryHasCredit.subject_type_id === null &&
+                        categoryHasCredit.subject_group_id === null &&
+                        categoryHasCredit.subjectCategory?.subject_category_name === categoryHeader
+                    ).length > 0 ? (
+                      curriculumScopeSE66
+                        ?.filter(
+                          categoryHasCredit =>
+                            categoryHasCredit.subject_category_id !== null &&
+                            categoryHasCredit.subject_type_id === null &&
+                            categoryHasCredit.subject_group_id === null &&
+                            categoryHasCredit.subjectCategory?.subject_category_name === categoryHeader
+                        )
+                        .map(categoryHasCreditResult => (
+                          <Box
+                            key={categoryHasCreditResult.curriculum_structures_v2_id}
+                            sx={{ display: 'flex', justifyContent: 'space-between' }}
+                          >
+                            <Typography variant='body1'>
+                              {categoryHasCreditResult?.subjectCategory?.subject_category_name}
+                            </Typography>
+                            <Box sx={{ display: 'flex' }}>
+                              <Typography variant='body2' sx={{ display: 'inline' }}>
+                                {categoryHasCreditResult?.credit_total}
+                              </Typography>
+                              <Typography variant='body2' sx={{ ml: 2 }}>
+                                Credit
+                              </Typography>
+                            </Box>
+                          </Box>
+                        ))
+                    ) : (
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='body1' key={categoryHeader}>
+                          {categoryHeader}
+                        </Typography>
+                        <Typography variant='body2'>Credit</Typography>
+                      </Box>
+                    )}
+
+                    {curriculumScopeSE66
+                      ?.filter(
+                        case1 =>
+                          // condition category && type or category && group
+                          (case1.subject_category_id !== null &&
+                            case1.subject_type_id !== null &&
+                            case1.subjectCategory?.subject_category_name === categoryHeader &&
+                            case1.subject_group_id === null) ||
+                          (case1.subject_category_id !== null &&
+                            case1.subject_group_id !== null &&
+                            case1.subjectCategory?.subject_category_name === categoryHeader &&
+                            case1.subject_type_id === null)
+                      )
+                      .map(case1Result => (
+                        <Box key={case1Result.curriculum_structures_v2_id}>
+                          {case1Result.subject_type_id !== null ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                              <Typography variant='body2'>{case1Result.subjectType?.subject_type_name}</Typography>
+                              <Typography variant='body2' display='inline'>
+                                {case1Result?.credit_total}
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                              <Typography variant='body2'>{case1Result.subjectGroup?.subject_group_name}</Typography>
+                              <Typography variant='body2' display='inline'>
+                                {case1Result?.credit_total}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      ))}
+
+                    {UniqueTypes.filter(filterType => filterType.subject_category_name === categoryHeader).map(
+                      typeHeader => (
+                        <Box key={typeHeader.subject_type_name} sx={{ ml: 3 }}>
+                          {/* {typeHeader.subject_type_name} */}
+
+                          {curriculumScopeSE66
+                            ?.filter(
+                              case1 =>
+                                // condition category && type
+                                case1.subject_category_id !== null &&
+                                case1.subject_type_id !== null &&
+                                case1.subject_group_id === null
+                            )
+                            .map(case1Duplicate => (
+                              <Box key={case1Duplicate.curriculum_structures_v2_id}>
+                                {case1Duplicate.subjectType.subject_type_name !== typeHeader.subject_type_name && (
+                                  <Typography>{typeHeader.subject_type_name}</Typography>
+                                )}
+                              </Box>
+                            ))}
+
+                          {/* <Typography>{typeHeader.subject_type_name}</Typography> */}
+
+                          {/* case 2 */}
+
+                          {curriculumScopeSE66
+                            ?.filter(
+                              case2 =>
+                                // condition category && type && group
+                                case2.subject_category_id !== null &&
+                                case2.subject_type_id !== null &&
+                                case2.subject_group_id !== null &&
+                                case2.subjectCategory?.subject_category_name === categoryHeader &&
+                                case2.subjectType?.subject_type_name === typeHeader.subject_type_name
+                            )
+                            .map(case2Result => (
+                              <Box key={case2Result.curriculum_structures_v2_id} sx={{ ml: 3 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                                  <Typography variant='body2'>
+                                    {case2Result.subjectGroup?.subject_group_name}
+                                  </Typography>
+                                  <Typography variant='body1' display='inline'>
+                                    {' ' + case2Result.credit_total + ' credit'}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            ))}
+                        </Box>
+                      )
+                    )}
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+            <Grid container item xs={12} spacing={3}>
+              {yearSemesterArray?.map(ys => (
+                <Grid item xs={12} md={6}>
+                  <Card sx={{ p: 6, height: 350 }}>
+                    {studyPlanSE66
+                      ?.filter(
+                        planFilter =>
+                          planFilter.study_plan_record_year === ys.year &&
+                          planFilter.study_plan_record_semester === ys.semester
+                      )
+                      .map((plan, index) => (
+                        <Grid container key={plan.study_plan_record_id}>
+                          <Grid item xs={12}>
+                            {index === 0 && (
+                              <>
+                                <Typography variant='body2' sx={{ color: grey[800], mb: 2 }}>
+                                  {'ปีการศึกษาที่' + ys.year + ' เทอม' + ys.semester}
+                                </Typography>
+                                <Divider />
+                              </>
+                            )}
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Typography variant='caption'>
+                              {plan.study_plan_record_elective_course ? '-' : plan.subjects?.subject_code}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8} sx={{ textAlign: 'start' }}>
+                            <Typography variant='caption'>
+                              {plan.study_plan_record_elective_course
+                                ? plan.study_plan_record_elective_course
+                                : plan.subjects?.subject_name_th}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      ))}
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
         )}
       </Grid>

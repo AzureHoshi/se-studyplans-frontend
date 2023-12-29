@@ -41,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
   })
 }))
 
-const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66 }) => {
+const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66 }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
@@ -269,7 +269,14 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66 }) => {
               </IconButton>
             </Box>
           )}
-          {pageState === 0 && <Roadmap curriculumTree={curriculumTree} subjectsSE66={subjectsSE66} />}
+          {pageState === 0 && (
+            <Roadmap
+              curriculumTree={curriculumTree}
+              subjectsSE66={subjectsSE66}
+              curriculumScopeSE66={curriculumScopeSE66}
+              studyPlanSE66={studyPlanSE66}
+            />
+          )}
           {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
           {pageState === 2 && <StudentSystems />}
         </Box>
@@ -282,14 +289,18 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
   const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
-  const resCurriculumTree = await axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + 2) // for se 66
-  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // for se 66
-
+  // for display subject
+  const resCurriculumSE66Tree = await axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + 2) // 2 for se 66
+  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
+  const resCurriculumSE66Scope = await axios.get(url.BASE_URL + `/curriculum-structures-v2/` + 2) // 2 for se 66
+  const resStudyPlanRecords = await axios.get(url.BASE_URL + `/study-plan-records/` + 2) // 2 for se 66
   return {
     props: {
       jobRecommended: resJobRecommended.data.data,
-      curriculumTree: resCurriculumTree.data.data,
-      subjectsSE66: resSubjectsSE66.data.data
+      curriculumTree: resCurriculumSE66Tree.data.data,
+      subjectsSE66: resSubjectsSE66.data.data,
+      curriculumScopeSE66: resCurriculumSE66Scope.data.data,
+      studyPlanSE66: resStudyPlanRecords.data.data
     }
   }
 }

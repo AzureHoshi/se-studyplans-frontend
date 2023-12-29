@@ -51,6 +51,7 @@ const Studyplans = () => {
 
   useEffect(() => {
     if (planSelected) {
+      console.log('planSelected', planSelected)
       const getPlanRecords = axios
         .get(URL_GET_PLAN_RECORDS + planSelected)
         .then(res => (res.data.status !== 404 ? res.data : { data: [] }))
@@ -59,17 +60,14 @@ const Studyplans = () => {
       setYearSelected(1)
       setSemesterSelected(1)
     }
-  }, [planSelected,URL_GET_PLAN_RECORDS])
+  }, [planSelected, URL_GET_PLAN_RECORDS])
 
   const handleCreatePlan = (state, createBy, setIsDone, subPlans) => {
-
     if (state.curriculum_id < 1) {
       if (state.study_plan_name === '') return alert('Please Fill Plan Name')
 
       return alert('Please Choose Curriculum')
-
     } else {
-
       // 0 = no reference
       // 1 = with reference
 
@@ -96,7 +94,7 @@ const Studyplans = () => {
           }
         })
         .catch(err => console.log(err))
-    ch(err => console.log(err))
+      ch(err => console.log(err))
     }
   }
 
@@ -104,7 +102,6 @@ const Studyplans = () => {
     if (Plans.length > 0) {
       console.log(Plans)
       setPlanSelected(String(Plans[0]?.study_plan_id))
-
     } else {
       setPlanSelected(0)
     }
