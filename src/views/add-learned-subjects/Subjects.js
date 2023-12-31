@@ -177,9 +177,11 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectS
                         </Typography>
                       </Grid>
                       <Grid item xs={1} sm={3} md={1} sx={{ pr: 4, pt: 3, textAlign: 'end' }}>
-                        <Tooltip title='has previous subject'>
-                          <AlertCircleOutline sx={{ fontSize: 20 }} />
-                        </Tooltip>
+                        {s.continue_subjects[0].parent !== null ? (
+                          <Tooltip title='has previous subject'>
+                            <AlertCircleOutline sx={{ fontSize: 20 }} />
+                          </Tooltip>
+                        ) : null}
                       </Grid>
                       <Grid container item xs={3} sm={12} md={3} spacing={0}>
                         <Grid item xs={12} sm={6} md={12}>

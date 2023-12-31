@@ -83,9 +83,9 @@ const SubjectDetails = ({ subjectSelected }) => {
                 Previous Subject
               </Typography>
               {subjectSelected?.continue_subjects[0].parent_id !== null ? (
-                <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }} noWrap>
+                <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }}>
                   <p style={{ fontWeight: 'bold' }}>{subjectSelected?.continue_subjects[0]?.parent?.subject_code}</p>
-                  <p style={{ marginLeft: 4 }}>Something..........................</p>
+                  <p style={{ marginLeft: 4 }}>{subjectSelected?.continue_subjects[0]?.parent?.subject_name_th}</p>
                 </Typography>
               ) : (
                 <Typography variant='caption' sx={{ display: 'flex', color: grey[400] }} noWrap>
