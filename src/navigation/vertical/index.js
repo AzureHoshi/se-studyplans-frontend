@@ -100,16 +100,16 @@ export const studentSystemNavigation = () => {
       title: 'Study Plan'
       // icon: BookOutline,
       // path: '/pages/studentsystems'
-    },
-    {
-      title: 'Projects Recommended'
-      // // icon: BookOutline,
-      // path: '/pages/studentsystems'
-    },
-    {
-      title: 'Competencies'
-      // icon: BookOutline,
-      // path: '/pages/studentsystems'
     }
+    // {
+    //   title: 'Projects Recommended'
+    //   // // icon: BookOutline,
+    //   // path: '/pages/studentsystems'
+    // },
+    // {
+    //   title: 'Competencies'
+    //   // icon: BookOutline,
+    //   // path: '/pages/studentsystems'
+    // }
   ]
 }
