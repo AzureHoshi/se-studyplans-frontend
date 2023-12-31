@@ -35,7 +35,7 @@ const AppBarContent = props => {
         justifyContent: { xs: 'space-between', lg: 'end' }
       }}
     >
-      <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
         {hidden ? (
           <IconButton
             color='inherit'
@@ -48,7 +48,7 @@ const AppBarContent = props => {
       </Box>
       {/* menu for student system */}
       {showStudentMenu && (
-        <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center', width: { xs: '100%', lg: 800 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', width: { xs: '100%', lg: 800 } }}>
           <Box
             sx={{
               width: { xs: '40%', md: '20%' },

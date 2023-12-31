@@ -94,12 +94,12 @@ export const studentSystemNavigation = () => {
     {
       title: 'Dashboard',
       // icon: BookOutline,
-      path: '/pages/front-office/student-systems/dashboard/'
+      path: '/pages/front-office/student-systems/dashboard'
     },
     {
-      title: 'Study Plan'
+      title: 'Study Plan',
       // icon: BookOutline,
-      // path: '/pages/studentsystems'
+      path: '/pages/front-office/student-systems/studyplans'
     }
     // {
     //   title: 'Projects Recommended'
