@@ -2,7 +2,19 @@
 import React, { useState, useEffect } from 'react'
 
 // Mui components import URL: https://material-ui.com/
-import { Box, Card, CardContent, Divider, Grid, Hidden, Typography } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Hidden,
+  Snackbar,
+  Stack,
+  Typography
+} from '@mui/material'
 
 // Icon import URL: https://materialdesignicons.com/
 import BookOpenPageVariantOutline from 'mdi-material-ui/BookOpenPageVariantOutline'
@@ -19,12 +31,29 @@ import { url } from 'src/configs/urlConfig'
 const Studyplans = ({ SubjectData }) => {
   const [switchContent, setSwitchContent] = useState(0)
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
+  const [openAlertStatus, setOpenAlertStatus] = useState(true)
   const [subjectSelected, setSubjectSelected] = useState([])
+
+  const handleShowAlert = () => {
+    setOpenAlertStatus(true)
+  }
 
   return (
     <CustomLayout
       content={
         <Box>
+          <Stack spacing={2} sx={{ width: '100%' }}>
+            <Snackbar
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              open={openAlertStatus}
+              autoHideDuration={6000}
+              onClose={() => setOpenAlertStatus(false)}
+            >
+              <Alert severity='success' onClose={() => setOpenAlertStatus(false)} sx={{ mb: 6, ml: 2 }}>
+                <AlertTitle sx={{ m: 0, p: 0 }}>ได้ เพิ่ม ENGSEXXX ในเทอมการศึกษาที่ 1/2023</AlertTitle>
+              </Alert>
+            </Snackbar>
+          </Stack>
           <Card>
             <CardContent>
               <Grid container>
@@ -53,12 +82,13 @@ const Studyplans = ({ SubjectData }) => {
                   filterState={filterState}
                   setSubjectSelected={setSubjectSelected}
                   subjectSelected={subjectSelected}
+                  handleShowAlert={handleShowAlert}
                 />
               </Grid>
               {subjectSelected.subject_id !== undefined ? (
                 <Hidden smDown>
                   <Grid item sm={6} lg={7}>
-                    <SubjectDetails subjectSelected={subjectSelected} />
+                    <SubjectDetails subjectSelected={subjectSelected} handleShowAlert={handleShowAlert} />
                   </Grid>
                 </Hidden>
               ) : (

@@ -30,7 +30,15 @@ import CardInfo from './CardInfo'
 import SubjectDetails from './SubjectDetails'
 import { blue, grey, red } from '@mui/material/colors'
 
-const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectSelected, setSubjectSelected }) => {
+const Subjects = ({
+  data,
+  switchContent,
+  setSwitchContent,
+  filterState,
+  subjectSelected,
+  setSubjectSelected,
+  handleShowAlert
+}) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
   const [searchSubject, setSearchSubject] = useState([])
@@ -218,12 +226,12 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectS
           ))}
       </Box>
       <Drawer anchor='right' open={openSubjectDetails} onClose={() => setOpenSubjectDetails(false)}>
-        <Box sx={{ p: '16px 10px 0px', mb: 5, width: 450 }}>
+        <Box sx={{ p: '16px 10px 0px', mb: 5, width: 300 }}>
           <Button variant='outlined' onClick={() => setOpenSubjectDetails(false)}>
             Back
           </Button>
         </Box>
-        <SubjectDetails subjectSelected={subjectSelected} />
+        <SubjectDetails subjectSelected={subjectSelected} handleShowAlert={handleShowAlert} />
       </Drawer>
     </Box>
   )

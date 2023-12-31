@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, Card, CardContent, Divider, Grid, Hidden, Typography } from '@mui/material'
 import { blue, grey, red } from '@mui/material/colors'
 
-const SubjectDetails = ({ subjectSelected }) => {
+const SubjectDetails = ({ subjectSelected, handleShowAlert }) => {
   return (
     <Box>
       <Box sx={{ padding: '1em 1em 0em' }}>
@@ -107,7 +107,7 @@ const SubjectDetails = ({ subjectSelected }) => {
         </CardContent>
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 6 }}>
-          <Button variant='contained' sx={{ px: 4 }}>
+          <Button variant='contained' sx={{ px: 4 }} onClick={handleShowAlert}>
             + Add Subject
           </Button>
           <Button variant='contained' sx={{ px: 4, ml: 2, background: red[200] }}>
