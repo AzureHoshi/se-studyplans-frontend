@@ -30,10 +30,15 @@ import CardInfo from './CardInfo'
 import SubjectDetails from './SubjectDetails'
 import { blue, grey, red } from '@mui/material/colors'
 
-const Subjects = ({ data, switchContent, setSwitchContent, filterState }) => {
+const Subjects = ({ data, switchContent, setSwitchContent, filterState, setSubjectSelected }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
   const [searchSubject, setSearchSubject] = useState([])
+
+  const handleChangeSubject = subject => {
+    setSubjectSelected(subject)
+    console.log(subject)
+  }
 
   const handleCheckScreen = () => {
     if (window.innerWidth > 600) {
@@ -130,6 +135,7 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState }) => {
           )
           .map(s => (
             <List
+              onClick={() => handleChangeSubject(s)}
               key={s.subject_id}
               sx={{ mx: 2, background: searchSubject.subject_id === s.subject_id ? grey[100] : 'white' }}
             >

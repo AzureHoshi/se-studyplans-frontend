@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 
 // Mui components import URL: https://material-ui.com/
-import { Box, Card, CardContent, Grid, Hidden, Typography } from '@mui/material'
+import { Box, Card, CardContent, Divider, Grid, Hidden, Typography } from '@mui/material'
 
 // Icon import URL: https://materialdesignicons.com/
 import BookOpenPageVariantOutline from 'mdi-material-ui/BookOpenPageVariantOutline'
@@ -19,6 +19,7 @@ import { url } from 'src/configs/urlConfig'
 const Studyplans = ({ SubjectData }) => {
   const [switchContent, setSwitchContent] = useState(0)
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
+  const [subjectSelected, setSubjectSelected] = useState([])
 
   return (
     <CustomLayout
@@ -50,13 +51,29 @@ const Studyplans = ({ SubjectData }) => {
                   switchContent={switchContent}
                   setSwitchContent={setSwitchContent}
                   filterState={filterState}
+                  setSubjectSelected={setSubjectSelected}
                 />
               </Grid>
-              <Hidden smDown>
-                <Grid item sm={6} lg={7}>
-                  <SubjectDetails />
-                </Grid>
-              </Hidden>
+              {subjectSelected.subject_id !== undefined ? (
+                <Hidden smDown>
+                  <Grid item sm={6} lg={7}>
+                    <SubjectDetails subjectSelected={subjectSelected} />
+                  </Grid>
+                </Hidden>
+              ) : (
+                <Hidden smDown>
+                  <Grid item sm={6} lg={7}>
+                    <Grid container>
+                      <Grid item xs={6} sx={{ padding: '1em 1em 0em' }}>
+                        <Typography variant='h6' fontSize='22px'>
+                          Subject Details
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </Grid>
+                </Hidden>
+              )}
             </Grid>
           </Card>
         </Box>
