@@ -82,10 +82,16 @@ const SubjectDetails = ({ subjectSelected }) => {
               <Typography variant='subtitle2' color={grey[500]}>
                 Previous Subject
               </Typography>
-              <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }} noWrap>
-                <p style={{ fontWeight: 'bold' }}>ENGXX000</p>
-                <p style={{ marginLeft: 4 }}>Something..........................</p>
-              </Typography>
+              {subjectSelected?.continue_subjects[0].parent_id !== null ? (
+                <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }} noWrap>
+                  <p style={{ fontWeight: 'bold' }}>{subjectSelected?.continue_subjects[0]?.parent?.subject_code}</p>
+                  <p style={{ marginLeft: 4 }}>Something..........................</p>
+                </Typography>
+              ) : (
+                <Typography variant='caption' sx={{ display: 'flex', color: grey[400] }} noWrap>
+                  No Previous Subject
+                </Typography>
+              )}
             </Grid>
           </Grid>
           <Grid container sx={{ marginTop: 4 }}>

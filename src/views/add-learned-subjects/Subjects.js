@@ -1,5 +1,5 @@
 // React import
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 
 // Mui components import URL: https://material-ui.com/
 import {
@@ -34,6 +34,7 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectS
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
   const [searchSubject, setSearchSubject] = useState([])
+  const [customSubjects, setCustomSubjects] = useState([])
 
   const handleChangeSubject = subject => {
     setSubjectSelected(subject)
@@ -47,6 +48,13 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectS
       setOpenSubjectDetails(true)
     }
   }
+
+  useLayoutEffect(() => {
+    if (!data) return
+    const customLabelForAutocomplete = data?.map(d => ({ label: d.subject_code + ' ' + d.subject_name_th }))
+    setCustomSubjects(customLabelForAutocomplete)
+    // console.log('testLabel', customLabelForAutocomplete)
+  }, [data])
 
   return (
     <Box sx={{ height: '100vh', borderRight: { xs: 'none', sm: '2px solid #e5eaef' } }}>
@@ -80,8 +88,8 @@ const Subjects = ({ data, switchContent, setSwitchContent, filterState, subjectS
             disablePortal
             fullWidth
             freeSolo
-            options={data}
-            getOptionLabel={option => (option ? `${option?.subject_code || ''} ${option?.subject_name_th || ''}` : '')}
+            options={customSubjects}
+            getOptionLabel={option => option.label || ''}
             renderInput={params => <TextField {...params} label='Subject Name, Code' />}
             onChange={(e, value) => {
               if (value !== null) {
