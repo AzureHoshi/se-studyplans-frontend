@@ -52,6 +52,7 @@ const Studyplans = ({ SubjectData }) => {
                   setSwitchContent={setSwitchContent}
                   filterState={filterState}
                   setSubjectSelected={setSubjectSelected}
+                  subjectSelected={subjectSelected}
                 />
               </Grid>
               {subjectSelected.subject_id !== undefined ? (
@@ -65,9 +66,7 @@ const Studyplans = ({ SubjectData }) => {
                   <Grid item sm={6} lg={7}>
                     <Grid container>
                       <Grid item xs={6} sx={{ padding: '1em 1em 0em' }}>
-                        <Typography variant='h6' fontSize='22px'>
-                          Subject Details
-                        </Typography>
+                        <Typography sx={{ fontSize: { xs: 16, lg: 20 }, minWidth: 160 }}>Subject Details</Typography>
                       </Grid>
                     </Grid>
                     <Divider />

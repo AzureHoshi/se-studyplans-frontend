@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react'
 
 // Mui components import URL: https://material-ui.com/
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { Box, Button, Card, CardContent, Divider, Grid, Hidden, Typography } from '@mui/material'
+import { blue, grey, red } from '@mui/material/colors'
 
 const SubjectDetails = ({ subjectSelected }) => {
   return (
@@ -11,10 +11,10 @@ const SubjectDetails = ({ subjectSelected }) => {
       <Box sx={{ padding: '1em 1em 0em' }}>
         <Grid container>
           <Grid item xs={6}>
-            <Typography sx={{ fontSize: { xs: 22, sm: 16, lg: 22 }, minWidth: 160 }}>Subject Details</Typography>
+            <Typography sx={{ fontSize: { xs: 16, lg: 20 }, minWidth: 160 }}>Subject Details</Typography>
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Typography fontWeight='bold' sx={{ fontSize: { xs: 22, sm: 16, lg: 22 } }}>
+            <Typography fontWeight='bold' sx={{ fontSize: { xs: 16, lg: 22 } }}>
               {subjectSelected?.subject_code}
             </Typography>
           </Grid>
@@ -25,41 +25,56 @@ const SubjectDetails = ({ subjectSelected }) => {
       <Card>
         <CardContent>
           <Grid container sx={{ padding: 0 }}>
-            <Grid item xs={1} sm={2} md={1.5}>
-              <Typography variant='h3' fontWeight='bold'>
+            <Grid item xs={1.5} sm={2} md={1.5} lg={1.5} sx={{ display: 'flex' }}>
+              <Typography variant='h3' fontWeight='bold' sx={{ fontSize: { xs: 32, md: 40 }, mt: 2, px: 3.5 }}>
                 {subjectSelected?.subject_credit}
               </Typography>
             </Grid>
             <Grid
               item
-              xs={9}
+              xs={10.5}
               sm={10}
-              md={8.5}
-              sx={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+              md={10.5}
+              lg={10.5}
+              sx={{ overflow: 'hidden', display: 'flex', justifyContent: 'space-between', pr: 2 }}
             >
-              <Typography variant='subtitle1' noWrap>
-                {subjectSelected?.subject_name_th}
-              </Typography>
-              <Typography variant='subtitle2' noWrap>
-                {subjectSelected?.subject_name_en}
-              </Typography>
-            </Grid>
-            <Grid item xs={2} sm={12} md={2}>
-              <Typography
-                variant='body2'
-                align='center'
+              <Box sx={{ width: '70%', mt: { xs: 3, lg: 2.5 } }}>
+                <Typography variant='subtitle1' noWrap sx={{ fontSize: { xs: 14, lg: 16 }, lineHeight: 1 }}>
+                  {subjectSelected?.subject_name_th}
+                </Typography>
+                <Typography variant='subtitle2' noWrap sx={{ fontSize: { xs: 14, lg: 16 } }}>
+                  {subjectSelected?.subject_name_en}
+                </Typography>
+              </Box>
+              <Box
                 sx={{
-                  color: '#ffb93d',
-                  backgroundColor: '#fef5e5',
-                  borderRadius: 2,
-                  minWidth: 80,
-                  maxWidth: 120,
-                  mr: { xs: 0, md: 12, lg: 0 },
-                  mt: { xs: 0, sm: 4 }
+                  width: '30%',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center'
                 }}
               >
-                General
-              </Typography>
+                <Hidden only={'sm'}>
+                  <Typography
+                    variant='body2'
+                    align='center'
+                    sx={{
+                      color: subjectSelected.subject_structures[0]?.subject_category_id === 1 ? '#ffb93d' : 'white',
+                      backgroundColor:
+                        subjectSelected.subject_structures[0]?.subject_category_id === 1 ? '#fef5e5' : blue[100],
+                      borderRadius: 2,
+                      minWidth: 110,
+                      mt: { xs: 0, sm: 4 }
+                    }}
+                  >
+                    {subjectSelected.subject_structures[0]?.subject_category_id === 1
+                      ? 'General'
+                      : subjectSelected.subject_structures[0]?.subject_category_id === 2
+                      ? 'Specific'
+                      : null}
+                  </Typography>
+                </Hidden>
+              </Box>
             </Grid>
           </Grid>
           <Grid container sx={{ marginTop: 4 }}>
@@ -85,8 +100,13 @@ const SubjectDetails = ({ subjectSelected }) => {
           </Grid>
         </CardContent>
         <Divider />
-        <Box sx={{ padding: '1em 1em 0em' }}>
-          <Button variant='contained'>Add</Button>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 6 }}>
+          <Button variant='contained' sx={{ px: 4 }}>
+            + Add Subject
+          </Button>
+          <Button variant='contained' sx={{ px: 4, ml: 2, background: red[200] }}>
+            Remove Subject
+          </Button>
         </Box>
       </Card>
     </Box>

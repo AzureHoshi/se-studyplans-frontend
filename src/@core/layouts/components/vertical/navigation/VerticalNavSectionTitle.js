@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import MuiListSubheader from '@mui/material/ListSubheader'
 
 // ** Styled Components
-const ListSubheader = styled(props => <MuiListSubheader component='li' {...props} />)(({ theme }) => ({
+const ListSubheader = styled(props => <MuiListSubheader component='div' {...props} />)(({ theme }) => ({
   lineHeight: 1,
   display: 'flex',
   position: 'relative',
