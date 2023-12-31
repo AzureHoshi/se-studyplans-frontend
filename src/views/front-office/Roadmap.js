@@ -1018,6 +1018,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
         open={openDetails}
         onClose={() => {
           setOpenDetails(false)
+          setSubjectSelected([])
           // setTimeout(() => {
           //   setSubjectSelected([])
           // }, 200)
@@ -1039,6 +1040,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
           <Button
             onClick={() => {
               setOpenDetails(false)
+              setSubjectSelected([])
               // setTimeout(() => {
               //   setSubjectSelected([])
               // }, 200)

@@ -31,11 +31,18 @@ import { url } from 'src/configs/urlConfig'
 const Studyplans = ({ SubjectData }) => {
   const [switchContent, setSwitchContent] = useState(0)
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
-  const [openAlertStatus, setOpenAlertStatus] = useState(true)
+  const [openAlertStatus, setOpenAlertStatus] = useState(false)
+  const [alertText, setAlertText] = useState('')
+  const [AlertType, setAlertType] = useState('success')
   const [subjectSelected, setSubjectSelected] = useState([])
 
-  const handleShowAlert = () => {
-    setOpenAlertStatus(true)
+  const handleShowAlert = (text, type = 'success') => {
+    if (!text || !type) return
+    setAlertType(type)
+    setAlertText(text)
+    setTimeout(() => {
+      setOpenAlertStatus(true)
+    }, 200)
   }
 
   return (
@@ -49,8 +56,9 @@ const Studyplans = ({ SubjectData }) => {
               autoHideDuration={6000}
               onClose={() => setOpenAlertStatus(false)}
             >
-              <Alert severity='success' onClose={() => setOpenAlertStatus(false)} sx={{ mb: 6, ml: 2 }}>
-                <AlertTitle sx={{ m: 0, p: 0 }}>ได้ เพิ่ม ENGSEXXX ในเทอมการศึกษาที่ 1/2023</AlertTitle>
+              <Alert severity={AlertType} onClose={() => setOpenAlertStatus(false)} sx={{ mb: 6, ml: 2 }}>
+                <AlertTitle sx={{ m: 0, p: 0 }}>{alertText}</AlertTitle>
+                {/* <AlertTitle sx={{ m: 0, p: 0 }}>ได้ เพิ่ม ENGSEXXX ในเทอมการศึกษาที่ 1/2023</AlertTitle> */}
               </Alert>
             </Snackbar>
           </Stack>

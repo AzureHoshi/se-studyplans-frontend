@@ -107,10 +107,18 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert }) => {
         </CardContent>
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 6 }}>
-          <Button variant='contained' sx={{ px: 4 }} onClick={handleShowAlert}>
+          <Button
+            variant='contained'
+            sx={{ px: 4 }}
+            onClick={() => handleShowAlert('ได้เพิ่ม ENGSEXXX ในเทอม 1/2023 สำเร็จ', 'success')}
+          >
             + Add Subject
           </Button>
-          <Button variant='contained' sx={{ px: 4, ml: 2, background: red[200] }}>
+          <Button
+            variant='contained'
+            sx={{ px: 4, ml: 2, background: red[200], ':hover': { background: red[300] } }}
+            onClick={() => handleShowAlert('ได้ลบ ENGSEXXX ออกจากเทอม 1/2023 สำเร็จ', 'warning')}
+          >
             Remove Subject
           </Button>
         </Box>
