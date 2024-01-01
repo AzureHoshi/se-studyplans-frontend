@@ -35,6 +35,7 @@ const Studyplans = ({ SubjectData }) => {
   const [alertText, setAlertText] = useState('')
   const [AlertType, setAlertType] = useState('success')
   const [subjectSelected, setSubjectSelected] = useState([])
+  const [currentTerm, setCurrentTerm] = useState('')
 
   const handleShowAlert = (text, type = 'success') => {
     if (!text || !type) return
@@ -79,7 +80,13 @@ const Studyplans = ({ SubjectData }) => {
           </Card>
           <Card variant='outlined' sx={{ marginTop: 6, display: 'flex' }}>
             <Hidden lgDown>
-              <CardInfo setSwitchContent={setSwitchContent} setFilterState={setFilterState} />
+              <CardInfo
+                setSwitchContent={setSwitchContent}
+                setFilterState={setFilterState}
+                closeDrawer={() => 0}
+                currentTerm={currentTerm}
+                setCurrentTerm={setCurrentTerm}
+              />
             </Hidden>
             <Grid container>
               <Grid item xs={12} sm={6} lg={5}>
@@ -91,6 +98,9 @@ const Studyplans = ({ SubjectData }) => {
                   setSubjectSelected={setSubjectSelected}
                   subjectSelected={subjectSelected}
                   handleShowAlert={handleShowAlert}
+                  setFilterState={setFilterState}
+                  currentTerm={currentTerm}
+                  setCurrentTerm={setCurrentTerm}
                 />
               </Grid>
               {subjectSelected.subject_id !== undefined ? (

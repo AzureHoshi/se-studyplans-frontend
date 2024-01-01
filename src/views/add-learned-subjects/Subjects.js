@@ -37,7 +37,10 @@ const Subjects = ({
   filterState,
   subjectSelected,
   setSubjectSelected,
-  handleShowAlert
+  handleShowAlert,
+  setFilterState,
+  currentTerm,
+  setCurrentTerm
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -73,23 +76,15 @@ const Subjects = ({
               <DockLeft />
             </IconButton>
             <Drawer anchor='left' open={open} onClose={() => setOpen(false)}>
-              <CardInfo setSwitchContent={setSwitchContent} />
+              <CardInfo
+                setSwitchContent={setSwitchContent}
+                setFilterState={setFilterState}
+                closeDrawer={() => setOpen(false)}
+                setCurrentTerm={setCurrentTerm}
+                currentTerm={currentTerm}
+              />
             </Drawer>
           </Hidden>
-          {/* <TextField
-            variant='outlined'
-            placeholder='Search...'
-            fullWidth
-            size='small'
-            sx={{ borderRadius: '7px', backgroundColor: '#e5eaef' }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Magnify />
-                </InputAdornment>
-              )
-            }}
-          /> */}
           <Autocomplete
             value={searchSubject || []}
             size='small'
@@ -118,12 +113,18 @@ const Subjects = ({
               <DockLeft />
             </IconButton>
             <Drawer anchor='left' open={open} onClose={() => setOpen(false)}>
-              <CardInfo setSwitchContent={setSwitchContent} />
+              <CardInfo
+                setSwitchContent={setSwitchContent}
+                setFilterState={setFilterState}
+                closeDrawer={() => setOpen(false)}
+                setCurrentTerm={setCurrentTerm}
+                currentTerm={currentTerm}
+              />
             </Drawer>
           </Hidden>
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='h6' fontSize='16px'>
-              1/2023
+              {currentTerm}
             </Typography>
             <Typography variant='h6' fontSize='16px'>
               16 Credits

@@ -21,6 +21,7 @@ import Recommendation from 'src/views/front-office/Recommendation'
 import StudentSystems from 'src/views/front-office/StudentSystems'
 import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
+import { userProfile } from 'src/dummy'
 
 const drawerWidth = 350
 
@@ -46,128 +47,10 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
-
   const [isSmallScreen, setIsSmallScreen] = useState(false)
-
-  useEffect(() => {
-    // Function to check if the screen is small
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 600) // Adjust the threshold as needed
-    }
-
-    // Initial check on mount
-    checkScreenSize()
-
-    // Event listener to update when the window is resized
-    window.addEventListener('resize', checkScreenSize)
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', checkScreenSize)
-    }
-  }, []) // Empty dependency array ensures that this effect runs only on mount and unmount
-
-  console.log('curriculumTree', curriculumTree)
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {!isSmallScreen && (
-        <Drawer
-          sx={{
-            width: { xs: 70, sm: 120, lg: 400 },
-            '& .MuiDrawer-paper': {
-              width: { xs: 70, sm: 120, lg: 400 },
-              boxSizing: 'border-box'
-            }
-          }}
-          variant='persistent'
-          anchor='left'
-          open={open}
-        >
-          <Box sx={{ height: '100%', overflow: 'hidden' }}>
-            {/* <Hidden lgUp>
-              <Box sx={{ mt: 8, mr: 2, height: '5%', display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton>
-                  <ChevronLeftIcon onClick={handleDrawerClose} />
-                </IconButton>
-              </Box>
-            </Hidden> */}
-            <Box
-              sx={{
-                ml: { xs: 2, lg: -12 },
-                mt: 24,
-                height: '100%',
-                display: 'grid',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
-                <Hidden lgDown>
-                  <Grid item xs={12}>
-                    <Button
-                      sx={{ fontSize: 12 }}
-                      variant='text'
-                      startIcon={<LibraryBooksIcon />}
-                      onClick={() => setPageState(0)}
-                    >
-                      Roadmap
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      sx={{ fontSize: 12 }}
-                      variant='text'
-                      startIcon={<DashboardIcon />}
-                      onClick={() => setPageState(1)}
-                    >
-                      Recommendation
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      sx={{ fontSize: 12 }}
-                      variant='text'
-                      startIcon={<AssistantPhotoIcon />}
-                      onClick={() => setPageState(2)}
-                    >
-                      Student Systems
-                    </Button>
-                  </Grid>
-                </Hidden>
-                <Hidden lgUp>
-                  <Grid item xs={12}>
-                    <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}></Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant='text' startIcon={<DashboardIcon />} onClick={() => setPageState(1)}></Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant='text' startIcon={<AssistantPhotoIcon />} onClick={() => setPageState(2)}></Button>
-                  </Grid>
-                </Hidden>
-              </Grid>
-              <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Hidden lgDown>
-                  <Button variant='text' startIcon={<ChevronLeftIcon />}>
-                    CE Reform
-                  </Button>
-                </Hidden>
-                <Hidden lgUp>
-                  <Button variant='text' startIcon={<ChevronLeftIcon />}></Button>
-                </Hidden>
-              </Box>
-            </Box>
-          </Box>
-        </Drawer>
-      )}
       <SwipeableDrawer onOpen={() => null} open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
         <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6 }}>
           <Grid item xs={12}>
@@ -254,13 +137,6 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
         </Grid>
       </SwipeableDrawer>
       <Main open={open}>
-        {/* <Hidden lgUp>
-          <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'flex-start' }}>
-            <IconButton>
-              <MenuIcon onClick={handleDrawerOpen} />
-            </IconButton>
-          </Box>
-        </Hidden> */}
         <Box sx={{ ml: { xs: 0, md: 12 }, mt: 0 }}>
           {isSmallScreen && (
             <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
@@ -290,10 +166,14 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 export async function getServerSideProps() {
   const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
   // for display subject
-  const resCurriculumSE66Tree = await axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + 2) // 2 for se 66
-  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
-  const resCurriculumSE66Scope = await axios.get(url.BASE_URL + `/curriculum-structures-v2/` + 2) // 2 for se 66
-  const resStudyPlanRecords = await axios.get(url.BASE_URL + `/study-plan-records/` + 2) // 2 for se 66
+  const resCurriculumSE66Tree = await axios.get(
+    url.BASE_URL + `/continue-subjects-curriculum/` + userProfile.curriculum_id
+  ) // 2 for se 66
+  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + userProfile.curriculum_id) // 2 for se 66
+  const resCurriculumSE66Scope = await axios.get(
+    url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
+  ) // 2 for se 66
+  const resStudyPlanRecords = await axios.get(url.BASE_URL + `/study-plan-records/` + userProfile.curriculum_id) // 2 for se 66
   return {
     props: {
       jobRecommended: resJobRecommended.data.data,

@@ -18,6 +18,7 @@ import { grey } from '@mui/material/colors'
 import { Button, Hidden, Typography } from '@mui/material'
 import { mdiExitToApp, mdiFlagCheckered, mdiFlagPlus } from '@mdi/js'
 import Icon from '@mdi/react'
+import { userProfile } from 'src/dummy'
 
 const AppBarContent = props => {
   // ** Props
@@ -110,7 +111,7 @@ const AppBarContent = props => {
                   mx: { xs: 'auto', md: 2 }
                 }}
               >
-                #635432060XXX
+                {userProfile.std_no}
               </Typography>
               <Typography
                 variant='body2'
@@ -122,7 +123,7 @@ const AppBarContent = props => {
                   mx: { xs: 'auto', md: 0 }
                 }}
               >
-                Profile Name
+                {userProfile.first_name + ' ' + userProfile.last_name}
               </Typography>
             </Box>
           </Box>
