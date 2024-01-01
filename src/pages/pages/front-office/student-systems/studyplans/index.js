@@ -115,6 +115,52 @@ const Studyplans = ({ SubjectData }) => {
     setOpenAddDialog(false)
   }
 
+  const handleAddSemester = type => {
+    if (!type) reuturn
+    if (type === 'normal') {
+      let newYear =
+        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + termLabel[termLabel.length - 1].year).toString()
+      let newSemester = termLabel[termLabel.length - 1].semester === 2 ? 1 : 2
+      let newTermLabel = String(newSemester + '/' + newYear)
+      let result = window.confirm('ต้องสร้างปีการศึกษา ' + newTermLabel + ' เพิ่ม?')
+      if (result) {
+        const newObject = [
+          ...termLabel,
+          {
+            i: termLabel[termLabel.length - 1].i + 1,
+            year:
+              termLabel[termLabel.length - 1].semester === 2
+                ? termLabel[termLabel.length - 1].year
+                : termLabel[termLabel.length - 1].year + 1,
+            semester: newSemester,
+            label: newTermLabel
+          }
+        ]
+
+        setTermLabel(newObject)
+      }
+    } else if (type === 'summer') {
+      let newYear =
+        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + summerLabel[summerLabel.length - 1].year).toString()
+
+      let newTermLabel = String(3 + '/' + newYear)
+      let result = window.confirm('ต้องสร้างปีการศึกษา ' + newTermLabel + ' เพิ่ม?')
+      if (result) {
+        const newObject = [
+          ...summerLabel,
+          {
+            i: summerLabel[summerLabel.length - 1].i + 1,
+            year: summerLabel[summerLabel.length - 1].year + 1,
+            semester: 3,
+            label: newTermLabel
+          }
+        ]
+
+        setSummerLabel(newObject)
+      }
+    }
+  }
+
   return (
     <CustomLayout
       content={
@@ -204,8 +250,28 @@ const Studyplans = ({ SubjectData }) => {
                   </Grid>
                 )}
               </Grid>
-              <Grid container sx={{ border: 1, borderRadius: 2, borderColor: grey[300], p: 3, mt: 2.5 }}>
-                <DialogContent>test</DialogContent>
+              <Grid container sx={{ border: 1, borderRadius: 2, borderColor: grey[300], mt: 2.5 }}>
+                <DialogContent>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <FormControl>
+                        <FormLabel sx={{ fontSize: '0.875rem' }}>เพิ่มปีการศึกษา</FormLabel>
+                        <RadioGroup
+                          row
+                          // defaultValue='normal'
+                          aria-label='semestertype'
+                          onChange={e => {
+                            handleAddSemester(e.target.value)
+                            // handleChangeSemesterType(e.target.value)
+                          }}
+                        >
+                          <FormControlLabel sx={{ mr: 8 }} value='normal' label='ภาคปกติ(normal)' control={<Radio />} />
+                          <FormControlLabel value='summer' label='ภาคฤดูร้อน(summer)' control={<Radio />} />
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
               </Grid>
             </DialogContent>
             <DialogActions>
