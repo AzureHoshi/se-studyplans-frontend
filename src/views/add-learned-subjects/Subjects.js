@@ -42,7 +42,8 @@ const Subjects = ({
   currentTerm,
   setCurrentTerm,
   termLabel,
-  summerLabel
+  summerLabel,
+  handleOpenAddDialog
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -241,7 +242,11 @@ const Subjects = ({
             Back
           </Button>
         </Box>
-        <SubjectDetails subjectSelected={subjectSelected} handleShowAlert={handleShowAlert} />
+        <SubjectDetails
+          subjectSelected={subjectSelected}
+          handleShowAlert={handleShowAlert}
+          handleOpenAddDialog={handleOpenAddDialog}
+        />
       </Drawer>
     </Box>
   )

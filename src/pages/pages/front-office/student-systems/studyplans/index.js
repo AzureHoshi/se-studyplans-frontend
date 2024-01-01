@@ -108,6 +108,7 @@ const Studyplans = ({ SubjectData }) => {
   }
 
   const handleOpenAddDialog = () => {
+    setCurrentTerm(termLabel[0].label)
     setOpenAddDialog(true)
   }
 
@@ -138,6 +139,7 @@ const Studyplans = ({ SubjectData }) => {
         ]
 
         setTermLabel(newObject)
+        setSemesterType('normal')
       }
     } else if (type === 'summer') {
       let newYear =
@@ -157,6 +159,7 @@ const Studyplans = ({ SubjectData }) => {
         ]
 
         setSummerLabel(newObject)
+        setSemesterType('summer')
       }
     }
   }
@@ -267,7 +270,7 @@ const Studyplans = ({ SubjectData }) => {
                     <Grid item xs={12}>
                       <FormControl>
                         <FormLabel sx={{ fontSize: '0.875rem' }}>เพิ่มปีการศึกษา</FormLabel>
-                        <RadioGroup
+                        {/* <RadioGroup
                           row
                           // defaultValue='normal'
                           aria-label='semestertype'
@@ -279,7 +282,31 @@ const Studyplans = ({ SubjectData }) => {
                         >
                           <FormControlLabel sx={{ mr: 8 }} value='normal' label='ภาคปกติ(normal)' control={<Radio />} />
                           <FormControlLabel value='summer' label='ภาคฤดูร้อน(summer)' control={<Radio />} />
-                        </RadioGroup>
+                        </RadioGroup> */}
+                        <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1.5 }}>
+                          <Button
+                            onClick={() => {
+                              handleAddSemester('normal')
+                            }}
+                            variant='text'
+                            sx={{ width: 200 }}
+                            fullWidth={true}
+                            style={{ justifyContent: 'flex-start' }}
+                          >
+                            + ภาคปกติ(normal)
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              handleAddSemester('summer')
+                            }}
+                            variant='text'
+                            sx={{ width: 200 }}
+                            fullWidth={true}
+                            style={{ justifyContent: 'flex-start' }}
+                          >
+                            + ภาคฤดูร้อน(summer)
+                          </Button>
+                        </Box>
                       </FormControl>
                     </Grid>
                   </Grid>
@@ -336,6 +363,7 @@ const Studyplans = ({ SubjectData }) => {
                   setCurrentTerm={setCurrentTerm}
                   termLabel={termLabel}
                   summerLabel={summerLabel}
+                  handleOpenAddDialog={handleOpenAddDialog}
                 />
               </Grid>
               {subjectSelected.subject_id !== undefined ? (

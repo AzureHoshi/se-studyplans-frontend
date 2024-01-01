@@ -91,12 +91,9 @@ const CardInfo = ({
             <Selection
               height={40}
               width={'100%'}
-              // label={'แผนการศึกษา'}
-              // disabled={true}
               selectionValue={currentTerm || 0}
               defaultValue={0}
               handleChange={e => {
-                // setPlanSelected(e.target.value)
                 setSwitchContent(1)
                 setMenuSubjectCursor(0)
                 setMenuSemesterCursor(0)
@@ -109,11 +106,29 @@ const CardInfo = ({
               ))}
             />
           </Box>
-          <Typography variant='body2' sx={{ mt: 3 }}>
-            Summer
-          </Typography>
         </Box>
-        <List sx={{ mt: -10 }}>
+        <Box sx={{ m: 6 }}>
+          <Typography variant='body2'>Summer</Typography>
+          <Selection
+            height={40}
+            width={'100%'}
+            selectionValue={currentTerm || 0}
+            defaultValue={0}
+            handleChange={e => {
+              setSwitchContent(1)
+              setMenuSubjectCursor(0)
+              setMenuSemesterCursor(0)
+              handleChangeTerm(e.target.value)
+            }}
+            Items={summerLabel?.map((item, index) => (
+              <MenuItem key={index} value={item.label} onClick={() => setSwitchContent(1)}>
+                {item.label}
+              </MenuItem>
+            ))}
+          />
+        </Box>
+
+        {/* <List sx={{ mt: -10 }}>
           {summerLabel?.map((item, index) => (
             <ListItem
               key={index}
@@ -132,7 +147,7 @@ const CardInfo = ({
               </ListItemButton>
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </Box>
     </Box>
   )
