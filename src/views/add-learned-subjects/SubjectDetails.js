@@ -25,20 +25,41 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert, handleOpenAddDialog,
       <Card>
         <CardContent>
           <Grid container sx={{ padding: 0 }}>
-            <Grid item xs={1.5} sm={2} md={1.5} lg={1.5} sx={{ display: 'flex' }}>
+            <Grid item xs={2} sm={12} md={1.5} lg={1.5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant='h3' fontWeight='bold' sx={{ fontSize: { xs: 32, md: 40 }, mt: 2, px: 3.5 }}>
                 {subjectSelected?.subject_credit}
               </Typography>
+              <Hidden mdUp>
+                <Typography
+                  variant='body2'
+                  align='center'
+                  sx={{
+                    color: subjectSelected.subject_structures[0]?.subject_category_id === 1 ? '#ffb93d' : 'white',
+                    backgroundColor:
+                      subjectSelected.subject_structures[0]?.subject_category_id === 1 ? '#fef5e5' : blue[100],
+                    borderRadius: 2,
+                    minWidth: 110,
+                    mt: 4,
+                    mb: 2
+                  }}
+                >
+                  {subjectSelected.subject_structures[0]?.subject_category_id === 1
+                    ? 'General'
+                    : subjectSelected.subject_structures[0]?.subject_category_id === 2
+                    ? 'Specific'
+                    : null}
+                </Typography>
+              </Hidden>
             </Grid>
             <Grid
               item
-              xs={10.5}
-              sm={10}
+              xs={12}
+              sm={12}
               md={10.5}
               lg={10.5}
               sx={{ overflow: 'hidden', display: 'flex', justifyContent: 'space-between', pr: 2 }}
             >
-              <Box sx={{ width: '70%', mt: { xs: 3, lg: 2.5 } }}>
+              <Box sx={{ width: { xs: '100%', md: '70%' }, mt: { xs: 3, lg: 2.5 } }}>
                 <Typography variant='subtitle1' noWrap sx={{ fontSize: { xs: 14, lg: 16 }, lineHeight: 1 }}>
                   {subjectSelected?.subject_name_th}
                 </Typography>
@@ -46,15 +67,15 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert, handleOpenAddDialog,
                   {subjectSelected?.subject_name_en}
                 </Typography>
               </Box>
-              <Box
-                sx={{
-                  width: '30%',
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center'
-                }}
-              >
-                <Hidden only={'sm'}>
+              <Hidden mdDown>
+                <Box
+                  sx={{
+                    width: '30%',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center'
+                  }}
+                >
                   <Typography
                     variant='body2'
                     align='center'
@@ -73,8 +94,8 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert, handleOpenAddDialog,
                       ? 'Specific'
                       : null}
                   </Typography>
-                </Hidden>
-              </Box>
+                </Box>
+              </Hidden>
             </Grid>
           </Grid>
           <Grid container sx={{ marginTop: 4 }}>

@@ -209,7 +209,7 @@ const Subjects = ({
                           md={7}
                           sx={{
                             width: '100%',
-                            overflow: 'hidden',
+                            overflow: { xs: null, md: 'hidden' },
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
                             pr: 2
@@ -222,7 +222,7 @@ const Subjects = ({
                             {s.subject_name_th}
                           </Typography>
                         </Grid>
-                        <Grid item xs={1} sm={3} md={1} sx={{ pr: 4, pt: 3, textAlign: 'end' }}>
+                        <Grid item xs={1} sm={3} md={1} sx={{ pr: 4, pt: { xs: 0, md: 3 }, textAlign: 'end' }}>
                           {s.continue_subjects[0].parent !== null ? (
                             <Tooltip title='has previous subject'>
                               <AlertCircleOutline sx={{ fontSize: 20 }} />
@@ -302,17 +302,17 @@ const Subjects = ({
         </Box>
       )}
       <Drawer anchor='right' open={openSubjectDetails} onClose={() => setOpenSubjectDetails(false)}>
-        <Box sx={{ p: '16px 10px 0px', mb: 5, width: 300 }}>
+        <Box sx={{ m: 2.5, mb: 5, width: 300 }}>
           <Button variant='outlined' onClick={() => setOpenSubjectDetails(false)}>
             Back
           </Button>
+          <SubjectDetails
+            subjectSelected={subjectSelected}
+            handleShowAlert={handleShowAlert}
+            handleOpenAddDialog={handleOpenAddDialog}
+            stdStudyPlans={stdStudyPlans}
+          />
         </Box>
-        <SubjectDetails
-          subjectSelected={subjectSelected}
-          handleShowAlert={handleShowAlert}
-          handleOpenAddDialog={handleOpenAddDialog}
-          stdStudyPlans={stdStudyPlans}
-        />
       </Drawer>
     </Box>
   )
