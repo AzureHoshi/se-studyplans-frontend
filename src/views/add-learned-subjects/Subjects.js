@@ -18,7 +18,8 @@ import {
   ListItem,
   ListItemText,
   ListItemButton,
-  Autocomplete
+  Autocomplete,
+  Divider
 } from '@mui/material'
 
 // Mui components import URL: https://mui.com/material-ui/react-list/
@@ -43,7 +44,9 @@ const Subjects = ({
   setCurrentTerm,
   termLabel,
   summerLabel,
-  handleOpenAddDialog
+  handleOpenAddDialog,
+  stdStudyPlans,
+  setStdStudyPlans
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -63,6 +66,23 @@ const Subjects = ({
     }
   }
 
+  const calculateSumByTermLabel = (data, targetTermLabel) => {
+    // Calculate the sum of subject_credit for each termLabel
+    const sumByTermLabel = data.reduce((acc, curr) => {
+      const { termLabel, subject_credit } = curr
+      acc[termLabel] = (acc[termLabel] || 0) + subject_credit
+      return acc
+    }, {})
+
+    // If a specific targetTermLabel is provided, return its sum
+    if (targetTermLabel) {
+      return sumByTermLabel[targetTermLabel] || 0
+    }
+
+    // Otherwise, return the entire sumByTermLabel object
+    return sumByTermLabel
+  }
+
   useLayoutEffect(() => {
     if (!data) return
     const customLabelForAutocomplete = data?.map(d => ({
@@ -77,6 +97,7 @@ const Subjects = ({
     console.log('searchSubject', searchSubject)
   }, [searchSubject])
 
+  console.log('stdStudyPlans', stdStudyPlans)
   return (
     <Box sx={{ height: '100vh', borderRight: { xs: 'none', sm: '2px solid #e5eaef' } }}>
       {switchContent === 0 && (
@@ -121,7 +142,7 @@ const Subjects = ({
       {switchContent === 1 && (
         <Box sx={{ paddingTop: 5, paddingX: 6, marginBottom: 4, display: 'flex' }}>
           <Hidden lgUp>
-            <IconButton onClick={() => setOpen(true)}>
+            <IconButton onClick={() => setOpen(true)} sx={{ mr: 1.5 }}>
               <DockLeft />
             </IconButton>
             <Drawer anchor='left' open={open} onClose={() => setOpen(false)}>
@@ -136,13 +157,14 @@ const Subjects = ({
               />
             </Drawer>
           </Hidden>
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant='h6' fontSize='16px'>
-              {currentTerm}
-            </Typography>
-            <Typography variant='h6' fontSize='16px'>
-              16 Credits
-            </Typography>
+          <Box sx={{ mt: 2, width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 16, md: 20 } }}>{currentTerm}</Typography>
+            <Box sx={{ display: 'flex' }}>
+              <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 16, md: 20 } }}>
+                {calculateSumByTermLabel(stdStudyPlans, currentTerm)}
+              </Typography>
+              <Typography sx={{ ml: 2, fontWeight: 'bold', fontSize: { xs: 16, md: 20 } }}>Total Credit</Typography>
+            </Box>
           </Box>
         </Box>
       )}
@@ -242,7 +264,41 @@ const Subjects = ({
             ))}
         </Box>
       )}
-      {switchContent === 1 && <Box sx={{ maxHeight: 800, overflow: 'auto', mx: 6, mt: 12 }}>test</Box>}
+      {switchContent === 1 && (
+        <Box sx={{ maxHeight: 800, overflow: 'auto', mx: 6, mt: 12 }}>
+          <Grid container>
+            {stdStudyPlans
+              ?.filter(s => s.termLabel === currentTerm)
+              .map(stdp => (
+                <Grid
+                  key={stdp.subject_id}
+                  container
+                  item
+                  xs={12}
+                  sx={{
+                    mb: 2.5,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    background: grey[50],
+                    px: 4,
+                    py: 2,
+                    borderRadius: 2
+                  }}
+                >
+                  <Grid item xs={8}>
+                    <Typography variant='caption'>{stdp.subject_code}</Typography>
+                    <Typography variant='body2' noWrap>
+                      {stdp.subject_name_th}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4} sx={{ p: 2.5, textAlign: 'end' }}>
+                    {stdp.subject_credit}
+                  </Grid>
+                </Grid>
+              ))}
+          </Grid>
+        </Box>
+      )}
       <Drawer anchor='right' open={openSubjectDetails} onClose={() => setOpenSubjectDetails(false)}>
         <Box sx={{ p: '16px 10px 0px', mb: 5, width: 300 }}>
           <Button variant='outlined' onClick={() => setOpenSubjectDetails(false)}>

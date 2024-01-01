@@ -98,6 +98,7 @@ const CardInfo = ({
                 setMenuSubjectCursor(0)
                 setMenuSemesterCursor(0)
                 handleChangeTerm(e.target.value)
+                closeDrawer()
               }}
               Items={termLabel?.map((item, index) => (
                 <MenuItem key={index} value={item.label} onClick={() => setSwitchContent(1)}>
@@ -119,6 +120,7 @@ const CardInfo = ({
               setMenuSubjectCursor(0)
               setMenuSemesterCursor(0)
               handleChangeTerm(e.target.value)
+              closeDrawer()
             }}
             Items={summerLabel?.map((item, index) => (
               <MenuItem key={index} value={item.label} onClick={() => setSwitchContent(1)}>

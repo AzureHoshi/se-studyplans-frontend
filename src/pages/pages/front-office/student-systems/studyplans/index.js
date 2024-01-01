@@ -1,5 +1,5 @@
 // React import
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 
 // Mui components import URL: https://material-ui.com/
 import {
@@ -51,7 +51,50 @@ const Studyplans = ({ SubjectData }) => {
   const [subjectSelected, setSubjectSelected] = useState([]) // cursor subject is selected
   const [currentTerm, setCurrentTerm] = useState('') // cursor current term
   const [semesterType, setSemesterType] = useState('normal') // for radio button in add subject dialog
-  const [openAddDialog, setOpenAddDialog] = useState(false)
+  const [openAddDialog, setOpenAddDialog] = useState(false) // state control add dialog
+
+  const [stdStudyPlans, setStdStudyPlans] = useState([
+    {
+      subject_id: 1,
+      academic_year: 1,
+      academic_semester: 1,
+      subject_name_th: 'ชื่อทดสอบ1',
+      subject_name_en: 'nameTest1',
+      subject_code: 'CODETEST1',
+      subject_credit: 3,
+      termLabel: '1/2563'
+    },
+    {
+      subject_id: 2,
+      academic_year: 1,
+      academic_semester: 2,
+      subject_name_th: 'ชื่อทดสอบ2',
+      subject_name_en: 'nameTest2',
+      subject_code: 'CODETEST2',
+      subject_credit: 3,
+      termLabel: '2/2563'
+    },
+    {
+      subject_id: 3,
+      academic_year: 1,
+      academic_semester: 3,
+      subject_name_th: 'ชื่อทดสอบ3',
+      subject_name_en: 'nameTest3',
+      subject_code: 'CODETEST3',
+      subject_credit: 3,
+      termLabel: '3/2563'
+    },
+    {
+      subject_id: 4,
+      academic_year: 1,
+      academic_semester: 3,
+      subject_name_th: 'ชื่อทดสอบ4',
+      subject_name_en: 'nameTest4',
+      subject_code: 'CODETEST4',
+      subject_credit: 3,
+      termLabel: '3/2563'
+    }
+  ])
 
   // จริงๆต้องดึงข้อมูลการศึกษาของนักศึกษามาว่ามีกี่เทอมแล้วเอามาทำข้อมูล ด้านล่างนี้เป็น Default สำหรับนักศึกษาที่ยังไม่ได้เพิ่มข้อมูลลงในระบบ
   const [termLabel, setTermLabel] = useState([
@@ -87,8 +130,8 @@ const Studyplans = ({ SubjectData }) => {
         label: String(pre.semester + '/' + yearFromStdNo)
       }
     })
-    setTermLabel(createTermLabel)
     setSummerLabel(createSummerLabel)
+    setTermLabel(createTermLabel)
     setCurrentTerm(createTermLabel[0].label)
   }, [userProfile])
 
@@ -140,6 +183,7 @@ const Studyplans = ({ SubjectData }) => {
 
         setTermLabel(newObject)
         setSemesterType('normal')
+        setCurrentTerm(newTermLabel)
       }
     } else if (type === 'summer') {
       let newYear =
@@ -160,17 +204,10 @@ const Studyplans = ({ SubjectData }) => {
 
         setSummerLabel(newObject)
         setSemesterType('summer')
+        setCurrentTerm(newTermLabel)
       }
     }
   }
-
-  useEffect(() => {
-    if (termLabel) return setCurrentTerm(termLabel[termLabel.length - 1].label)
-  }, [termLabel])
-
-  useEffect(() => {
-    if (summerLabel) return setCurrentTerm(summerLabel[summerLabel.length - 1].label)
-  }, [summerLabel])
 
   return (
     <CustomLayout
@@ -364,6 +401,8 @@ const Studyplans = ({ SubjectData }) => {
                   termLabel={termLabel}
                   summerLabel={summerLabel}
                   handleOpenAddDialog={handleOpenAddDialog}
+                  stdStudyPlans={stdStudyPlans}
+                  setStdStudyPlans={setStdStudyPlans}
                 />
               </Grid>
               {subjectSelected.subject_id !== undefined ? (
