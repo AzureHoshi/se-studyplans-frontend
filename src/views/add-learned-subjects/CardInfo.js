@@ -127,27 +127,6 @@ const CardInfo = ({
             ))}
           />
         </Box>
-
-        {/* <List sx={{ mt: -10 }}>
-          {summerLabel?.map((item, index) => (
-            <ListItem
-              key={index}
-              onClick={() => {
-                setSwitchContent(1)
-                setMenuSemesterCursor(index + 1)
-                setMenuSubjectCursor(0)
-                handleChangeTerm(item.label)
-              }}
-            >
-              <ListItemButton
-                sx={{ borderRadius: '7px', background: index + 1 === menuSemesterCursor ? grey[100] : null }}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
       </Box>
     </Box>
   )

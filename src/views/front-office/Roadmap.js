@@ -1019,9 +1019,6 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
         onClose={() => {
           setOpenDetails(false)
           setSubjectSelected([])
-          // setTimeout(() => {
-          //   setSubjectSelected([])
-          // }, 200)
         }}
         fullWidth
         maxWidth={'md'}
@@ -1041,9 +1038,6 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
             onClick={() => {
               setOpenDetails(false)
               setSubjectSelected([])
-              // setTimeout(() => {
-              //   setSubjectSelected([])
-              // }, 200)
             }}
             sx={{ fontFamily: 'Segoe UI', color: 'white', fontWeight: 'bold', letterSpacing: 1, opacity: 0.8 }}
           >

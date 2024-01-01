@@ -65,10 +65,17 @@ const Subjects = ({
 
   useLayoutEffect(() => {
     if (!data) return
-    const customLabelForAutocomplete = data?.map(d => ({ label: d.subject_code + ' ' + d.subject_name_th }))
+    const customLabelForAutocomplete = data?.map(d => ({
+      label: d.subject_code + ' ' + d.subject_name_th,
+      subject_id: d.subject_id
+    }))
     setCustomSubjects(customLabelForAutocomplete)
     // console.log('testLabel', customLabelForAutocomplete)
   }, [data])
+
+  useEffect(() => {
+    console.log('searchSubject', searchSubject)
+  }, [searchSubject])
 
   return (
     <Box sx={{ height: '100vh', borderRight: { xs: 'none', sm: '2px solid #e5eaef' } }}>
@@ -253,16 +260,3 @@ const Subjects = ({
 }
 
 export default Subjects
-
-{
-  /* <List>
-<ListItem disablePadding>
-  <ListItemButton sx={{ borderRadius: '7px' }}>
-    <ListItemIcon>
-      <AlertCircleOutline />
-    </ListItemIcon>
-    <ListItemText primary='No subjects found' />
-  </ListItemButton>
-</ListItem>
-</List> */
-}
