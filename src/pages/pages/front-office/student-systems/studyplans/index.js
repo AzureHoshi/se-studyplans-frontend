@@ -150,9 +150,69 @@ const Studyplans = ({ SubjectData }) => {
     }, 200)
   }
 
-  const handleOpenAddDialog = () => {
+  const handleOpenAddDialog = subject => {
+    if (!subject) return
+    setSubjectSelected(subject)
     setCurrentTerm(termLabel[0].label)
     setOpenAddDialog(true)
+  }
+
+  const handleAddStudyPlans = type => {
+    if (type === 'normal') {
+      const getTerm = termLabel?.find(t => t.label === currentTerm)
+      if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+        const checkParentinPlan = stdStudyPlans?.find(
+          cp =>
+            cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+            cp.academic_semester < getTerm.semester
+        )
+        if (!checkParentinPlan)
+          return alert(
+            'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
+              subjectSelected?.continue_subjects[0]?.parent?.subject_code
+          )
+      }
+      const newObject = {
+        ...subjectSelected,
+        academic_year: getTerm.year,
+        academic_semester: getTerm.semester,
+        termLabel: currentTerm
+      }
+      const updatePlan = [...stdStudyPlans, newObject]
+      // console.log('updatePlan', [...stdStudyPlans, newObject])
+      setStdStudyPlans(updatePlan)
+      setOpenAddDialog(false)
+      handleShowAlert(
+        'ได้เพิ่มวิชา' +
+          subjectSelected.subject_code +
+          ' ' +
+          subjectSelected.subject_name_th +
+          ' ' +
+          'ในปีการศึกษา ' +
+          currentTerm
+      )
+    } else if (type === 'summer') {
+      const getTerm = summerLabel?.find(t => t.label === currentTerm)
+      const newObject = {
+        ...subjectSelected,
+        academic_year: getTerm.year,
+        academic_semester: getTerm.semester,
+        termLabel: currentTerm
+      }
+      const updatePlan = [...stdStudyPlans, newObject]
+      // console.log('updatePlan', [...stdStudyPlans, newObject])
+      setStdStudyPlans(updatePlan)
+      setOpenAddDialog(false)
+      handleShowAlert(
+        'ได้เพิ่มวิชา' +
+          subjectSelected.subject_code +
+          ' ' +
+          subjectSelected.subject_name_th +
+          ' ' +
+          'ในปีการศึกษา ' +
+          currentTerm
+      )
+    }
   }
 
   const handleCloseAddDialog = () => {
@@ -351,7 +411,9 @@ const Studyplans = ({ SubjectData }) => {
               </Grid>
             </DialogContent>
             <DialogActions>
-              <Button variant='outlined'>ADD Subject</Button>
+              <Button onClick={() => handleAddStudyPlans(semesterType)} variant='outlined'>
+                ADD Subject
+              </Button>
               <Button sx={{ color: grey[400] }} onClick={() => setOpenAddDialog(false)}>
                 Close
               </Button>

@@ -112,7 +112,7 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert, handleOpenAddDialog,
             variant='contained'
             sx={{ px: 4 }}
             // onClick={() => handleShowAlert('ได้เพิ่ม ENGSEXXX ในเทอม 1/2023 สำเร็จ', 'success')}
-            onClick={() => handleOpenAddDialog()}
+            onClick={() => handleOpenAddDialog(subjectSelected)}
           >
             + Add Subject
           </Button>
