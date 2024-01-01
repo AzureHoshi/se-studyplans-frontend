@@ -40,7 +40,9 @@ const Subjects = ({
   handleShowAlert,
   setFilterState,
   currentTerm,
-  setCurrentTerm
+  setCurrentTerm,
+  termLabel,
+  summerLabel
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -82,6 +84,8 @@ const Subjects = ({
                 closeDrawer={() => setOpen(false)}
                 setCurrentTerm={setCurrentTerm}
                 currentTerm={currentTerm}
+                termLabel={termLabel}
+                summerLabel={summerLabel}
               />
             </Drawer>
           </Hidden>
@@ -107,7 +111,7 @@ const Subjects = ({
         </Box>
       )}
       {switchContent === 1 && (
-        <Box sx={{ paddingTop: 4, paddingX: 4, marginBottom: 4, display: 'flex' }}>
+        <Box sx={{ paddingTop: 5, paddingX: 6, marginBottom: 4, display: 'flex' }}>
           <Hidden lgUp>
             <IconButton onClick={() => setOpen(true)}>
               <DockLeft />
@@ -119,6 +123,8 @@ const Subjects = ({
                 closeDrawer={() => setOpen(false)}
                 setCurrentTerm={setCurrentTerm}
                 currentTerm={currentTerm}
+                termLabel={termLabel}
+                summerLabel={summerLabel}
               />
             </Drawer>
           </Hidden>
@@ -132,100 +138,103 @@ const Subjects = ({
           </Box>
         </Box>
       )}
-      <Box sx={{ maxHeight: 800, overflow: 'auto' }}>
-        {data
-          ?.sort((a, b) =>
-            searchSubject.subject_id === undefined
-              ? a.subject_structures[0]?.subject_category_id - b.subject_structures[0]?.subject_category_id
-              : a.subject_id === searchSubject.subject_id
-              ? -1
-              : b.id === searchSubject.subject_id
-              ? 1
-              : a.id - b.id
-          )
-          .filter(fS =>
-            filterState === 0
-              ? fS
-              : filterState === 1
-              ? fS.subject_structures[0]?.subject_category_id === 1
-              : fS.subject_structures[0]?.subject_category_id === 2
-          )
-          .map(s => (
-            <List
-              onClick={() => handleChangeSubject(s)}
-              key={s.subject_id}
-              sx={{ mx: 2, background: searchSubject.subject_id === s.subject_id ? grey[100] : 'white' }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => handleCheckScreen()}>
-                  <ListItemText>
-                    <Grid container>
-                      <Grid item xs={1}>
-                        <Typography variant='h5' sx={{ marginTop: '20%', fontWeight: 'bold' }}>
-                          {s.subject_credit}
-                        </Typography>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={7}
-                        sm={8}
-                        md={7}
-                        sx={{
-                          width: '100%',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                          pr: 2
-                        }}
-                      >
-                        <Typography variant='subtitle2' sx={{ fontWeight: 'bold', marginBottom: '-5px' }}>
-                          {s.subject_code}
-                        </Typography>
-                        <Typography variant='caption' noWrap>
-                          {s.subject_name_th}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={1} sm={3} md={1} sx={{ pr: 4, pt: 3, textAlign: 'end' }}>
-                        {s.continue_subjects[0].parent !== null ? (
-                          <Tooltip title='has previous subject'>
-                            <AlertCircleOutline sx={{ fontSize: 20 }} />
-                          </Tooltip>
-                        ) : null}
-                      </Grid>
-                      <Grid container item xs={3} sm={12} md={3} spacing={0}>
-                        <Grid item xs={12} sm={6} md={12}>
-                          <Typography
-                            variant='body2'
-                            align='center'
-                            sx={{
-                              color: s.subject_structures[0]?.subject_category_id === 1 ? '#ffb93d' : 'white',
-                              backgroundColor:
-                                s.subject_structures[0]?.subject_category_id === 1 ? '#fef5e5' : blue[100],
-                              borderRadius: 2,
-                              minWidth: 80,
-                              mb: 1
-                            }}
-                          >
-                            {s.subject_structures[0]?.subject_category_id === 1 ? 'General' : 'Specific'}
+      {switchContent === 0 && (
+        <Box sx={{ maxHeight: 800, overflow: 'auto' }}>
+          {data
+            ?.sort((a, b) =>
+              searchSubject.subject_id === undefined
+                ? a.subject_structures[0]?.subject_category_id - b.subject_structures[0]?.subject_category_id
+                : a.subject_id === searchSubject.subject_id
+                ? -1
+                : b.id === searchSubject.subject_id
+                ? 1
+                : a.id - b.id
+            )
+            .filter(fS =>
+              filterState === 0
+                ? fS
+                : filterState === 1
+                ? fS.subject_structures[0]?.subject_category_id === 1
+                : fS.subject_structures[0]?.subject_category_id === 2
+            )
+            .map(s => (
+              <List
+                onClick={() => handleChangeSubject(s)}
+                key={s.subject_id}
+                sx={{ mx: 2, background: searchSubject.subject_id === s.subject_id ? grey[100] : 'white' }}
+              >
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => handleCheckScreen()}>
+                    <ListItemText>
+                      <Grid container>
+                        <Grid item xs={1}>
+                          <Typography variant='h5' sx={{ marginTop: '20%', fontWeight: 'bold' }}>
+                            {s.subject_credit}
                           </Typography>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={12}>
-                          <Typography
-                            variant='body2'
-                            align='center'
-                            sx={{ color: grey[400], backgroundColor: grey[200], borderRadius: 2, minWidth: 80 }}
-                          >
-                            Added
+                        <Grid
+                          item
+                          xs={7}
+                          sm={8}
+                          md={7}
+                          sx={{
+                            width: '100%',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            pr: 2
+                          }}
+                        >
+                          <Typography variant='subtitle2' sx={{ fontWeight: 'bold', marginBottom: '-5px' }}>
+                            {s.subject_code}
+                          </Typography>
+                          <Typography variant='caption' noWrap>
+                            {s.subject_name_th}
                           </Typography>
                         </Grid>
+                        <Grid item xs={1} sm={3} md={1} sx={{ pr: 4, pt: 3, textAlign: 'end' }}>
+                          {s.continue_subjects[0].parent !== null ? (
+                            <Tooltip title='has previous subject'>
+                              <AlertCircleOutline sx={{ fontSize: 20 }} />
+                            </Tooltip>
+                          ) : null}
+                        </Grid>
+                        <Grid container item xs={3} sm={12} md={3} spacing={0}>
+                          <Grid item xs={12} sm={6} md={12}>
+                            <Typography
+                              variant='body2'
+                              align='center'
+                              sx={{
+                                color: s.subject_structures[0]?.subject_category_id === 1 ? '#ffb93d' : 'white',
+                                backgroundColor:
+                                  s.subject_structures[0]?.subject_category_id === 1 ? '#fef5e5' : blue[100],
+                                borderRadius: 2,
+                                minWidth: 80,
+                                mb: 1
+                              }}
+                            >
+                              {s.subject_structures[0]?.subject_category_id === 1 ? 'General' : 'Specific'}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={12}>
+                            <Typography
+                              variant='body2'
+                              align='center'
+                              sx={{ color: grey[400], backgroundColor: grey[200], borderRadius: 2, minWidth: 80 }}
+                            >
+                              Added
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            </List>
-          ))}
-      </Box>
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            ))}
+        </Box>
+      )}
+      {switchContent === 1 && <Box sx={{ maxHeight: 800, overflow: 'auto', mx: 6, mt: 12 }}>test</Box>}
       <Drawer anchor='right' open={openSubjectDetails} onClose={() => setOpenSubjectDetails(false)}>
         <Box sx={{ p: '16px 10px 0px', mb: 5, width: 300 }}>
           <Button variant='outlined' onClick={() => setOpenSubjectDetails(false)}>

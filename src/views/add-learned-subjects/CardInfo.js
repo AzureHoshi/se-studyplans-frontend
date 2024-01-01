@@ -25,25 +25,17 @@ import { grey } from '@mui/material/colors'
 import { userProfile } from 'src/dummy'
 import { Selection } from 'src/components'
 
-const CardInfo = ({ setSwitchContent, setFilterState, closeDrawer, setCurrentTerm, currentTerm }) => {
+const CardInfo = ({
+  setSwitchContent,
+  setFilterState,
+  closeDrawer,
+  setCurrentTerm,
+  currentTerm,
+  termLabel,
+  summerLabel
+}) => {
   const [menuSubjectCursor, setMenuSubjectCursor] = useState(1)
   const [menuSemesterCursor, setMenuSemesterCursor] = useState(0)
-  const [termLabel, setTermLabel] = useState([
-    { i: 1, year: 1, semester: 1, label: '' },
-    { i: 2, year: 1, semester: 2, label: '' },
-    { i: 3, year: 2, semester: 1, label: '' },
-    { i: 4, year: 2, semester: 2, label: '' },
-    { i: 5, year: 3, semester: 1, label: '' },
-    { i: 6, year: 3, semester: 2, label: '' },
-    { i: 7, year: 4, semester: 1, label: '' },
-    { i: 8, year: 4, semester: 2, label: '' }
-  ])
-  const [summerLabel, setSummerLabel] = useState([
-    { i: 1, year: 1, semester: 3, label: '' },
-    { i: 2, year: 2, semester: 3, label: '' },
-    { i: 3, year: 3, semester: 3, label: '' },
-    { i: 4, year: 4, semester: 3, label: '' }
-  ])
 
   const handleChangeFilter = type => {
     setFilterState(type)
@@ -53,26 +45,6 @@ const CardInfo = ({ setSwitchContent, setFilterState, closeDrawer, setCurrentTer
   const handleChangeTerm = term => {
     setCurrentTerm(term)
   }
-
-  useLayoutEffect(() => {
-    if (!userProfile) return
-    const createTermLabel = termLabel.map(pre => {
-      const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
-      return {
-        ...pre,
-        label: String(pre.semester + '/' + yearFromStdNo)
-      }
-    })
-    const createSummerLabel = summerLabel.map(pre => {
-      const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
-      return {
-        ...pre,
-        label: String(pre.semester + '/' + yearFromStdNo)
-      }
-    })
-    setTermLabel(createTermLabel)
-    setSummerLabel(createSummerLabel)
-  }, [userProfile])
 
   return (
     <Box>
@@ -131,7 +103,7 @@ const CardInfo = ({ setSwitchContent, setFilterState, closeDrawer, setCurrentTer
                 handleChangeTerm(e.target.value)
               }}
               Items={termLabel?.map((item, index) => (
-                <MenuItem key={index} value={item.label}>
+                <MenuItem key={index} value={item.label} onClick={() => setSwitchContent(1)}>
                   {item.label}
                 </MenuItem>
               ))}
