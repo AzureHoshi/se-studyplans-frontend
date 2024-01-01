@@ -161,6 +161,14 @@ const Studyplans = ({ SubjectData }) => {
     }
   }
 
+  useEffect(() => {
+    if (termLabel) return setCurrentTerm(termLabel[termLabel.length - 1].label)
+  }, [termLabel])
+
+  useEffect(() => {
+    if (summerLabel) return setCurrentTerm(summerLabel[summerLabel.length - 1].label)
+  }, [summerLabel])
+
   return (
     <CustomLayout
       content={
@@ -190,6 +198,7 @@ const Studyplans = ({ SubjectData }) => {
                     <RadioGroup
                       row
                       defaultValue='normal'
+                      value={semesterType}
                       aria-label='semestertype'
                       onChange={e => handleChangeSemesterType(e.target.value)}
                     >
@@ -211,9 +220,10 @@ const Studyplans = ({ SubjectData }) => {
                         defaultValue={0}
                         handleChange={e => {
                           setSwitchContent(1)
-                          setMenuSubjectCursor(0)
-                          setMenuSemesterCursor(0)
-                          handleChangeTerm(e.target.value)
+                          setCurrentTerm(e.target.value)
+                          // setMenuSubjectCursor(0)
+                          // setMenuSemesterCursor(0)
+                          // handleChangeTerm(e.target.value)
                         }}
                         Items={termLabel?.map((item, index) => (
                           <MenuItem key={index} value={item.label}>
@@ -236,9 +246,10 @@ const Studyplans = ({ SubjectData }) => {
                         defaultValue={0}
                         handleChange={e => {
                           setSwitchContent(1)
-                          setMenuSubjectCursor(0)
-                          setMenuSemesterCursor(0)
-                          handleChangeTerm(e.target.value)
+                          setCurrentTerm(e.target.value)
+                          // setMenuSubjectCursor(0)
+                          // setMenuSemesterCursor(0)
+                          // handleChangeTerm(e.target.value)
                         }}
                         Items={summerLabel?.map((item, index) => (
                           <MenuItem key={index} value={item.label}>
@@ -262,7 +273,8 @@ const Studyplans = ({ SubjectData }) => {
                           aria-label='semestertype'
                           onChange={e => {
                             handleAddSemester(e.target.value)
-                            // handleChangeSemesterType(e.target.value)
+                            setCurrentTerm(e.target.value)
+                            handleChangeSemesterType(e.target.value)
                           }}
                         >
                           <FormControlLabel sx={{ mr: 8 }} value='normal' label='ภาคปกติ(normal)' control={<Radio />} />
@@ -276,7 +288,9 @@ const Studyplans = ({ SubjectData }) => {
             </DialogContent>
             <DialogActions>
               <Button variant='outlined'>ADD Subject</Button>
-              <Button sx={{ color: grey[400] }}>Close</Button>
+              <Button sx={{ color: grey[400] }} onClick={() => setOpenAddDialog(false)}>
+                Close
+              </Button>
             </DialogActions>
           </Dialog>
           <Card>
