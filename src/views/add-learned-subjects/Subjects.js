@@ -246,15 +246,17 @@ const Subjects = ({
                               {s.subject_structures[0]?.subject_category_id === 1 ? 'General' : 'Specific'}
                             </Typography>
                           </Grid>
-                          <Grid item xs={12} sm={6} md={12}>
-                            <Typography
-                              variant='body2'
-                              align='center'
-                              sx={{ color: grey[400], backgroundColor: grey[200], borderRadius: 2, minWidth: 80 }}
-                            >
-                              Added
-                            </Typography>
-                          </Grid>
+                          {stdStudyPlans?.find(subj => subj.subject_id === s.subject_id) && (
+                            <Grid item xs={12} sm={6} md={12}>
+                              <Typography
+                                variant='body2'
+                                align='center'
+                                sx={{ color: grey[400], backgroundColor: grey[200], borderRadius: 2, minWidth: 80 }}
+                              >
+                                Added
+                              </Typography>
+                            </Grid>
+                          )}
                         </Grid>
                       </Grid>
                     </ListItemText>
@@ -309,6 +311,7 @@ const Subjects = ({
           subjectSelected={subjectSelected}
           handleShowAlert={handleShowAlert}
           handleOpenAddDialog={handleOpenAddDialog}
+          stdStudyPlans={stdStudyPlans}
         />
       </Drawer>
     </Box>

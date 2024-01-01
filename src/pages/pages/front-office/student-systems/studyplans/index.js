@@ -55,42 +55,42 @@ const Studyplans = ({ SubjectData }) => {
 
   const [stdStudyPlans, setStdStudyPlans] = useState([
     {
-      subject_id: 1,
+      subject_id: 115,
       academic_year: 1,
       academic_semester: 1,
-      subject_name_th: 'ชื่อทดสอบ1',
-      subject_name_en: 'nameTest1',
-      subject_code: 'CODETEST1',
+      subject_name_th: 'การฝึกเฉพาะตำแหน่ง',
+      subject_name_en: 'Practicum',
+      subject_code: 'ENGSE305',
       subject_credit: 3,
       termLabel: '1/2563'
     },
     {
-      subject_id: 2,
+      subject_id: 74,
       academic_year: 1,
       academic_semester: 2,
-      subject_name_th: 'ชื่อทดสอบ2',
-      subject_name_en: 'nameTest2',
-      subject_code: 'CODETEST2',
+      subject_code: 'ENGSE510',
+      subject_name_th: 'คอมพิวเตอร์กราฟิกส์',
+      subject_name_en: 'Computer Graphics',
       subject_credit: 3,
       termLabel: '2/2563'
     },
     {
-      subject_id: 3,
+      subject_id: 69,
       academic_year: 1,
       academic_semester: 3,
-      subject_name_th: 'ชื่อทดสอบ3',
-      subject_name_en: 'nameTest3',
-      subject_code: 'CODETEST3',
+      subject_code: 'ENGSE505',
+      subject_name_th: 'เทคโนโลยีบล็อคเชน',
+      subject_name_en: 'Blockchain Technology',
       subject_credit: 3,
       termLabel: '3/2563'
     },
     {
-      subject_id: 4,
+      subject_id: 68,
       academic_year: 1,
       academic_semester: 3,
-      subject_name_th: 'ชื่อทดสอบ4',
-      subject_name_en: 'nameTest4',
-      subject_code: 'CODETEST4',
+      subject_code: 'ENGSE504',
+      subject_name_th: 'การประมวลผลแบบคลาวด์',
+      subject_name_en: 'Cloud Computing',
       subject_credit: 3,
       termLabel: '3/2563'
     }
@@ -412,6 +412,7 @@ const Studyplans = ({ SubjectData }) => {
                       subjectSelected={subjectSelected}
                       handleShowAlert={handleShowAlert}
                       handleOpenAddDialog={handleOpenAddDialog}
+                      stdStudyPlans={stdStudyPlans}
                     />
                   </Grid>
                 </Hidden>
