@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, Button, Card, CardContent, Divider, Grid, Hidden, Typography } from '@mui/material'
 import { blue, grey, red } from '@mui/material/colors'
 
-const SubjectDetails = ({ subjectSelected, handleShowAlert }) => {
+const SubjectDetails = ({ subjectSelected, handleShowAlert, handleOpenAddDialog }) => {
   return (
     <Box>
       <Box sx={{ padding: '1em 1em 0em' }}>
@@ -110,7 +110,8 @@ const SubjectDetails = ({ subjectSelected, handleShowAlert }) => {
           <Button
             variant='contained'
             sx={{ px: 4 }}
-            onClick={() => handleShowAlert('ได้เพิ่ม ENGSEXXX ในเทอม 1/2023 สำเร็จ', 'success')}
+            // onClick={() => handleShowAlert('ได้เพิ่ม ENGSEXXX ในเทอม 1/2023 สำเร็จ', 'success')}
+            onClick={() => handleOpenAddDialog()}
           >
             + Add Subject
           </Button>

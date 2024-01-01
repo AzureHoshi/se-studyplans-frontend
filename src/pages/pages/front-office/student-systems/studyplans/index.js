@@ -10,6 +10,7 @@ import {
   Card,
   CardContent,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
@@ -49,7 +50,8 @@ const Studyplans = ({ SubjectData }) => {
   const [AlertType, setAlertType] = useState('success') // type of alert
   const [subjectSelected, setSubjectSelected] = useState([]) // cursor subject is selected
   const [currentTerm, setCurrentTerm] = useState('') // cursor current term
-  const [semesterType, setSemesterType] = useState('normal')
+  const [semesterType, setSemesterType] = useState('normal') // for radio button in add subject dialog
+  const [openAddDialog, setOpenAddDialog] = useState(false)
 
   // จริงๆต้องดึงข้อมูลการศึกษาของนักศึกษามาว่ามีกี่เทอมแล้วเอามาทำข้อมูล ด้านล่างนี้เป็น Default สำหรับนักศึกษาที่ยังไม่ได้เพิ่มข้อมูลลงในระบบ
   const [termLabel, setTermLabel] = useState([
@@ -105,6 +107,14 @@ const Studyplans = ({ SubjectData }) => {
     }, 200)
   }
 
+  const handleOpenAddDialog = () => {
+    setOpenAddDialog(true)
+  }
+
+  const handleCloseAddDialog = () => {
+    setOpenAddDialog(false)
+  }
+
   return (
     <CustomLayout
       content={
@@ -122,10 +132,12 @@ const Studyplans = ({ SubjectData }) => {
               </Alert>
             </Snackbar>
           </Stack>
-          <Dialog open={false} maxWidth={'sm'} fullWidth>
+
+          {/* add subject dialog */}
+          <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth={'sm'} fullWidth>
             <DialogTitle sx={{ background: grey[400], color: 'white' }}>เลือกปีการศึกษา</DialogTitle>
-            <DialogContent sx={{ height: 400, m: 6 }}>
-              <Grid container spacing={6}>
+            <DialogContent sx={{ height: 400 }}>
+              <Grid container sx={{ border: 1, borderRadius: 2, borderColor: grey[300], p: 3, mt: 2.5 }}>
                 <Grid item xs={12}>
                   <FormControl>
                     <FormLabel sx={{ fontSize: '0.875rem' }}>ประเภทปีการศึกษา</FormLabel>
@@ -149,12 +161,9 @@ const Studyplans = ({ SubjectData }) => {
                       <Selection
                         height={40}
                         width={'100%'}
-                        // label={'แผนการศึกษา'}
-                        // disabled={true}
                         selectionValue={currentTerm || 0}
                         defaultValue={0}
                         handleChange={e => {
-                          // setPlanSelected(e.target.value)
                           setSwitchContent(1)
                           setMenuSubjectCursor(0)
                           setMenuSemesterCursor(0)
@@ -177,12 +186,9 @@ const Studyplans = ({ SubjectData }) => {
                       <Selection
                         height={40}
                         width={'100%'}
-                        // label={'แผนการศึกษา'}
-                        // disabled={true}
                         selectionValue={currentTerm || 0}
                         defaultValue={0}
                         handleChange={e => {
-                          // setPlanSelected(e.target.value)
                           setSwitchContent(1)
                           setMenuSubjectCursor(0)
                           setMenuSemesterCursor(0)
@@ -198,8 +204,14 @@ const Studyplans = ({ SubjectData }) => {
                   </Grid>
                 )}
               </Grid>
+              <Grid container sx={{ border: 1, borderRadius: 2, borderColor: grey[300], p: 3, mt: 2.5 }}>
+                <DialogContent>test</DialogContent>
+              </Grid>
             </DialogContent>
-            <Button>click</Button>
+            <DialogActions>
+              <Button variant='outlined'>ADD Subject</Button>
+              <Button sx={{ color: grey[400] }}>Close</Button>
+            </DialogActions>
           </Dialog>
           <Card>
             <CardContent>
@@ -249,7 +261,11 @@ const Studyplans = ({ SubjectData }) => {
               {subjectSelected.subject_id !== undefined ? (
                 <Hidden smDown>
                   <Grid item sm={6} lg={7}>
-                    <SubjectDetails subjectSelected={subjectSelected} handleShowAlert={handleShowAlert} />
+                    <SubjectDetails
+                      subjectSelected={subjectSelected}
+                      handleShowAlert={handleShowAlert}
+                      handleOpenAddDialog={handleOpenAddDialog}
+                    />
                   </Grid>
                 </Hidden>
               ) : (
