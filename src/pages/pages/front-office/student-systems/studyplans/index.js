@@ -272,6 +272,16 @@ const Studyplans = ({ SubjectData }) => {
       )
     } else {
       // remove studyplan
+      const removeSubject = stdStudyPlans?.filter(s => s.subject_id !== subjectSelected.subject_id)
+
+      setStdStudyPlans(removeSubject)
+      handleShowAlert(
+        'ได้ลบวิชา' +
+          subjectSelected.subject_code +
+          ' ' +
+          subjectSelected.subject_name_th +
+          ' ออกจากแผนการเรียนปัจจุบัน'
+      )
     }
   }
 
