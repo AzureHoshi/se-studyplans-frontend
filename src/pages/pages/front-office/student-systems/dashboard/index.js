@@ -74,7 +74,7 @@ function StudentSystems() {
           <Grid container>
             {/* dashbord  */}
             <Grid container item spacing={10} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 10 } }}>
-              <Grid item xs={12} sm={5} lg={4}>
+              <Grid item xs={12} sm={5} lg={5}>
                 <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
                   <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
                   <Box
@@ -132,7 +132,7 @@ function StudentSystems() {
                   </Box>
                 </Card>
               </Grid>
-              <Grid item xs={12} sm={7} lg={8}>
+              <Grid item xs={12} sm={7} lg={7}>
                 <Card sx={{ height: 420, p: 6, pt: 4 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
