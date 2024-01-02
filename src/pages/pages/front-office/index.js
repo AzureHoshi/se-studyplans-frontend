@@ -174,6 +174,7 @@ export async function getServerSideProps() {
     url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
   ) // 2 for se 66
   const resStudyPlanRecords = await axios.get(url.BASE_URL + `/study-plan-records/` + userProfile.curriculum_id) // 2 for se 66
+
   return {
     props: {
       jobRecommended: resJobRecommended.data.data,

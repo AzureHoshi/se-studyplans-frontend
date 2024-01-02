@@ -19,14 +19,18 @@ import { CustomLayout } from 'src/views/custom-layout-student-systems'
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { mdiClose } from '@mdi/js'
 import Icon from '@mdi/react'
+import { url } from 'src/configs/urlConfig'
+import { userProfile } from 'src/dummy'
+import axios from 'axios'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-function StudentSystems() {
+function StudentSystems({ InterestResult }) {
   const [openFeedBack, setOpenFeedBack] = useState(false)
+  const [interRestResult, setInterRestResult] = useState([])
 
   const handleOpenFeedBack = () => {
     setOpenFeedBack(true)
@@ -56,6 +60,23 @@ function StudentSystems() {
       }
     }
   }
+
+  useEffect(() => {
+    console.log('InterestResult', InterestResult)
+    const newObject = {
+      labels: InterestResult?.labels,
+      datasets: [
+        {
+          label: '  % Interested',
+          data: InterestResult?.data,
+          backgroundColor: ['rgba(40, 40, 40, 1)', 'rgba(160, 160, 160, 1)', 'rgba(200, 200, 200, 1)'], // 40% opacity gray],
+          borderWidth: 6,
+          borderRadius: 100
+        }
+      ]
+    }
+    console.log('newObject', newObject)
+  }, [InterestResult])
 
   return (
     <CustomLayout
@@ -87,8 +108,9 @@ function StudentSystems() {
                     }}
                   >
                     {/* <PieChart series={[{ data, innerRadius: 80 }]} {...size} /> */}
+
                     <Box sx={{ width: '100%', height: 180, mt: 12 }}>
-                      <Doughnut data={data} options={options} />
+                      {InterestResult && <Doughnut data={InterestResult?.data} options={options} />}
                     </Box>
                     <Typography
                       sx={{
@@ -101,9 +123,10 @@ function StudentSystems() {
                         transform: 'translate(-50%, -50%)'
                       }}
                     >
-                      60%
+                      {InterestResult?.data[0] + '%'}
                     </Typography>
                   </Box>
+
                   <Box
                     sx={{
                       mt: 6,
@@ -113,7 +136,20 @@ function StudentSystems() {
                       flexDirection: 'column'
                     }}
                   >
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                    {[0, 1, 2].map(index => (
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
+                          {InterestResult?.labels[index]}
+                        </Typography>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
+                          {InterestResult?.data[index] + '%'}
+                        </Typography>
+                      </Box>
+                    ))}
+                    {/* {InterestResult?.labels.map(l => (
+                     
+                    ))} */}
+                    {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
                       <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
                         Software Engineer
                       </Typography>
@@ -128,7 +164,7 @@ function StudentSystems() {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
                       <Typography variant='body2'>Programmer</Typography>
                       <Typography variant='body2'>10% </Typography>
-                    </Box>
+                    </Box> */}
                   </Box>
                 </Card>
               </Grid>
@@ -423,5 +459,16 @@ function StudentSystems() {
   )
 }
 StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
+
+// ssr
+export async function getServerSideProps() {
+  const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+
+  return {
+    props: {
+      InterestResult: resInterestResult.data
+    }
+  }
+}
 
 export default StudentSystems

@@ -10,6 +10,7 @@ import axios from 'axios'
 import InterestForm from 'src/views/InterestSurvey/InterestForm'
 import InterestResult from 'src/views/InterestSurvey/InterestResult'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { userProfile } from 'src/dummy'
 
 const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
   const [resultDisplay, setResultDisplay] = useState(null)
@@ -61,7 +62,7 @@ export async function getServerSideProps() {
   return {
     props: {
       dataSurvey: res.data.data,
-      collegianCode: '63543206000'
+      collegianCode: userProfile.std_no
     }
   }
 }
