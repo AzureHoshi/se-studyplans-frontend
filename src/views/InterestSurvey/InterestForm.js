@@ -99,7 +99,10 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         })
 
         console.log(res)
-        router.push('/pages/front-office/student-systems/dashboard/')
+        setTimeout(() => {
+          router.push('/pages/front-office/student-systems/dashboard/')
+        }, 1000)
+
         // setResultDisplay(true)
       } catch (err) {
         console.log(err)
@@ -113,14 +116,6 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
   useEffect(() => {
     console.log('answers: ', answers)
   }, [answers])
-
-  // useEffect(() => {
-  //   if (isLoading && ) {
-  //     setTimeout(() => {
-  //       setIsLoading(false)
-  //     }, 2000)
-  //   }
-  // }, [isLoading, resultDisplay])
 
   if (isLoading) {
     return (

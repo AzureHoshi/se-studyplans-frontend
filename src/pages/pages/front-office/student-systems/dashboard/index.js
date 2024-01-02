@@ -25,12 +25,17 @@ import Icon from '@mdi/react'
 import { url } from 'src/configs/urlConfig'
 import { userProfile } from 'src/dummy'
 import axios from 'axios'
+import router, { useRouter } from 'next/router'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 function StudentSystems({ InterestResult }) {
+  const router = useRouter()
   const [openFeedBack, setOpenFeedBack] = useState(false)
-  const [interRestResult, setInterRestResult] = useState([])
+  const [interRestResult, setInterRestResult] = useState({
+    labels: [],
+    datasets: []
+  })
 
   const handleOpenFeedBack = () => {
     setOpenFeedBack(true)
@@ -75,6 +80,7 @@ function StudentSystems({ InterestResult }) {
         }
       ]
     }
+    setInterRestResult(newObject)
     console.log('newObject', newObject)
   }, [InterestResult])
 
@@ -96,77 +102,79 @@ function StudentSystems({ InterestResult }) {
             {/* dashbord  */}
             <Grid container item spacing={10} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 10 } }}>
               <Grid item xs={12} sm={5} lg={5}>
-                <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
-                  <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      mt: 6,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative'
-                    }}
-                  >
-                    {/* <PieChart series={[{ data, innerRadius: 80 }]} {...size} /> */}
-
-                    <Box sx={{ width: '100%', height: 180, mt: 12 }}>
-                      {InterestResult && <Doughnut data={InterestResult?.data} options={options} />}
-                    </Box>
-                    <Typography
+                {interRestResult?.labels?.length > 0 ? (
+                  <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
+                    <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
+                    <Box
                       sx={{
-                        color: 'black',
-                        fontSize: 24,
-                        fontWeight: 'medium',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)'
+                        width: '100%',
+                        mt: 6,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative'
                       }}
                     >
-                      {InterestResult?.data[0] + '%'}
-                    </Typography>
-                  </Box>
+                      {/* <PieChart series={[{ data, innerRadius: 80 }]} {...size} /> */}
 
-                  <Box
-                    sx={{
-                      mt: 6,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flexDirection: 'column'
-                    }}
-                  >
-                    {[0, 1, 2].map(index => (
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
-                        <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
-                          {InterestResult?.labels[index]}
-                        </Typography>
-                        <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
-                          {InterestResult?.data[index] + '%'}
-                        </Typography>
+                      <Box sx={{ width: '100%', height: 180, mt: 12 }}>
+                        <Doughnut data={interRestResult} options={options} />
                       </Box>
-                    ))}
-                    {/* {InterestResult?.labels.map(l => (
-                     
-                    ))} */}
-                    {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
-                      <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
-                        Software Engineer
-                      </Typography>
-                      <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'black' }}>
-                        60%
+                      <Typography
+                        sx={{
+                          color: 'black',
+                          fontSize: 24,
+                          fontWeight: 'medium',
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)'
+                        }}
+                      >
+                        {InterestResult?.data[0] + '%'}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
-                      <Typography variant='body2'>IT Support</Typography>
-                      <Typography variant='body2'>30% </Typography>
+
+                    <Box
+                      sx={{
+                        mt: 6,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      {[0, 1, 2].map(index => (
+                        <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: index === 0 ? 'black' : 'gray', pr: 2, maxWidth: 220 }}
+                            noWrap
+                          >
+                            {InterestResult?.labels[index]}
+                          </Typography>
+                          <Typography variant='caption' sx={{ fontWeight: 'bold', color: 'black' }}>
+                            {InterestResult?.data[index] + '%'}
+                          </Typography>
+                        </Box>
+                      ))}
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
-                      <Typography variant='body2'>Programmer</Typography>
-                      <Typography variant='body2'>10% </Typography>
-                    </Box> */}
-                  </Box>
-                </Card>
+                  </Card>
+                ) : (
+                  <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
+                    <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
+                    <Box
+                      sx={{
+                        width: '100%',
+                        mt: 6,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative'
+                      }}
+                    >
+                      No Data
+                    </Box>
+                  </Card>
+                )}
               </Grid>
               <Grid item xs={12} sm={7} lg={7}>
                 <Card sx={{ height: 420, p: 6, pt: 4 }}>
@@ -180,7 +188,7 @@ function StudentSystems({ InterestResult }) {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ alignItems: 'end' }}>
+                    <Box sx={{ alignItems: 'end', minWidth: 120 }}>
                       <Button
                         size='medium'
                         variant={'contained'}
@@ -188,7 +196,7 @@ function StudentSystems({ InterestResult }) {
                           px: 4,
                           mx: 'auto',
                           letterSpacing: 0.5,
-                          fontSize: 12,
+                          fontSize: 10,
                           backgroundColor: 'black'
                         }}
                       >
@@ -463,7 +471,16 @@ StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
   const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
-
+  // if didn't answer the survey redirect to survay page
+  if (resInterestResult.data.labels.length === 0) {
+    // router.push('/pages/front-office/student-systems/interest-survey/')
+    return {
+      redirect: {
+        destination: '/pages/front-office/student-systems/interest-survey/',
+        permanent: false // Set to true for permanent redirection
+      }
+    }
+  }
   return {
     props: {
       InterestResult: resInterestResult.data
