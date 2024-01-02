@@ -593,6 +593,17 @@ Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
   const resSubjects = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
+  const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+  if (resInterestResult.data.labels.length === 0) {
+    // router.push('/pages/front-office/student-systems/interest-survey/')
+    return {
+      redirect: {
+        destination: '/pages/front-office/student-systems/interest-survey/',
+        permanent: false // Set to true for permanent redirection
+      }
+    }
+  }
+
   return {
     props: {
       SubjectData: resSubjects.data.data
