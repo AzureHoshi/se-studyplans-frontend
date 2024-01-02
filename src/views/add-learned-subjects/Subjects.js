@@ -46,7 +46,8 @@ const Subjects = ({
   summerLabel,
   handleOpenAddDialog,
   stdStudyPlans,
-  setStdStudyPlans
+  setStdStudyPlans,
+  handleRemoveStudyPlan
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -311,6 +312,7 @@ const Subjects = ({
             handleShowAlert={handleShowAlert}
             handleOpenAddDialog={handleOpenAddDialog}
             stdStudyPlans={stdStudyPlans}
+            handleRemoveStudyPlan={handleRemoveStudyPlan}
           />
         </Box>
       </Drawer>
