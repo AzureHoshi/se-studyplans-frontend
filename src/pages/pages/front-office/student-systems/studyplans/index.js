@@ -52,6 +52,7 @@ const Studyplans = ({ SubjectData }) => {
   const [currentTerm, setCurrentTerm] = useState('') // cursor current term
   const [semesterType, setSemesterType] = useState('normal') // for radio button in add subject dialog
   const [openAddDialog, setOpenAddDialog] = useState(false) // state control add dialog
+  const [showScope, setShowScope] = useState(false)
 
   const [stdStudyPlans, setStdStudyPlans] = useState([
     {
@@ -179,6 +180,12 @@ const Studyplans = ({ SubjectData }) => {
     setCurrentTerm(createTermLabel[0].label)
   }, [userProfile])
 
+  const handleShowScope = () => {
+    setShowScope(true)
+  }
+  const handleCloseScope = () => {
+    setShowScope(false)
+  }
   const handleChangeSemesterType = value => {
     setSemesterType(value)
     if (value === 'normal') setCurrentTerm(termLabel[0].label)
@@ -515,54 +522,66 @@ const Studyplans = ({ SubjectData }) => {
                 setCurrentTerm={setCurrentTerm}
                 termLabel={termLabel}
                 summerLabel={summerLabel}
+                handleShowScope={handleShowScope}
               />
             </Hidden>
-            <Grid container>
-              <Grid item xs={12} sm={6} lg={5}>
-                <Subjects
-                  data={SubjectData}
-                  switchContent={switchContent}
-                  setSwitchContent={setSwitchContent}
-                  filterState={filterState}
-                  setSubjectSelected={setSubjectSelected}
-                  subjectSelected={subjectSelected}
-                  handleShowAlert={handleShowAlert}
-                  setFilterState={setFilterState}
-                  currentTerm={currentTerm}
-                  setCurrentTerm={setCurrentTerm}
-                  termLabel={termLabel}
-                  summerLabel={summerLabel}
-                  handleOpenAddDialog={handleOpenAddDialog}
-                  stdStudyPlans={stdStudyPlans}
-                  setStdStudyPlans={setStdStudyPlans}
-                  handleRemoveStudyPlan={handleRemoveStudyPlan}
-                />
-              </Grid>
-              {subjectSelected.subject_id !== undefined ? (
-                <Hidden smDown>
-                  <Grid item sm={6} lg={7}>
-                    <SubjectDetails
-                      subjectSelected={subjectSelected}
-                      handleShowAlert={handleShowAlert}
-                      handleOpenAddDialog={handleOpenAddDialog}
-                      stdStudyPlans={stdStudyPlans}
-                      handleRemoveStudyPlan={handleRemoveStudyPlan}
-                    />
-                  </Grid>
-                </Hidden>
-              ) : (
-                <Hidden smDown>
-                  <Grid item sm={6} lg={7}>
-                    <Grid container>
-                      <Grid item xs={6} sx={{ padding: '1em 1em 0em' }}>
-                        <Typography sx={{ fontSize: { xs: 16, lg: 20 }, minWidth: 160 }}>Subject Details</Typography>
-                      </Grid>
+            {!showScope ? (
+              <Grid container>
+                <Grid item xs={12} sm={6} lg={5}>
+                  <Subjects
+                    data={SubjectData}
+                    switchContent={switchContent}
+                    setSwitchContent={setSwitchContent}
+                    filterState={filterState}
+                    setSubjectSelected={setSubjectSelected}
+                    subjectSelected={subjectSelected}
+                    handleShowAlert={handleShowAlert}
+                    setFilterState={setFilterState}
+                    currentTerm={currentTerm}
+                    setCurrentTerm={setCurrentTerm}
+                    termLabel={termLabel}
+                    summerLabel={summerLabel}
+                    handleOpenAddDialog={handleOpenAddDialog}
+                    stdStudyPlans={stdStudyPlans}
+                    setStdStudyPlans={setStdStudyPlans}
+                    handleRemoveStudyPlan={handleRemoveStudyPlan}
+                    handleShowScope={handleShowScope}
+                  />
+                </Grid>
+                {subjectSelected.subject_id !== undefined ? (
+                  <Hidden smDown>
+                    <Grid item sm={6} lg={7}>
+                      <SubjectDetails
+                        subjectSelected={subjectSelected}
+                        handleShowAlert={handleShowAlert}
+                        handleOpenAddDialog={handleOpenAddDialog}
+                        stdStudyPlans={stdStudyPlans}
+                        handleRemoveStudyPlan={handleRemoveStudyPlan}
+                      />
                     </Grid>
-                    <Divider />
-                  </Grid>
-                </Hidden>
-              )}
-            </Grid>
+                  </Hidden>
+                ) : (
+                  <Hidden smDown>
+                    <Grid item sm={6} lg={7}>
+                      <Grid container>
+                        <Grid item xs={6} sx={{ padding: '1em 1em 0em' }}>
+                          <Typography sx={{ fontSize: { xs: 16, lg: 20 }, minWidth: 160 }}>Subject Details</Typography>
+                        </Grid>
+                      </Grid>
+                      <Divider />
+                    </Grid>
+                  </Hidden>
+                )}
+              </Grid>
+            ) : (
+              <Grid container>
+                <Grid item xs={12} sx={{ p: 6 }}>
+                  <Button variant='outlined' onClick={handleCloseScope}>
+                    Back
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
           </Card>
         </Box>
       }

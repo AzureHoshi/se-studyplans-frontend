@@ -32,7 +32,8 @@ const CardInfo = ({
   setCurrentTerm,
   currentTerm,
   termLabel,
-  summerLabel
+  summerLabel,
+  handleShowScope
 }) => {
   const [menuSubjectCursor, setMenuSubjectCursor] = useState(1)
   const [menuSemesterCursor, setMenuSemesterCursor] = useState(0)
@@ -51,8 +52,8 @@ const CardInfo = ({
       <Box sx={{ width: '220px', height: '100vh', borderRight: { xs: 'none', sm: '2px solid #e5eaef' } }}>
         <Box>
           <CardContent>
-            <Button variant='contained' fullWidth>
-              what is this?
+            <Button variant='contained' fullWidth onClick={handleShowScope}>
+              Show Scope
             </Button>
           </CardContent>
         </Box>
