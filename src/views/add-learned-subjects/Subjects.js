@@ -71,8 +71,8 @@ const Subjects = ({
   const calculateSumByTermLabel = (data, targetTermLabel) => {
     // Calculate the sum of subject_credit for each termLabel
     const sumByTermLabel = data.reduce((acc, curr) => {
-      const { termLabel, subject_credit } = curr
-      acc[termLabel] = (acc[termLabel] || 0) + subject_credit
+      const { termLabel } = curr
+      acc[termLabel] = (acc[termLabel] || 0) + curr.subject?.subject_credit
       return acc
     }, {})
 

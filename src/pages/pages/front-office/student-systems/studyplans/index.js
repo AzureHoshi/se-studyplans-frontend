@@ -247,12 +247,13 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
 
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
+      console.log('term', getTerm)
       if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
-            cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
-            cp.stu_acad_rec_semester < getTerm.semester
+            cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id && cp.stu_acad_rec_year < getTerm.year
         )
+        console.log(checkParentinPlan)
         if (!checkParentinPlan)
           return alert(
             'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
@@ -276,7 +277,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
         stu_acad_rec_semester: String(getTerm.semester),
         stu_acad_rec_grade: gradeSelected
       }
-
+      console.log('newPostObject', newPostObject)
       try {
         axios.post(AddAPI, newPostObject)
 
@@ -306,6 +307,19 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
       }
     } else if (type === 'summer') {
       const getTerm = summerLabel?.find(t => t.label === currentTerm)
+      // console.log(getTerm)
+      if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+        const checkParentinPlan = stdStudyPlans?.find(
+          cp =>
+            cp.subject.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+            cp.stu_acad_rec_year < getTerm.year
+        )
+        if (!checkParentinPlan)
+          return alert(
+            'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
+              subjectSelected?.continue_subjects[0]?.parent?.subject_code
+          )
+      }
       const newLocalObject = {
         subject: {
           ...subjectSelected
@@ -323,6 +337,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
         stu_acad_rec_grade: gradeSelected
       }
 
+      console.log('newPostObject', newPostObject)
       try {
         axios.post(AddAPI, newPostObject)
         const updatePlan = [...stdStudyPlans, newLocalObject]
