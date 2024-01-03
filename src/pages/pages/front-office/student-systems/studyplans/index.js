@@ -54,101 +54,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
   const [openAddDialog, setOpenAddDialog] = useState(false) // state control add dialog
   const [showScope, setShowScope] = useState(false)
   const [gradeSelected, setGradeSelected] = useState('A+')
-
-  // const [stdStudyPlans, setStdStudyPlans] = useState([
-  //   {
-  //     subject_id: 115,
-  //     collegian_code: userProfile.std_no,
-  //     stu_acad_rec_year: 1,
-  //     stu_acad_rec_semester: 1,
-  //     subject_name_th: 'การฝึกเฉพาะตำแหน่ง',
-  //     subject_name_en: 'Practicum',
-  //     subject_code: 'ENGSE305',
-  //     subject_credit: 3,
-  //     termLabel: '1/2563',
-  //     stu_acad_rec_grade: 'A+',
-  //     continue_subjects: [
-  //       {
-  //         continue_subject_id: 115,
-  //         parent_id: null,
-  //         subject_id: 115,
-  //         is_deleted: 0,
-  //         created_at: '2023-12-29T18:28:37.000+00:00',
-  //         updated_at: '2023-12-29T18:28:37.000+00:00',
-  //         parent: null
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     subject_id: 74,
-  //     collegian_code: userProfile.std_no,
-  //     stu_acad_rec_year: 1,
-  //     stu_acad_rec_semester: 2,
-  //     subject_code: 'ENGSE510',
-  //     subject_name_th: 'คอมพิวเตอร์กราฟิกส์',
-  //     subject_name_en: 'Computer Graphics',
-  //     subject_credit: 3,
-  //     termLabel: '2/2563',
-  //     stu_acad_rec_grade: 'A+',
-  //     continue_subjects: [
-  //       {
-  //         continue_subject_id: 77,
-  //         parent_id: null,
-  //         subject_id: 74,
-  //         is_deleted: 0,
-  //         created_at: '2023-12-29T18:28:26.000+00:00',
-  //         updated_at: '2023-12-29T18:28:26.000+00:00',
-  //         parent: null
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     subject_id: 69,
-  //     collegian_code: userProfile.std_no,
-  //     stu_acad_rec_year: 1,
-  //     stu_acad_rec_semester: 3,
-  //     subject_code: 'ENGSE505',
-  //     subject_name_th: 'เทคโนโลยีบล็อคเชน',
-  //     subject_name_en: 'Blockchain Technology',
-  //     subject_credit: 3,
-  //     termLabel: '3/2563',
-  //     stu_acad_rec_grade: 'A+',
-  //     continue_subjects: [
-  //       {
-  //         continue_subject_id: 72,
-  //         parent_id: null,
-  //         subject_id: 69,
-  //         is_deleted: 0,
-  //         created_at: '2023-12-29T18:28:25.000+00:00',
-  //         updated_at: '2023-12-29T18:28:25.000+00:00',
-  //         parent: null
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     subject_id: 68,
-  //     collegian_code: userProfile.std_no,
-  //     stu_acad_rec_year: 1,
-  //     stu_acad_rec_semester: 3,
-  //     subject_code: 'ENGSE504',
-  //     subject_name_th: 'การประมวลผลแบบคลาวด์',
-  //     subject_name_en: 'Cloud Computing',
-  //     subject_credit: 3,
-  //     termLabel: '3/2563',
-  //     stu_acad_rec_grade: 'A+',
-  //     continue_subjects: [
-  //       {
-  //         continue_subject_id: 71,
-  //         parent_id: null,
-  //         subject_id: 68,
-  //         is_deleted: 0,
-  //         created_at: '2023-12-29T18:28:24.000+00:00',
-  //         updated_at: '2023-12-29T18:28:24.000+00:00',
-  //         parent: null
-  //       }
-  //     ]
-  //   }
-  // ])
+  const AddAPI = url.BASE_URL + `/stu-acad-recs/`
 
   const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo)
 
@@ -243,8 +149,6 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
   }
 
   const handleAddStudyPlans = async type => {
-    const AddAPI = url.BASE_URL + `/stu-acad-recs/`
-
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
       console.log('term', getTerm)
@@ -380,16 +284,27 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
       )
     } else {
       // remove studyplan
-      const removeSubject = stdStudyPlans?.filter(s => s.subject_id !== subjectSelected.subject_id)
-
-      setStdStudyPlans(removeSubject)
-      handleShowAlert(
-        'ได้ลบวิชา' +
-          subjectSelected.subject_code +
-          ' ' +
-          subjectSelected.subject_name_th +
-          ' ออกจากแผนการเรียนปัจจุบัน'
-      )
+      try {
+        axios.delete(AddAPI + studyPlan.stu_acad_rec_id)
+        const removeSubject = stdStudyPlans?.filter(s => s.subject_id !== subjectSelected.subject_id)
+        setStdStudyPlans(removeSubject)
+        handleShowAlert(
+          'ได้ลบวิชา' +
+            subjectSelected.subject_code +
+            ' ' +
+            subjectSelected.subject_name_th +
+            ' ออกจากแผนการเรียนปัจจุบัน'
+        )
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error (Not Found) here
+          console.error('Resource not found')
+          // You can redirect to a custom 404 page or do any other necessary actions
+        } else {
+          // Handle other errors
+          console.error('An error occurred:', error.message)
+        }
+      }
     }
   }
 

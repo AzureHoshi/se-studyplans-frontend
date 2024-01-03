@@ -250,7 +250,7 @@ const Subjects = ({
                               {s.subject_structures[0]?.subject_category_id === 1 ? 'General' : 'Specific'}
                             </Typography>
                           </Grid>
-                          {stdStudyPlans?.find(subj => subj.subject_id === s.subject_id) && (
+                          {stdStudyPlans?.find(subj => subj.subject?.subject_id === s.subject_id) && (
                             <Grid item xs={12} sm={6} md={12}>
                               <Typography
                                 variant='body2'
