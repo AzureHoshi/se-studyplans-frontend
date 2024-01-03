@@ -768,6 +768,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                 termLabel={termLabel}
                 summerLabel={summerLabel}
                 handleShowScope={handleShowScope}
+                setShowScope={setShowScope}
               />
             </Hidden>
             {!showScope ? (
@@ -904,30 +905,34 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                                     <Typography variant='body2'>
                                       {case1Result.subjectType?.subject_type_name}
                                     </Typography>
-                                    {case1Result.countScope > case1Result.credit_total && (
-                                      <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
-                                        (overflow)
-                                      </Typography>
-                                    )}
+                                    <Box>
+                                      {case1Result.countScope > case1Result.credit_total && (
+                                        <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
+                                          (overflow)
+                                        </Typography>
+                                      )}
 
-                                    {case1Result.countScope
-                                      ? case1Result.countScope + ' of ' + case1Result?.credit_total
-                                      : '0 of ' + case1Result?.credit_total}
+                                      {case1Result.countScope
+                                        ? case1Result.countScope + ' of ' + case1Result?.credit_total
+                                        : '0 of ' + case1Result?.credit_total}
+                                    </Box>
                                   </Box>
                                 ) : (
                                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
                                     <Typography variant='body2'>
                                       {case1Result.subjectGroup?.subject_group_name}
                                     </Typography>
-                                    {case1Result.countScope > case1Result.credit_total && (
-                                      <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
-                                        (overflow)
-                                      </Typography>
-                                    )}
+                                    <Box>
+                                      {case1Result.countScope > case1Result.credit_total && (
+                                        <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
+                                          (overflow)
+                                        </Typography>
+                                      )}
 
-                                    {case1Result.countScope
-                                      ? case1Result.countScope + ' of ' + case1Result?.credit_total
-                                      : '0 of ' + case1Result?.credit_total}
+                                      {case1Result.countScope
+                                        ? case1Result.countScope + ' of ' + case1Result?.credit_total
+                                        : '0 of ' + case1Result?.credit_total}
+                                    </Box>
                                   </Box>
                                 )}
                               </Box>

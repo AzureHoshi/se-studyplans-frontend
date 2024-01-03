@@ -33,7 +33,8 @@ const CardInfo = ({
   currentTerm,
   termLabel,
   summerLabel,
-  handleShowScope
+  handleShowScope,
+  setShowScope
 }) => {
   const [menuSubjectCursor, setMenuSubjectCursor] = useState(1)
   const [menuSemesterCursor, setMenuSemesterCursor] = useState(0)
@@ -71,6 +72,7 @@ const CardInfo = ({
                   handleChangeFilter(index)
                   setMenuSubjectCursor(index + 1)
                   setMenuSemesterCursor(0)
+                  setShowScope(false)
                 }}
               >
                 <ListItemButton
