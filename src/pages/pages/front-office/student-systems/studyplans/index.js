@@ -57,6 +57,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const AddAPI = url.BASE_URL + `/stu-acad-recs/`
 
   const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo)
+  const [curriculumScopeToDisplay, setCurriculumScopeToDisplay] = useState(curriculumScope)
 
   const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−', 'F']
 
@@ -215,6 +216,106 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     setStdStudyPlans(createTermLabel)
     console.log('createTermLabel', createTermLabel)
   }, [StudyPlanByStdNo])
+
+  // updatescope
+  useEffect(() => {
+    if (!stdStudyPlans || !curriculumScope) return
+    const newUpdates = []
+    stdStudyPlans?.map(s => {
+      // console.log(s)
+      if (s?.subject_structure[0]?.subjectGroup !== undefined) {
+        const finetoUpdateScope = curriculumScope
+          .filter(
+            scope => scope.subjectGroup?.subject_group_id === s?.subject_structure?.subjectGroup?.subject_group_id
+          )
+          .map(pre => ({
+            ...pre,
+            // countScope: pre.countScope !== s?.subject_credit ? pre.countScope - s?.subject_credit : s?.subject_credit
+            countScope: s?.subject.subject_credit
+          }))
+        if (finetoUpdateScope) {
+          const newUpdate = finetoUpdateScope[0]
+          // console.log('newUpdate1', newUpdate)
+          newUpdates.push(newUpdate)
+        }
+      } else {
+        const finetoUpdateScope = curriculumScope
+          .filter(scope => scope.subjectGroup?.subject_group_id === s?.subject_structure?.subject_group_id)
+          .map(pre => ({
+            ...pre,
+            // countScope: pre.countScope !== s?.subject_credit ? pre.countScope - s?.subject_credit : s?.subject_credit
+            countScope: s?.subject.subject_credit
+          }))
+        if (finetoUpdateScope) {
+          const newUpdate = finetoUpdateScope[0]
+          // console.log('newUpdate2', newUpdate)
+          newUpdates.push(newUpdate)
+        }
+      }
+    })
+    console.log('newUpdates', newUpdates)
+
+    const sumMap = {}
+
+    // Count occurrences of each curriculum_structures_v2_id in newUpdates
+    const occurrencesMap = {}
+
+    // Sum countScope for each curriculum_structures_v2_id in newUpdates
+    newUpdates.forEach(update => {
+      const curriculumStructuresV2Id = parseInt(update.curriculum_structures_v2_id)
+      // console.log('update.countScope', update.countScope)
+      // Accumulate countScope for each unique curriculum_structures_v2_id
+      sumMap[curriculumStructuresV2Id] = (sumMap[curriculumStructuresV2Id] || 0) + update.countScope
+
+      // Count occurrences of each curriculum_structures_v2_id
+      occurrencesMap[curriculumStructuresV2Id] = (occurrencesMap[curriculumStructuresV2Id] || 0) + 1
+    })
+
+    // Create an array with unique curriculum_structures_v2_id and set countScope to corresponding sums or keep original countScope
+    const uniqueNewUpdates = Object.keys(sumMap).map(curriculumStructuresV2Id => {
+      const matchingCurriculumStructure = newUpdates.find(
+        structure => structure.curriculum_structures_v2_id === parseInt(curriculumStructuresV2Id)
+      )
+
+      if (matchingCurriculumStructure) {
+        return {
+          ...matchingCurriculumStructure,
+          countScope: sumMap[curriculumStructuresV2Id]
+        }
+      } else {
+        // Handle the case where there is no matching structure (optional)
+        console.warn(
+          `No matching CurriculumStructure found for curriculum_structures_v2_id ${curriculumStructuresV2Id}`
+        )
+        return null // or provide default values
+      }
+    })
+
+    // Update curriculumStructures state based on uniqueNewUpdates
+    const updatedCurriculumStructures = curriculumScope.map(item => {
+      const curriculumStructuresV2Id = item.curriculum_structures_v2_id
+      // console.log('curriculumStructuresV2Id', curriculumStructuresV2Id)
+
+      // Find the corresponding entry in uniqueNewUpdates
+      const uniqueUpdate = uniqueNewUpdates.find(
+        update => update.curriculum_structures_v2_id === curriculumStructuresV2Id
+      )
+      if (uniqueUpdate) {
+      }
+      // Update countScope based on the difference
+      return {
+        ...item,
+        countScope:
+          uniqueUpdate && item.countScope + uniqueUpdate.countScope > 0
+            ? item.countScope + uniqueUpdate.countScope
+            : uniqueUpdate && item.countScope + uniqueUpdate.countScope === 0
+            ? 0
+            : item.countScope
+      }
+    })
+    console.log('updatedCurriculumStructures', updatedCurriculumStructures)
+    setCurriculumScopeToDisplay(updatedCurriculumStructures)
+  }, [curriculumScope, stdStudyPlans])
 
   const handleShowScope = () => {
     setShowScope(true)
@@ -741,14 +842,14 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                           maxWidth={'100%'}
                           sx={{ pl: 3, pr: 6, mb: 6, borderLeft: 1, borderColor: 'lightgrey' }}
                         >
-                          {curriculumScope?.filter(
+                          {curriculumScopeToDisplay?.filter(
                             categoryHasCredit =>
                               categoryHasCredit.subject_category_id !== null &&
                               categoryHasCredit.subject_type_id === null &&
                               categoryHasCredit.subject_group_id === null &&
                               categoryHasCredit.subjectCategory?.subject_category_name === categoryHeader
                           ).length > 0 ? (
-                            curriculumScope
+                            curriculumScopeToDisplay
                               ?.filter(
                                 categoryHasCredit =>
                                   categoryHasCredit.subject_category_id !== null &&
@@ -783,7 +884,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                             </Box>
                           )}
 
-                          {curriculumScope
+                          {curriculumScopeToDisplay
                             ?.filter(
                               case1 =>
                                 // condition category && type or category && group
@@ -803,18 +904,30 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                                     <Typography variant='body2'>
                                       {case1Result.subjectType?.subject_type_name}
                                     </Typography>
-                                    <Typography variant='body2' display='inline'>
-                                      {case1Result?.credit_total}
-                                    </Typography>
+                                    {case1Result.countScope > case1Result.credit_total && (
+                                      <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
+                                        (overflow)
+                                      </Typography>
+                                    )}
+
+                                    {case1Result.countScope
+                                      ? case1Result.countScope + ' of ' + case1Result?.credit_total
+                                      : '0 of ' + case1Result?.credit_total}
                                   </Box>
                                 ) : (
                                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
                                     <Typography variant='body2'>
                                       {case1Result.subjectGroup?.subject_group_name}
                                     </Typography>
-                                    <Typography variant='body2' display='inline'>
-                                      {case1Result?.credit_total}
-                                    </Typography>
+                                    {case1Result.countScope > case1Result.credit_total && (
+                                      <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
+                                        (overflow)
+                                      </Typography>
+                                    )}
+
+                                    {case1Result.countScope
+                                      ? case1Result.countScope + ' of ' + case1Result?.credit_total
+                                      : '0 of ' + case1Result?.credit_total}
                                   </Box>
                                 )}
                               </Box>
@@ -825,7 +938,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                               <Box key={typeHeader.subject_type_name} sx={{ ml: 3 }}>
                                 {/* {typeHeader.subject_type_name} */}
 
-                                {curriculumScope
+                                {curriculumScopeToDisplay
                                   ?.filter(
                                     case1 =>
                                       // condition category && type
@@ -846,7 +959,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
                                 {/* case 2 */}
 
-                                {curriculumScope
+                                {curriculumScopeToDisplay
                                   ?.filter(
                                     case2 =>
                                       // condition category && type && group
@@ -893,6 +1006,9 @@ export async function getServerSideProps() {
   const resCurriculumSE66Scope = await axios.get(
     url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
   ) // 2 for se 66
+
+  const addCountScope = resCurriculumSE66Scope.data.data.map(c => ({ ...c, countScope: 0 }))
+
   var dataPlan = []
   try {
     const resStudyPlan = await axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no)
@@ -923,7 +1039,7 @@ export async function getServerSideProps() {
     props: {
       SubjectData: resSubjects.data.data,
       StudyPlanByStdNo: dataPlan,
-      curriculumScope: resCurriculumSE66Scope.data.data
+      curriculumScope: addCountScope
     }
   }
 }

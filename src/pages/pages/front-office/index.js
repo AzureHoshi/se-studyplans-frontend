@@ -138,13 +138,13 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
       </SwipeableDrawer>
       <Main open={open}>
         <Box sx={{ ml: { xs: 0, md: 12 }, mt: 0 }}>
-          {isSmallScreen && (
+          <Hidden smUp>
             <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
               <IconButton onClick={() => setOpenSmallDrawer(true)}>
                 <MenuIcon />
               </IconButton>
             </Box>
-          )}
+          </Hidden>
           {pageState === 0 && (
             <Roadmap
               curriculumTree={curriculumTree}

@@ -133,9 +133,11 @@ const Subjects = ({
             onChange={(e, value) => {
               if (value !== null) {
                 setSearchSubject(value)
+                setSubjectSelected(data?.find(s => s.subject_id === value.subject_id))
                 // setState(pre => ({ ...pre, subject_group_id: value.subject_group_id }))
               } else {
                 setSearchSubject([])
+                setSubjectSelected([])
                 // setState(pre => ({ ...pre, subject_group_id: null }))
               }
             }}
