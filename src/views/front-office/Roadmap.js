@@ -218,6 +218,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
 
     return uniqueValuesArray
   }
+
   const getUniqueMultiValues = (arr, propertyPath1, propertyPath2, outputName1, outputName2) => {
     const uniqueValuesSet = new Set()
 

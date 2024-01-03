@@ -42,7 +42,7 @@ import { grey } from '@mui/material/colors'
 import { userProfile } from 'src/dummy'
 import { Selection } from 'src/components'
 
-const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
+const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const [switchContent, setSwitchContent] = useState(0) // for switch between search bar and display current term
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
   const [openAlertStatus, setOpenAlertStatus] = useState(false) // hide | show alert
@@ -77,6 +77,97 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
     { i: 3, year: 3, semester: 3, label: '' },
     { i: 4, year: 4, semester: 3, label: '' }
   ])
+
+  const [categoriesSubject, setCategoriesSubject] = useState([])
+  const [typesSubject, setTypesSubject] = useState([])
+  const [groupsSubject, setGroupsSubject] = useState([])
+
+  const getUniqueMultiValues = (arr, propertyPath1, propertyPath2, outputName1, outputName2) => {
+    const uniqueValuesSet = new Set()
+
+    arr.forEach(obj => {
+      const nestedProperties1 = propertyPath1.split('.')
+      const nestedProperties2 = propertyPath2.split('.')
+      let propertyValue1 = obj
+      let propertyValue2 = obj
+
+      for (let prop of nestedProperties1) {
+        if (propertyValue1 && propertyValue1.hasOwnProperty(prop)) {
+          propertyValue1 = propertyValue1[prop]
+        } else {
+          propertyValue1 = undefined
+          break
+        }
+      }
+
+      for (let prop of nestedProperties2) {
+        if (propertyValue2 && propertyValue2.hasOwnProperty(prop)) {
+          propertyValue2 = propertyValue2[prop]
+        } else {
+          propertyValue2 = undefined
+          break
+        }
+      }
+
+      const uniqueObject = {
+        [outputName1]: propertyValue1,
+        [outputName2]: propertyValue2
+      }
+
+      uniqueValuesSet.add(JSON.stringify(uniqueObject))
+    })
+
+    const uniqueValuesArray = Array.from(uniqueValuesSet).map(str => JSON.parse(str))
+
+    return uniqueValuesArray
+  }
+
+  const UniqueCategories = getUniqueValues(curriculumScope, 'subjectCategory.subject_category_name')
+
+  const UniqueTypes = getUniqueMultiValues(
+    curriculumScope,
+    'subjectCategory.subject_category_name',
+    'subjectType.subject_type_name',
+    'subject_category_name',
+    'subject_type_name'
+  )
+
+  useEffect(() => {
+    if (stdStudyPlans) {
+      // console.log('Subjects', Subjects)
+
+      // Use Set to store unique values
+      const uniqueCategories = new Set()
+      const uniqueTypes = new Set()
+      const uniqueGroups = new Set()
+
+      const subjectStructure = stdStudyPlans?.map(v => v.subject_structures)
+
+      // console.log('subjectStructure', subjectStructure)
+
+      //   // Iterate over the array and populate the sets
+      Object.values(subjectStructure)?.forEach(subject => {
+        uniqueCategories.add(subject[0]?.subjectCategory?.subject_category_name)
+        uniqueTypes.add(subject[0]?.subjectType?.subject_type_name)
+        uniqueGroups.add(subject[0]?.subjectGroup?.subject_group_name)
+      })
+
+      // Convert sets to arrays if needed
+      const uniqueCategoriesArray = Array.from(uniqueCategories)
+      const uniqueTypesArray = Array.from(uniqueTypes)
+      const uniqueGroupsArray = Array.from(uniqueGroups)
+
+      setCategoriesSubject(uniqueCategoriesArray)
+      setTypesSubject(uniqueTypesArray)
+      setGroupsSubject(uniqueGroupsArray)
+
+      // console.log('Unique Subject Categories:', uniqueCategoriesArray)
+      // console.log('Unique Subject Types:', uniqueTypesArray)
+      // console.log('Unique Subject Groups:', uniqueGroupsArray)
+    } else {
+      return
+    }
+  }, [stdStudyPlans])
 
   useLayoutEffect(() => {
     if (!userProfile) return
@@ -601,11 +692,13 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
                 )}
               </Grid>
             ) : (
-              <Grid container>
-                <Grid item xs={12} sx={{ p: 6 }}>
+              <Grid container sx={{ p: 6 }}>
+                <Grid item xs={12} sx={{ display: 'block' }}>
                   <Button variant='outlined' onClick={handleCloseScope}>
                     Back
                   </Button>
+
+                  {/* show scope here */}
                 </Grid>
               </Grid>
             )}
@@ -621,6 +714,9 @@ Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 export async function getServerSideProps() {
   const resSubjects = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
   const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+  const resCurriculumSE66Scope = await axios.get(
+    url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
+  ) // 2 for se 66
   var dataPlan = []
   try {
     const resStudyPlan = await axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no)
@@ -650,7 +746,8 @@ export async function getServerSideProps() {
   return {
     props: {
       SubjectData: resSubjects.data.data,
-      StudyPlanByStdNo: dataPlan
+      StudyPlanByStdNo: dataPlan,
+      curriculumScope: resCurriculumSE66Scope.data.data
     }
   }
 }
