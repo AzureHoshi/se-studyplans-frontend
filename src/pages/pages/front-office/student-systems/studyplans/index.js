@@ -42,7 +42,7 @@ import { grey } from '@mui/material/colors'
 import { userProfile } from 'src/dummy'
 import { Selection } from 'src/components'
 
-const Studyplans = ({ SubjectData }) => {
+const Studyplans = ({ SubjectData, StudyPlanByStdNo }) => {
   const [switchContent, setSwitchContent] = useState(0) // for switch between search bar and display current term
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
   const [openAlertStatus, setOpenAlertStatus] = useState(false) // hide | show alert
@@ -53,93 +53,106 @@ const Studyplans = ({ SubjectData }) => {
   const [semesterType, setSemesterType] = useState('normal') // for radio button in add subject dialog
   const [openAddDialog, setOpenAddDialog] = useState(false) // state control add dialog
   const [showScope, setShowScope] = useState(false)
+  const [gradeSelected, setGradeSelected] = useState('A+')
 
-  const [stdStudyPlans, setStdStudyPlans] = useState([
-    {
-      subject_id: 115,
-      academic_year: 1,
-      academic_semester: 1,
-      subject_name_th: 'การฝึกเฉพาะตำแหน่ง',
-      subject_name_en: 'Practicum',
-      subject_code: 'ENGSE305',
-      subject_credit: 3,
-      termLabel: '1/2563',
-      continue_subjects: [
-        {
-          continue_subject_id: 115,
-          parent_id: null,
-          subject_id: 115,
-          is_deleted: 0,
-          created_at: '2023-12-29T18:28:37.000+00:00',
-          updated_at: '2023-12-29T18:28:37.000+00:00',
-          parent: null
-        }
-      ]
-    },
-    {
-      subject_id: 74,
-      academic_year: 1,
-      academic_semester: 2,
-      subject_code: 'ENGSE510',
-      subject_name_th: 'คอมพิวเตอร์กราฟิกส์',
-      subject_name_en: 'Computer Graphics',
-      subject_credit: 3,
-      termLabel: '2/2563',
-      continue_subjects: [
-        {
-          continue_subject_id: 77,
-          parent_id: null,
-          subject_id: 74,
-          is_deleted: 0,
-          created_at: '2023-12-29T18:28:26.000+00:00',
-          updated_at: '2023-12-29T18:28:26.000+00:00',
-          parent: null
-        }
-      ]
-    },
-    {
-      subject_id: 69,
-      academic_year: 1,
-      academic_semester: 3,
-      subject_code: 'ENGSE505',
-      subject_name_th: 'เทคโนโลยีบล็อคเชน',
-      subject_name_en: 'Blockchain Technology',
-      subject_credit: 3,
-      termLabel: '3/2563',
-      continue_subjects: [
-        {
-          continue_subject_id: 72,
-          parent_id: null,
-          subject_id: 69,
-          is_deleted: 0,
-          created_at: '2023-12-29T18:28:25.000+00:00',
-          updated_at: '2023-12-29T18:28:25.000+00:00',
-          parent: null
-        }
-      ]
-    },
-    {
-      subject_id: 68,
-      academic_year: 1,
-      academic_semester: 3,
-      subject_code: 'ENGSE504',
-      subject_name_th: 'การประมวลผลแบบคลาวด์',
-      subject_name_en: 'Cloud Computing',
-      subject_credit: 3,
-      termLabel: '3/2563',
-      continue_subjects: [
-        {
-          continue_subject_id: 71,
-          parent_id: null,
-          subject_id: 68,
-          is_deleted: 0,
-          created_at: '2023-12-29T18:28:24.000+00:00',
-          updated_at: '2023-12-29T18:28:24.000+00:00',
-          parent: null
-        }
-      ]
-    }
-  ])
+  // const [stdStudyPlans, setStdStudyPlans] = useState([
+  //   {
+  //     subject_id: 115,
+  //     collegian_code: userProfile.std_no,
+  //     stu_acad_rec_year: 1,
+  //     stu_acad_rec_semester: 1,
+  //     subject_name_th: 'การฝึกเฉพาะตำแหน่ง',
+  //     subject_name_en: 'Practicum',
+  //     subject_code: 'ENGSE305',
+  //     subject_credit: 3,
+  //     termLabel: '1/2563',
+  //     stu_acad_rec_grade: 'A+',
+  //     continue_subjects: [
+  //       {
+  //         continue_subject_id: 115,
+  //         parent_id: null,
+  //         subject_id: 115,
+  //         is_deleted: 0,
+  //         created_at: '2023-12-29T18:28:37.000+00:00',
+  //         updated_at: '2023-12-29T18:28:37.000+00:00',
+  //         parent: null
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     subject_id: 74,
+  //     collegian_code: userProfile.std_no,
+  //     stu_acad_rec_year: 1,
+  //     stu_acad_rec_semester: 2,
+  //     subject_code: 'ENGSE510',
+  //     subject_name_th: 'คอมพิวเตอร์กราฟิกส์',
+  //     subject_name_en: 'Computer Graphics',
+  //     subject_credit: 3,
+  //     termLabel: '2/2563',
+  //     stu_acad_rec_grade: 'A+',
+  //     continue_subjects: [
+  //       {
+  //         continue_subject_id: 77,
+  //         parent_id: null,
+  //         subject_id: 74,
+  //         is_deleted: 0,
+  //         created_at: '2023-12-29T18:28:26.000+00:00',
+  //         updated_at: '2023-12-29T18:28:26.000+00:00',
+  //         parent: null
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     subject_id: 69,
+  //     collegian_code: userProfile.std_no,
+  //     stu_acad_rec_year: 1,
+  //     stu_acad_rec_semester: 3,
+  //     subject_code: 'ENGSE505',
+  //     subject_name_th: 'เทคโนโลยีบล็อคเชน',
+  //     subject_name_en: 'Blockchain Technology',
+  //     subject_credit: 3,
+  //     termLabel: '3/2563',
+  //     stu_acad_rec_grade: 'A+',
+  //     continue_subjects: [
+  //       {
+  //         continue_subject_id: 72,
+  //         parent_id: null,
+  //         subject_id: 69,
+  //         is_deleted: 0,
+  //         created_at: '2023-12-29T18:28:25.000+00:00',
+  //         updated_at: '2023-12-29T18:28:25.000+00:00',
+  //         parent: null
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     subject_id: 68,
+  //     collegian_code: userProfile.std_no,
+  //     stu_acad_rec_year: 1,
+  //     stu_acad_rec_semester: 3,
+  //     subject_code: 'ENGSE504',
+  //     subject_name_th: 'การประมวลผลแบบคลาวด์',
+  //     subject_name_en: 'Cloud Computing',
+  //     subject_credit: 3,
+  //     termLabel: '3/2563',
+  //     stu_acad_rec_grade: 'A+',
+  //     continue_subjects: [
+  //       {
+  //         continue_subject_id: 71,
+  //         parent_id: null,
+  //         subject_id: 68,
+  //         is_deleted: 0,
+  //         created_at: '2023-12-29T18:28:24.000+00:00',
+  //         updated_at: '2023-12-29T18:28:24.000+00:00',
+  //         parent: null
+  //       }
+  //     ]
+  //   }
+  // ])
+
+  const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo)
+
+  const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−', 'F']
 
   // จริงๆต้องดึงข้อมูลการศึกษาของนักศึกษามาว่ามีกี่เทอมแล้วเอามาทำข้อมูล ด้านล่างนี้เป็น Default สำหรับนักศึกษาที่ยังไม่ได้เพิ่มข้อมูลลงในระบบ
   const [termLabel, setTermLabel] = useState([
@@ -180,12 +193,33 @@ const Studyplans = ({ SubjectData }) => {
     setCurrentTerm(createTermLabel[0].label)
   }, [userProfile])
 
+  useLayoutEffect(() => {
+    if (!StudyPlanByStdNo) {
+      return
+    }
+    const createTermLabel = StudyPlanByStdNo?.map(pre => {
+      const yearFromStdNo =
+        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
+      return {
+        ...pre,
+        termLabel: String(pre.stu_acad_rec_semester + '/' + yearFromStdNo)
+      }
+    })
+    setStdStudyPlans(createTermLabel)
+    console.log('createTermLabel', createTermLabel)
+  }, [StudyPlanByStdNo])
+
   const handleShowScope = () => {
     setShowScope(true)
   }
   const handleCloseScope = () => {
     setShowScope(false)
   }
+
+  const handleChangeGrade = grade => {
+    setGradeSelected(grade)
+  }
+
   const handleChangeSemesterType = value => {
     setSemesterType(value)
     if (value === 'normal') setCurrentTerm(termLabel[0].label)
@@ -208,14 +242,16 @@ const Studyplans = ({ SubjectData }) => {
     setOpenAddDialog(true)
   }
 
-  const handleAddStudyPlans = type => {
+  const handleAddStudyPlans = async type => {
+    const AddAPI = url.BASE_URL + `/stu-acad-recs/`
+
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
       if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
             cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
-            cp.academic_semester < getTerm.semester
+            cp.stu_acad_rec_semester < getTerm.semester
         )
         if (!checkParentinPlan)
           return alert(
@@ -223,46 +259,96 @@ const Studyplans = ({ SubjectData }) => {
               subjectSelected?.continue_subjects[0]?.parent?.subject_code
           )
       }
-      const newObject = {
-        ...subjectSelected,
-        academic_year: getTerm.year,
-        academic_semester: getTerm.semester,
+      const newLocalObject = {
+        subject: {
+          ...subjectSelected
+        },
+        stu_acad_rec_year: getTerm.year,
+        stu_acad_rec_semester: getTerm.semester,
+        stu_acad_rec_grade: gradeSelected,
         termLabel: currentTerm
       }
-      const updatePlan = [...stdStudyPlans, newObject]
-      // console.log('updatePlan', [...stdStudyPlans, newObject])
-      setStdStudyPlans(updatePlan)
-      setOpenAddDialog(false)
-      handleShowAlert(
-        'ได้เพิ่มวิชา' +
-          subjectSelected.subject_code +
-          ' ' +
-          subjectSelected.subject_name_th +
-          ' ' +
-          'ในปีการศึกษา ' +
-          currentTerm
-      )
+
+      const newPostObject = {
+        collegian_code: String(userProfile.std_no),
+        subject_id: String(subjectSelected.subject_id),
+        stu_acad_rec_year: String(getTerm.year),
+        stu_acad_rec_semester: String(getTerm.semester),
+        stu_acad_rec_grade: gradeSelected
+      }
+
+      try {
+        axios.post(AddAPI, newPostObject)
+
+        const updatePlan = [...stdStudyPlans, newLocalObject]
+        setStdStudyPlans(updatePlan)
+        setOpenAddDialog(false)
+        handleShowAlert(
+          'ได้เพิ่มวิชา' +
+            subjectSelected.subject_code +
+            ' ' +
+            subjectSelected.subject_name_th +
+            ' ' +
+            'ในปีการศึกษา ' +
+            currentTerm
+        )
+        setGradeSelected('A+')
+        // Handle the successful response here
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error (Not Found) here
+          console.error('Resource not found')
+          // You can redirect to a custom 404 page or do any other necessary actions
+        } else {
+          // Handle other errors
+          console.error('An error occurred:', error.message)
+        }
+      }
     } else if (type === 'summer') {
       const getTerm = summerLabel?.find(t => t.label === currentTerm)
-      const newObject = {
-        ...subjectSelected,
-        academic_year: getTerm.year,
-        academic_semester: getTerm.semester,
+      const newLocalObject = {
+        subject: {
+          ...subjectSelected
+        },
+        stu_acad_rec_year: getTerm.year,
+        stu_acad_rec_semester: getTerm.semester,
+        stu_acad_rec_grade: gradeSelected,
         termLabel: currentTerm
       }
-      const updatePlan = [...stdStudyPlans, newObject]
-      // console.log('updatePlan', [...stdStudyPlans, newObject])
-      setStdStudyPlans(updatePlan)
-      setOpenAddDialog(false)
-      handleShowAlert(
-        'ได้เพิ่มวิชา' +
-          subjectSelected.subject_code +
-          ' ' +
-          subjectSelected.subject_name_th +
-          ' ' +
-          'ในปีการศึกษา ' +
-          currentTerm
-      )
+      const newPostObject = {
+        collegian_code: String(userProfile.std_no),
+        subject_id: String(subjectSelected.subject_id),
+        stu_acad_rec_year: String(getTerm.year),
+        stu_acad_rec_semester: String(getTerm.semester),
+        stu_acad_rec_grade: gradeSelected
+      }
+
+      try {
+        axios.post(AddAPI, newPostObject)
+        const updatePlan = [...stdStudyPlans, newLocalObject]
+
+        setStdStudyPlans(updatePlan)
+        setOpenAddDialog(false)
+        handleShowAlert(
+          'ได้เพิ่มวิชา' +
+            subjectSelected.subject_code +
+            ' ' +
+            subjectSelected.subject_name_th +
+            ' ' +
+            'ในปีการศึกษา ' +
+            currentTerm
+        )
+        setGradeSelected('A+')
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error (Not Found) here
+          console.error('Resource not found')
+          // You can redirect to a custom 404 page or do any other necessary actions
+        } else {
+          // Handle other errors
+          console.error('An error occurred:', error.message)
+        }
+      }
     }
   }
 
@@ -297,7 +383,7 @@ const Studyplans = ({ SubjectData }) => {
   }
 
   const handleAddSemester = type => {
-    if (!type) reuturn
+    if (!type) return
     if (type === 'normal') {
       let newYear =
         '25' + (parseInt(userProfile.std_no.substring(0, 2)) + termLabel[termLabel.length - 1].year).toString()
@@ -444,19 +530,7 @@ const Studyplans = ({ SubjectData }) => {
                     <Grid item xs={12}>
                       <FormControl>
                         <FormLabel sx={{ fontSize: '0.875rem' }}>เพิ่มปีการศึกษา</FormLabel>
-                        {/* <RadioGroup
-                          row
-                          // defaultValue='normal'
-                          aria-label='semestertype'
-                          onChange={e => {
-                            handleAddSemester(e.target.value)
-                            setCurrentTerm(e.target.value)
-                            handleChangeSemesterType(e.target.value)
-                          }}
-                        >
-                          <FormControlLabel sx={{ mr: 8 }} value='normal' label='ภาคปกติ(normal)' control={<Radio />} />
-                          <FormControlLabel value='summer' label='ภาคฤดูร้อน(summer)' control={<Radio />} />
-                        </RadioGroup> */}
+
                         <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1.5 }}>
                           <Button
                             onClick={() => {
@@ -485,6 +559,29 @@ const Studyplans = ({ SubjectData }) => {
                     </Grid>
                   </Grid>
                 </DialogContent>
+              </Grid>
+              {/* กรอกเกรด */}
+              <Grid container sx={{ border: 1, borderRadius: 2, borderColor: grey[300], mt: 2.5 }}>
+                <Grid container sx={{ m: 3.5 }}>
+                  <Grid item xs={12} md={3}>
+                    <Typography sx={{ m: 2.5 }}>เกรดที่ได้รับ</Typography>
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Selection
+                      height={40}
+                      width={'100%'}
+                      selectionValue={gradeSelected || 'A+'}
+                      handleChange={e => {
+                        handleChangeGrade(e.target.value)
+                      }}
+                      Items={gradeItems?.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </DialogContent>
             <DialogActions>
@@ -594,6 +691,22 @@ Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 export async function getServerSideProps() {
   const resSubjects = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
   const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+  var dataPlan = []
+  try {
+    const resStudyPlan = await axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no)
+
+    // Handle the successful response here
+    dataPlan = resStudyPlan.data.data
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // Handle 404 error (Not Found) here
+      console.error('Resource not found')
+      // You can redirect to a custom 404 page or do any other necessary actions
+    } else {
+      // Handle other errors
+      console.error('An error occurred:', error.message)
+    }
+  }
   if (resInterestResult.data.labels.length === 0) {
     // router.push('/pages/front-office/student-systems/interest-survey/')
     return {
@@ -606,7 +719,8 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      SubjectData: resSubjects.data.data
+      SubjectData: resSubjects.data.data,
+      StudyPlanByStdNo: dataPlan
     }
   }
 }

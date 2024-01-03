@@ -291,14 +291,14 @@ const Subjects = ({
                     borderRadius: 2
                   }}
                 >
-                  <Grid item xs={8}>
-                    <Typography variant='caption'>{stdp.subject_code}</Typography>
+                  <Grid item xs={6}>
+                    <Typography variant='caption'>{stdp.subject?.subject_code}</Typography>
                     <Typography variant='body2' noWrap>
-                      {stdp.subject_name_th}
+                      {stdp.subject?.subject_name_th}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4} sx={{ p: 2.5, textAlign: 'end' }}>
-                    {stdp.subject_credit}
+                  <Grid item xs={6} sx={{ p: 2.5, textAlign: 'end' }}>
+                    {stdp.stu_acad_rec_grade + '(' + stdp.subject?.subject_credit + ' Credit)'}
                   </Grid>
                 </Grid>
               ))}
