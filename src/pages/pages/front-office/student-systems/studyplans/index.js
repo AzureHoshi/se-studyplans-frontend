@@ -156,6 +156,28 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     'subject_type_name'
   )
 
+  const totalCreditByScope = curriculumScope.reduce((sum, currentItem) => {
+    // Check if the subject property exists and has the subject_credit property
+    if (currentItem.credit_total) {
+      // Add the subject_credit to the sum
+      return sum + currentItem.credit_total
+    } else {
+      // If the property is missing or doesn't have subject_credit, return the current sum
+      return sum
+    }
+  }, 0)
+
+  const totalCurrentSubjectCredit = stdStudyPlans.reduce((sum, currentItem) => {
+    // Check if the subject property exists and has the subject_credit property
+    if (currentItem.subject && currentItem.subject.subject_credit) {
+      // Add the subject_credit to the sum
+      return sum + currentItem.subject.subject_credit
+    } else {
+      // If the property is missing or doesn't have subject_credit, return the current sum
+      return sum
+    }
+  }, 0)
+
   useLayoutEffect(() => {
     if (!userProfile) return
     const createTermLabel = termLabel.map(pre => {
@@ -705,11 +727,16 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                   {/* show scope here */}
                   <Box sx={{ m: 6, ml: 0 }}>
                     <Grid container sx={{ width: '100%', px: 4 }}>
+                      <Grid item xs={12} sx={{ pb: 6 }}>
+                        <Typography variant='body2'>
+                          {' '}
+                          {'current total credit : ' + totalCurrentSubjectCredit + '/' + totalCreditByScope}
+                        </Typography>
+                      </Grid>
                       {UniqueCategories.map(categoryHeader => (
                         <Grid
                           item
                           xs={12}
-                          sm={6}
                           key={categoryHeader}
                           maxWidth={'100%'}
                           sx={{ pl: 3, pr: 6, mb: 6, borderLeft: 1, borderColor: 'lightgrey' }}
