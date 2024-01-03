@@ -148,7 +148,7 @@ const SubjectDetails = ({
             variant='contained'
             sx={{ px: 4, ml: 2, background: red[200], ':hover': { background: red[300] } }}
             // onClick={() => handleShowAlert('ได้ลบ ENGSEXXX ออกจากเทอม 1/2023 สำเร็จ', 'warning')}
-            onClick={() => handleRemoveStudyPlan(subjectSelected)}
+            onClick={() => handleRemoveStudyPlan(stdStudyPlans?.find(s => s.subject_id === subjectSelected.subject_id))}
           >
             Remove Subject
           </Button>

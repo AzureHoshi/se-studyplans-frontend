@@ -78,10 +78,34 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     { i: 4, year: 4, semester: 3, label: '' }
   ])
 
-  const [categoriesSubject, setCategoriesSubject] = useState([])
-  const [typesSubject, setTypesSubject] = useState([])
-  const [groupsSubject, setGroupsSubject] = useState([])
+  function getUniqueValues(arr, propertyPath) {
+    const uniqueValuesSet = new Set()
 
+    arr.forEach(obj => {
+      // Use propertyPath to access nested properties
+      const nestedProperties = propertyPath.split('.')
+      let propertyValue = obj
+
+      for (let prop of nestedProperties) {
+        if (propertyValue && propertyValue.hasOwnProperty(prop)) {
+          propertyValue = propertyValue[prop]
+        } else {
+          // Handle cases where the nested property doesn't exist
+          propertyValue = undefined
+          break
+        }
+      }
+
+      // Add the value to the Set
+      uniqueValuesSet.add(propertyValue)
+    })
+
+    // Convert the Set back to an array and return it
+
+    const uniqueValuesArray = Array.from(uniqueValuesSet)
+
+    return uniqueValuesArray
+  }
   const getUniqueMultiValues = (arr, propertyPath1, propertyPath2, outputName1, outputName2) => {
     const uniqueValuesSet = new Set()
 
@@ -132,43 +156,6 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     'subject_type_name'
   )
 
-  useEffect(() => {
-    if (stdStudyPlans) {
-      // console.log('Subjects', Subjects)
-
-      // Use Set to store unique values
-      const uniqueCategories = new Set()
-      const uniqueTypes = new Set()
-      const uniqueGroups = new Set()
-
-      const subjectStructure = stdStudyPlans?.map(v => v.subject_structures)
-
-      // console.log('subjectStructure', subjectStructure)
-
-      //   // Iterate over the array and populate the sets
-      Object.values(subjectStructure)?.forEach(subject => {
-        uniqueCategories.add(subject[0]?.subjectCategory?.subject_category_name)
-        uniqueTypes.add(subject[0]?.subjectType?.subject_type_name)
-        uniqueGroups.add(subject[0]?.subjectGroup?.subject_group_name)
-      })
-
-      // Convert sets to arrays if needed
-      const uniqueCategoriesArray = Array.from(uniqueCategories)
-      const uniqueTypesArray = Array.from(uniqueTypes)
-      const uniqueGroupsArray = Array.from(uniqueGroups)
-
-      setCategoriesSubject(uniqueCategoriesArray)
-      setTypesSubject(uniqueTypesArray)
-      setGroupsSubject(uniqueGroupsArray)
-
-      // console.log('Unique Subject Categories:', uniqueCategoriesArray)
-      // console.log('Unique Subject Types:', uniqueTypesArray)
-      // console.log('Unique Subject Groups:', uniqueGroupsArray)
-    } else {
-      return
-    }
-  }, [stdStudyPlans])
-
   useLayoutEffect(() => {
     if (!userProfile) return
     const createTermLabel = termLabel.map(pre => {
@@ -199,6 +186,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
       return {
         ...pre,
+        subject_code: pre.subject.subject_code,
         termLabel: String(pre.stu_acad_rec_semester + '/' + yearFromStdNo)
       }
     })
@@ -243,25 +231,35 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
       console.log('term', getTerm)
+      console.log('All Plans', stdStudyPlans)
       if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
-            cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id && cp.stu_acad_rec_year < getTerm.year
+            (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+              cp.stu_acad_rec_year < getTerm.year) ||
+            (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+              cp.stu_acad_rec_year === getTerm.year &&
+              cp.stu_acad_rec_semester < getTerm.semester)
         )
-        console.log(checkParentinPlan)
+        console.log('checkParentinPlan', checkParentinPlan)
         if (!checkParentinPlan)
           return alert(
             'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
               subjectSelected?.continue_subjects[0]?.parent?.subject_code
           )
       }
+      // console.log('subjectSelected', subjectSelected)
       const newLocalObject = {
         subject: {
           ...subjectSelected
         },
+        subject_code: subjectSelected.subject_code,
+        subject_id: subjectSelected.subject_id,
         stu_acad_rec_year: getTerm.year,
         stu_acad_rec_semester: getTerm.semester,
         stu_acad_rec_grade: gradeSelected,
+        continue_subjects: [...subjectSelected.continue_subjects],
+        subject_structure: subjectSelected.subject_structures[0],
         termLabel: currentTerm
       }
 
@@ -273,6 +271,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         stu_acad_rec_grade: gradeSelected
       }
       console.log('newPostObject', newPostObject)
+      console.log('newLocalObject', newLocalObject)
       try {
         axios.post(AddAPI, newPostObject)
 
@@ -319,9 +318,13 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         subject: {
           ...subjectSelected
         },
+        subject_code: subjectSelected.subject_code,
+        subject_id: subjectSelected.subject_id,
         stu_acad_rec_year: getTerm.year,
         stu_acad_rec_semester: getTerm.semester,
         stu_acad_rec_grade: gradeSelected,
+        continue_subjects: [...subjectSelected.continue_subjects],
+        subject_structure: subjectSelected.subject_structures[0],
         termLabel: currentTerm
       }
       const newPostObject = {
@@ -365,6 +368,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const handleRemoveStudyPlan = studyPlan => {
     if (!studyPlan) return
     const checkChildren = stdStudyPlans?.filter(s => s.continue_subjects[0]?.parent_id === studyPlan?.subject_id)
+    console.log('checkChildren', checkChildren)
     if (checkChildren.length > 0) {
       // alert 'this subject have childrens in studyplan please remove all children before remove this subject'
       const propertyValues = checkChildren.map(obj => obj['subject_code'])
@@ -699,6 +703,151 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                   </Button>
 
                   {/* show scope here */}
+                  <Box sx={{ m: 6, ml: 0 }}>
+                    <Grid container sx={{ width: '100%', px: 4 }}>
+                      {UniqueCategories.map(categoryHeader => (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          key={categoryHeader}
+                          maxWidth={'100%'}
+                          sx={{ pl: 3, pr: 6, mb: 6, borderLeft: 1, borderColor: 'lightgrey' }}
+                        >
+                          {curriculumScope?.filter(
+                            categoryHasCredit =>
+                              categoryHasCredit.subject_category_id !== null &&
+                              categoryHasCredit.subject_type_id === null &&
+                              categoryHasCredit.subject_group_id === null &&
+                              categoryHasCredit.subjectCategory?.subject_category_name === categoryHeader
+                          ).length > 0 ? (
+                            curriculumScope
+                              ?.filter(
+                                categoryHasCredit =>
+                                  categoryHasCredit.subject_category_id !== null &&
+                                  categoryHasCredit.subject_type_id === null &&
+                                  categoryHasCredit.subject_group_id === null &&
+                                  categoryHasCredit.subjectCategory?.subject_category_name === categoryHeader
+                              )
+                              .map(categoryHasCreditResult => (
+                                <Box
+                                  key={categoryHasCreditResult.curriculum_structures_v2_id}
+                                  sx={{ display: 'flex', justifyContent: 'space-between' }}
+                                >
+                                  <Typography variant='body1'>
+                                    {categoryHasCreditResult?.subjectCategory?.subject_category_name}
+                                  </Typography>
+                                  <Box sx={{ display: 'flex' }}>
+                                    <Typography variant='body2' sx={{ display: 'inline' }}>
+                                      {categoryHasCreditResult?.credit_total}
+                                    </Typography>
+                                    <Typography variant='body2' sx={{ ml: 2 }}>
+                                      Credit
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              ))
+                          ) : (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <Typography variant='body1' key={categoryHeader}>
+                                {categoryHeader}
+                              </Typography>
+                              <Typography variant='body2'>Credit</Typography>
+                            </Box>
+                          )}
+
+                          {curriculumScope
+                            ?.filter(
+                              case1 =>
+                                // condition category && type or category && group
+                                (case1.subject_category_id !== null &&
+                                  case1.subject_type_id !== null &&
+                                  case1.subjectCategory?.subject_category_name === categoryHeader &&
+                                  case1.subject_group_id === null) ||
+                                (case1.subject_category_id !== null &&
+                                  case1.subject_group_id !== null &&
+                                  case1.subjectCategory?.subject_category_name === categoryHeader &&
+                                  case1.subject_type_id === null)
+                            )
+                            .map(case1Result => (
+                              <Box key={case1Result.curriculum_structures_v2_id}>
+                                {case1Result.subject_type_id !== null ? (
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                                    <Typography variant='body2'>
+                                      {case1Result.subjectType?.subject_type_name}
+                                    </Typography>
+                                    <Typography variant='body2' display='inline'>
+                                      {case1Result?.credit_total}
+                                    </Typography>
+                                  </Box>
+                                ) : (
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                                    <Typography variant='body2'>
+                                      {case1Result.subjectGroup?.subject_group_name}
+                                    </Typography>
+                                    <Typography variant='body2' display='inline'>
+                                      {case1Result?.credit_total}
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </Box>
+                            ))}
+
+                          {UniqueTypes.filter(filterType => filterType.subject_category_name === categoryHeader).map(
+                            typeHeader => (
+                              <Box key={typeHeader.subject_type_name} sx={{ ml: 3 }}>
+                                {/* {typeHeader.subject_type_name} */}
+
+                                {curriculumScope
+                                  ?.filter(
+                                    case1 =>
+                                      // condition category && type
+                                      case1.subject_category_id !== null &&
+                                      case1.subject_type_id !== null &&
+                                      case1.subject_group_id === null
+                                  )
+                                  .map(case1Duplicate => (
+                                    <Box key={case1Duplicate.curriculum_structures_v2_id}>
+                                      {case1Duplicate.subjectType.subject_type_name !==
+                                        typeHeader.subject_type_name && (
+                                        <Typography>{typeHeader.subject_type_name}</Typography>
+                                      )}
+                                    </Box>
+                                  ))}
+
+                                {/* <Typography>{typeHeader.subject_type_name}</Typography> */}
+
+                                {/* case 2 */}
+
+                                {curriculumScope
+                                  ?.filter(
+                                    case2 =>
+                                      // condition category && type && group
+                                      case2.subject_category_id !== null &&
+                                      case2.subject_type_id !== null &&
+                                      case2.subject_group_id !== null &&
+                                      case2.subjectCategory?.subject_category_name === categoryHeader &&
+                                      case2.subjectType?.subject_type_name === typeHeader.subject_type_name
+                                  )
+                                  .map(case2Result => (
+                                    <Box key={case2Result.curriculum_structures_v2_id} sx={{ ml: 3 }}>
+                                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+                                        <Typography variant='body2'>
+                                          {case2Result.subjectGroup?.subject_group_name}
+                                        </Typography>
+                                        <Typography variant='body1' display='inline'>
+                                          {' ' + case2Result.credit_total + ' credit'}
+                                        </Typography>
+                                      </Box>
+                                    </Box>
+                                  ))}
+                              </Box>
+                            )
+                          )}
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
                 </Grid>
               </Grid>
             )}
