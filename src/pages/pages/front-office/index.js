@@ -136,9 +136,52 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
           </Grid>
         </Grid>
       </SwipeableDrawer>
+      <Hidden mdDown>
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box'
+            }
+          }}
+          variant='persistent'
+          anchor='left'
+          open={open}
+        >
+          <Box sx={{ height: '100%' }}>
+            <Box
+              sx={{ height: { xs: '90%', md: '95%' }, display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
+                <Grid item xs={12}>
+                  <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}>
+                    Roadmap
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant='text' startIcon={<DashboardIcon />} onClick={() => setPageState(1)}>
+                    Recommendation
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant='text' startIcon={<AssistantPhotoIcon />} onClick={() => setPageState(2)}>
+                    Student Systems
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Button variant='text' startIcon={<ChevronLeftIcon />}>
+                CE Reform
+              </Button>
+            </Box>
+          </Box>
+        </Drawer>
+      </Hidden>
       <Main open={open}>
-        <Box sx={{ ml: { xs: 0, md: 12 }, mt: 0 }}>
-          <Hidden smUp>
+        <Box sx={{ mt: 0 }}>
+          <Hidden mdUp>
             <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
               <IconButton onClick={() => setOpenSmallDrawer(true)}>
                 <MenuIcon />

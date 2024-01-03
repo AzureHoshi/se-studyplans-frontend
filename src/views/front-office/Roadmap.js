@@ -326,7 +326,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   }, [curriculumTree])
 
   return (
-    <Box className='content-center'>
+    <Box className='content-center' sx={{ m: 8 }}>
       <Grid container spacing={2} sx={{ minWidth: 320 }}>
         <Hidden mdDown>
           {displayMode === 0 && (
