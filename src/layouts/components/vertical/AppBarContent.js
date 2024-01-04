@@ -27,6 +27,10 @@ const AppBarContent = props => {
   // ** Hook
   const hiddenSm = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
+  const handleClicktoSimSyst = () => {
+    window.open('/pages/studyplansimulator/', '_blank')
+    // router.push('/pages/studyplansimulator/')
+  }
   return (
     <Box
       sx={{
@@ -87,7 +91,10 @@ const AppBarContent = props => {
               }}
             >
               <Icon path={mdiFlagPlus} size={1} color={grey[500]} />
-              <Typography sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}>
+              <Typography
+                onClick={() => handleClicktoSimSyst()}
+                sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}
+              >
                 Simulation Studyplan
               </Typography>
             </Box>

@@ -29,30 +29,99 @@ import router, { useRouter } from 'next/router'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-function StudentSystems({ InterestResult }) {
-  const router = useRouter()
+function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
   const [openFeedBack, setOpenFeedBack] = useState(false)
   const [interRestResult, setInterRestResult] = useState({
     labels: [],
     datasets: []
   })
+  const [lastedSubjectSemester, setLastedSubjectsSemester] = useState([])
+
+  const totalCreditByScope = curriculumScope.reduce((sum, currentItem) => {
+    // Check if the subject property exists and has the subject_credit property
+    if (currentItem.credit_total) {
+      // Add the subject_credit to the sum
+      return sum + currentItem.credit_total
+    } else {
+      // If the property is missing or doesn't have subject_credit, return the current sum
+      return sum
+    }
+  }, 0)
+
+  const totalCreditByLastedSemester = lastedSubjectSemester?.reduce((sum, currentItem) => {
+    // Check if the subject property exists and has the subject_credit property
+    if (currentItem.subject) {
+      // Add the subject_credit to the sum
+      return sum + currentItem.subject.subject_credit
+    } else {
+      // If the property is missing or doesn't have subject_credit, return the current sum
+      return sum
+    }
+  }, 0)
+
+  const totalCurrentSubjectCredit = StudyPlanByStdNo.reduce((sum, currentItem) => {
+    // Check if the subject property exists and has the subject_credit property
+    if (currentItem.subject && currentItem.subject.subject_credit) {
+      // Add the subject_credit to the sum
+      return sum + currentItem.subject.subject_credit
+    } else {
+      // If the property is missing or doesn't have subject_credit, return the current sum
+      return sum
+    }
+  }, 0)
+
+  function findMaxYearAndSemester(data) {
+    if (!Array.isArray(data) || data.length === 0) {
+      // Handle empty or invalid input
+      return []
+    }
+
+    const maxYearSemester = data.reduce((acc, current) => {
+      const currentYear = current.stu_acad_rec_year
+      const currentSemester = current.stu_acad_rec_semester
+
+      if (!acc || currentYear > acc.year || (currentYear === acc.year && currentSemester > acc.semester)) {
+        return { year: currentYear, semester: currentSemester }
+      } else {
+        return acc
+      }
+    }, null)
+
+    // Filter the array to get all objects with the max year and semester
+    const maxYearSemesterObjects = data.filter(item => {
+      return item.stu_acad_rec_year === maxYearSemester.year && item.stu_acad_rec_semester === maxYearSemester.semester
+    })
+
+    return maxYearSemesterObjects
+  }
+  console.log(findMaxYearAndSemester(StudyPlanByStdNo))
+
+  function calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope) {
+    if (totalCreditByScope === 0) {
+      // Handle division by zero to avoid errors
+      return 0
+    }
+
+    const percentage = (totalCurrentSubjectCredit / totalCreditByScope) * 100
+    return parseInt(percentage)
+  }
 
   const handleOpenFeedBack = () => {
     setOpenFeedBack(true)
   }
 
-  const data = {
-    labels: ['Software Engineering', 'IT Support', 'Programmer'],
-    datasets: [
-      {
-        label: '  % Interested',
-        data: [60, 30, 10],
-        backgroundColor: ['rgba(40, 40, 40, 1)', 'rgba(160, 160, 160, 1)', 'rgba(200, 200, 200, 1)'], // 40% opacity gray],
-        borderWidth: 6,
-        borderRadius: 100
-      }
-    ]
-  }
+  // const data = {
+  //   labels: ['Software Engineering', 'IT Support', 'Programmer'],
+  //   datasets: [
+  //     {
+  //       label: '  % Interested',
+  //       data: [60, 30, 10],
+  //       backgroundColor: ['rgba(40, 40, 40, 1)', 'rgba(160, 160, 160, 1)', 'rgba(200, 200, 200, 1)'], // 40% opacity gray],
+  //       borderWidth: 6,
+  //       borderRadius: 100
+  //     }
+  //   ]
+  // }
 
   let options = {
     // responsive: true,
@@ -83,6 +152,11 @@ function StudentSystems({ InterestResult }) {
     setInterRestResult(newObject)
     console.log('newObject', newObject)
   }, [InterestResult])
+
+  useEffect(() => {
+    if (!StudyPlanByStdNo) return
+    setLastedSubjectsSemester(findMaxYearAndSemester(StudyPlanByStdNo))
+  }, [StudyPlanByStdNo])
 
   return (
     <CustomLayout
@@ -206,12 +280,17 @@ function StudentSystems({ InterestResult }) {
                   </Box>
                   {/* show percentage of studyplan */}
                   <Box sx={{ width: '100%', mt: 6 }}>
-                    <Typography variant='body2' sx={{ mb: 2 }}>
-                      25% inprocess
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant='body2' sx={{ mb: 2 }}>
+                        {calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope)}% inprocess
+                      </Typography>
+                      <Typography variant='body2' sx={{ mb: 2 }}>
+                        {totalCurrentSubjectCredit + '/' + totalCreditByScope + ' TotalCredit'}
+                      </Typography>
+                    </Box>
                     <LinearProgress
                       variant='determinate'
-                      value={25}
+                      value={calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope)}
                       sx={{ height: 10, borderRadius: 24, border: 1, borderColor: orange[200] }}
                     />
                   </Box>
@@ -221,13 +300,16 @@ function StudentSystems({ InterestResult }) {
                       <Grid item xs={12} lg={8}>
                         <Box sx={{ display: 'flex', justifyContent: { xs: 'space-between', lg: 'start' } }}>
                           <Typography variant='caption' mr={6} noWrap>
-                            2/2023
+                            {'ปี: ' +
+                              lastedSubjectSemester[0]?.stu_acad_rec_year +
+                              ' เทอม:' +
+                              lastedSubjectSemester[0]?.stu_acad_rec_semester}
                           </Typography>
                           <Typography variant='caption' mr={6} noWrap>
-                            3 subjects
+                            {lastedSubjectSemester?.length} subjects
                           </Typography>
                           <Typography variant='caption' noWrap>
-                            9 total credit
+                            {totalCreditByLastedSemester} total credit
                           </Typography>
                         </Box>
                       </Grid>
@@ -253,19 +335,19 @@ function StudentSystems({ InterestResult }) {
                   </Box>
 
                   <Divider />
-                  {Array.from({ length: 3 }, (_, index) => (
-                    <Box key={index}>
+                  {lastedSubjectSemester?.slice(0, 3).map((currentSubject, index) => (
+                    <Box key={currentSubject.stu_acad_rec_id}>
                       <Box sx={{ mt: 3.5, display: 'flex', justifyContent: 'space-between' }}>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'space-between' }}>
                           <Typography variant='caption' sx={{ width: '30%' }} noWrap>
-                            ENGCEXXX
+                            {currentSubject.subject.subject_code}
                           </Typography>
                           <Typography variant='caption' sx={{ width: '70%' }} noWrap>
-                            Something...................
+                            {currentSubject.subject.subject_name_th}
                           </Typography>
                         </Box>
                         <Typography variant='caption' sx={{ width: '40%', fontWeight: 'bold', textAlign: 'end' }}>
-                          3
+                          {currentSubject.subject.subject_credit}
                         </Typography>
                       </Box>
                       {index + 1 !== 3 && <Divider />}
@@ -471,6 +553,27 @@ StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
   const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+  const resCurriculumSE66Scope = await axios.get(
+    url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
+  ) // 2 for se 66
+
+  var dataPlan = []
+  try {
+    const resStudyPlan = await axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no)
+
+    // Handle the successful response here
+    dataPlan = resStudyPlan.data.data
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // Handle 404 error (Not Found) here
+      console.error('Resource not found')
+      // You can redirect to a custom 404 page or do any other necessary actions
+    } else {
+      // Handle other errors
+      console.error('An error occurred:', error.message)
+    }
+  }
+
   // if didn't answer the survey redirect to survay page
   if (resInterestResult.data.labels.length === 0) {
     // router.push('/pages/front-office/student-systems/interest-survey/')
@@ -483,7 +586,9 @@ export async function getServerSideProps() {
   }
   return {
     props: {
-      InterestResult: resInterestResult.data
+      InterestResult: resInterestResult.data,
+      StudyPlanByStdNo: dataPlan,
+      curriculumScope: resCurriculumSE66Scope.data.data
     }
   }
 }

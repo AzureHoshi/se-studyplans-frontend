@@ -207,24 +207,49 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
 export async function getServerSideProps() {
-  const resJobRecommended = await axios.get(url.BASE_URL + `/subject-job-relateds`)
-  // for display subject
-  const resCurriculumSE66Tree = await axios.get(
-    url.BASE_URL + `/continue-subjects-curriculum/` + userProfile.curriculum_id
-  ) // 2 for se 66
-  const resSubjectsSE66 = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + userProfile.curriculum_id) // 2 for se 66
-  const resCurriculumSE66Scope = await axios.get(
-    url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
-  ) // 2 for se 66
-  const resStudyPlanRecords = await axios.get(url.BASE_URL + `/study-plan-records/` + userProfile.curriculum_id) // 2 for se 66
+  var jobRecommended = []
+  var curriculumTree = []
+  var subjectsSE66 = []
+  var curriculumScopeSE66 = []
+  var studyPlanSE66 = []
+
+  try {
+    // Make multiple API requests concurrently using Promise.all
+    const [resJobRecommended, resCurriculumSE66Tree, resSubjectsSE66, resCurriculumSE66Scope, resStudyPlanRecords] =
+      await Promise.all([
+        axios.get(url.BASE_URL + `/subject-job-relateds`),
+        axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + userProfile.curriculum_id),
+        axios.get(url.BASE_URL + `/subjects-by-curriculum/` + userProfile.curriculum_id),
+        axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
+        axios.get(url.BASE_URL + `/study-plan-records/` + userProfile.curriculum_id)
+      ])
+
+    // Process data from responses
+    jobRecommended = resJobRecommended.data.data
+    curriculumTree = resCurriculumSE66Tree.data.data
+    subjectsSE66 = resSubjectsSE66.data.data
+    curriculumScopeSE66 = resCurriculumSE66Scope.data.data
+    studyPlanSE66 = resStudyPlanRecords.data.data
+
+    // Your logic with the retrieved data
+
+    console.log('Data from endpoint jobRecommended:', jobRecommended)
+    console.log('Data from endpoint curriculumTree:', curriculumTree)
+    console.log('Data from endpoint subjectsSE66:', subjectsSE66)
+    console.log('Data from endpoint curriculumScopeSE66:', curriculumScopeSE66)
+    console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
+  } catch (errorArray) {
+    // Handle errors separately for each API request
+    console.error('Error fetching data concurrently:', errorArray.message)
+  }
 
   return {
     props: {
-      jobRecommended: resJobRecommended.data.data,
-      curriculumTree: resCurriculumSE66Tree.data.data,
-      subjectsSE66: resSubjectsSE66.data.data,
-      curriculumScopeSE66: resCurriculumSE66Scope.data.data,
-      studyPlanSE66: resStudyPlanRecords.data.data
+      jobRecommended: jobRecommended,
+      subjectsSE66: subjectsSE66,
+      curriculumScopeSE66: curriculumScopeSE66,
+      studyPlanSE66: studyPlanSE66,
+      curriculumTree: curriculumTree
     }
   }
 }
