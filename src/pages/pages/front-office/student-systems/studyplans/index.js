@@ -1006,48 +1006,6 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
-  // const resSubjects = await axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2) // 2 for se 66
-  // const resInterestResult = await axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
-  // const resCurriculumSE66Scope = await axios.get(
-  //   url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id
-  // ) // 2 for se 66
-
-  // const addCountScope = resCurriculumSE66Scope.data.data.map(c => ({ ...c, countScope: 0 }))
-
-  // var dataPlan = []
-  // try {
-  //   const resStudyPlan = await axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no)
-
-  //   // Handle the successful response here
-  //   dataPlan = resStudyPlan.data.data
-  // } catch (error) {
-  //   if (error.response && error.response.status === 404) {
-  //     // Handle 404 error (Not Found) here
-  //     console.error('Resource not found')
-  //     // You can redirect to a custom 404 page or do any other necessary actions
-  //   } else {
-  //     // Handle other errors
-  //     console.error('An error occurred:', error.message)
-  //   }
-  // }
-  // if (resInterestResult.data.labels.length === 0) {
-  //   // router.push('/pages/front-office/student-systems/interest-survey/')
-  //   return {
-  //     redirect: {
-  //       destination: '/pages/front-office/student-systems/interest-survey/',
-  //       permanent: false // Set to true for permanent redirection
-  //     }
-  //   }
-  // }
-
-  // return {
-  //   props: {
-  //     SubjectData: resSubjects.data.data,
-  //     StudyPlanByStdNo: dataPlan,
-  //     curriculumScope: addCountScope
-  //   }
-  // }
-
   var SubjectData = []
   var StudyPlanByStdNo = []
   var curriculumScope = []

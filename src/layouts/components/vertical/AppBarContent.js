@@ -76,6 +76,7 @@ const AppBarContent = props => {
           </Box>
           <Hidden only={'xs'}>
             <Box
+              onClick={() => handleClicktoSimSyst()}
               sx={{
                 width: '40%',
                 background: grey[200],
@@ -91,10 +92,7 @@ const AppBarContent = props => {
               }}
             >
               <Icon path={mdiFlagPlus} size={1} color={grey[500]} />
-              <Typography
-                onClick={() => handleClicktoSimSyst()}
-                sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}
-              >
+              <Typography sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}>
                 Simulation Studyplan
               </Typography>
             </Box>

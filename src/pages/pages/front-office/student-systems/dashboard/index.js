@@ -10,6 +10,7 @@ import {
   Hidden,
   IconButton,
   LinearProgress,
+  TablePagination,
   TextField,
   Typography
 } from '@mui/material'
@@ -36,6 +37,28 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
     datasets: []
   })
   const [lastedSubjectSemester, setLastedSubjectsSemester] = useState([])
+  const router = useRouter()
+
+  const handleRoutetoUpdatePlan = () => {
+    router.push('studyplans')
+  }
+
+  const mostRecentObject = lastedSubjectSemester.reduce((acc, current) => {
+    const currentUpdatedAt = new Date(current.updated_at).getTime()
+    const accUpdatedAt = acc ? new Date(acc.updated_at).getTime() : 0
+
+    return currentUpdatedAt > accUpdatedAt ? current : acc
+  }, null)
+
+  const reformattedDate = new Date(mostRecentObject?.updated_at).toLocaleString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC' // Adjust the time zone as needed
+  })
 
   const totalCreditByScope = curriculumScope.reduce((sum, currentItem) => {
     // Check if the subject property exists and has the subject_credit property
@@ -264,10 +287,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
 
                     <Box sx={{ alignItems: 'end', minWidth: 120 }}>
                       <Button
+                        onClick={handleRoutetoUpdatePlan}
                         size='medium'
                         variant={'contained'}
                         sx={{
-                          pl: 4,
+                          ml: 4,
                           mx: 'auto',
                           letterSpacing: 0.5,
                           fontSize: 10,
@@ -315,7 +339,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
                       </Grid>
                       <Grid item xs={12} lg={4} sx={{ textAlign: 'end' }}>
                         <Typography variant='caption' noWrap>
-                          2026-11-05 08:15:30
+                          {reformattedDate}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -356,9 +380,20 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
                 </Card>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                  Project Recommended
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+                    Project Recommended
+                  </Typography>
+                  <TablePagination
+                    rowsPerPageOptions={[]}
+                    component='div'
+                    size='small'
+                    count={6}
+                    rowsPerPage={5}
+                    page={1}
+                    onPageChange={() => null}
+                  />
+                </Box>
                 <Grid container item xs={12} sx={{ mt: 2 }} spacing={6}>
                   {Array.from({ length: 6 }, (_, index) => (
                     <Grid key={index} item xs={12} md={6} lg={4}>
@@ -495,11 +530,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
                 </IconButton>
                 <Hidden mdDown>
                   <Grid item xs={6} sx={{ position: 'relative' }}>
-                    <Box sx={{ position: 'absolute', left: -15, bottom: -60 }}>
+                    <Box sx={{ position: 'absolute', top: '55%', left: '43%', transform: 'translate(-50%, -50%)' }}>
                       <img
-                        src='https://img.freepik.com/free-vector/like-icon-3d-vector-illustration-heart-symbol-red-bubble-social-media-applications-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1695.jpg?w=826&t=st=1703657164~exp=1703657764~hmac=2c8cfdfa08d33fb0e7742e6ffeb4b26a3b993686189011951b21a64d7ba87236'
+                        src='/images/feedback/mail.png'
                         alt='Description of the image'
-                        style={{ width: '105%', height: 'auto' }}
+                        style={{ width: '110%', height: 'auto' }}
                       />
                     </Box>
                   </Grid>
