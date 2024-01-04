@@ -133,19 +133,6 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
     setOpenFeedBack(true)
   }
 
-  // const data = {
-  //   labels: ['Software Engineering', 'IT Support', 'Programmer'],
-  //   datasets: [
-  //     {
-  //       label: '  % Interested',
-  //       data: [60, 30, 10],
-  //       backgroundColor: ['rgba(40, 40, 40, 1)', 'rgba(160, 160, 160, 1)', 'rgba(200, 200, 200, 1)'], // 40% opacity gray],
-  //       borderWidth: 6,
-  //       borderRadius: 100
-  //     }
-  //   ]
-  // }
-
   let options = {
     // responsive: true,
     cutout: '80%',
