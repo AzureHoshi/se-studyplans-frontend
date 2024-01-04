@@ -41,7 +41,7 @@ const Recommendation = ({ jobRecommended }) => {
     }
   }, [jobRecommended])
   return (
-    <Box className='content-center' sx={{ maxWidth: 1200, m: 8 }}>
+    <Box sx={{ m: 8 }}>
       <Grid container spacing={4} sx={{ pb: 46 }}>
         <Grid item xs={12} sm={8}>
           <Typography

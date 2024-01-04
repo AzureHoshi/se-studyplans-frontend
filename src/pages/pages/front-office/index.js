@@ -53,6 +53,13 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
     <Box sx={{ display: 'flex' }}>
       <SwipeableDrawer onOpen={() => null} open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
         <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6 }}>
+          <Grid item xs={12} sx={{ mt: 16 }}>
+            <img
+              src='/images/logos/studyplan-vertical.png'
+              alt='logo'
+              style={{ width: 100, height: 'auto', margin: 32, marginBottom: 56 }}
+            />
+          </Grid>
           <Grid item xs={12}>
             <Button
               // fullWidth
@@ -151,9 +158,22 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
         >
           <Box sx={{ height: '100%' }}>
             <Box
-              sx={{ height: { xs: '90%', md: '95%' }, display: 'grid', justifyContent: 'center', alignItems: 'center' }}
+              sx={{
+                display: 'grid',
+                justifyContent: 'center',
+                alignItems: 'center',
+                pb: 32,
+                overflow: 'hidden'
+              }}
             >
               <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
+                <Grid item xs={12} sx={{ m: 16 }}>
+                  <img
+                    src='/images/logos/studyplan-vertical.png'
+                    alt='logo'
+                    style={{ width: 140, height: 'auto', marginTop: 16 }}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}>
                     Roadmap
@@ -171,16 +191,16 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
                 </Grid>
               </Grid>
             </Box>
-            <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <Box sx={{ height: '5%', display: 'grid', justifyContent: 'flex-start', alignItems: 'center', ml: 10 }}>
               <Button variant='text' startIcon={<ChevronLeftIcon />}>
-                CE Reform
+                Back to Reform
               </Button>
             </Box>
           </Box>
         </Drawer>
       </Hidden>
       <Main open={open}>
-        <Box sx={{ mt: 0 }}>
+        <Box sx={{ mt: 52, ml: 6 }}>
           <Hidden mdUp>
             <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
               <IconButton onClick={() => setOpenSmallDrawer(true)}>

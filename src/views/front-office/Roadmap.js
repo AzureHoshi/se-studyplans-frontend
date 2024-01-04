@@ -326,7 +326,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   }, [curriculumTree])
 
   return (
-    <Box className='content-center' sx={{ m: 8 }}>
+    <Box sx={{ m: 8, mt: 0 }}>
       <Grid container spacing={2} sx={{ minWidth: 320 }}>
         <Hidden mdDown>
           {displayMode === 0 && (
@@ -499,7 +499,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
         </Hidden>
         {/* show curriculum in treeview and gridview */}
         {displayMode === 1 && (
-          <Grid container item xs={12}>
+          <Grid container item xs={12} sx={{ mt: -12 }}>
             <Hidden mdDown>
               <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3.5 }}>
                 <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
@@ -820,14 +820,14 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
           </Grid>
         )}
         {displayMode === 2 && (
-          <Grid container item xs={12}>
+          <Grid container item xs={12} sx={{ pb: 12 }}>
             <Grid item xs={12}>
-              <Grid item xs={12} sx={{ pb: 12 }}>
+              <Grid item xs={12} sx={{ mb: 6 }}>
                 <Button onClick={() => handleChangeDisplayMode(0)} variant={'contained'}>
                   Back
                 </Button>
               </Grid>
-              <Box>
+              <Box sx={{ textAlign: 'end', pr: 10, mt: -12 }}>
                 <Typography variant='h6' sx={{ fontFamily: 'Segoe UI', mb: 6 }}>
                   แผนแนะนำ มคอ.2 Software Engineering 66
                 </Typography>
