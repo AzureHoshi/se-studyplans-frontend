@@ -13,6 +13,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import AssistantPhotoIcon from '@mui/icons-material/AssistantPhoto'
+import AccountBoxRounded from '@mui/icons-material/AccountBoxRounded'
 import MenuIcon from '@mui/icons-material/Menu'
 
 // ** Custom Components
@@ -22,6 +23,7 @@ import StudentSystems from 'src/views/front-office/StudentSystems'
 import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
 import { userProfile } from 'src/dummy'
+import Simulator from 'src/views/front-office/Simulator'
 
 const drawerWidth = 350
 
@@ -52,7 +54,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
   return (
     <Box sx={{ display: 'flex' }}>
       <SwipeableDrawer onOpen={() => null} open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
-        <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6 }}>
+        <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6, width: 300 }}>
           <Grid item xs={12} sx={{ mt: 16 }}>
             <img
               src='/images/logos/studyplan-vertical.png'
@@ -105,6 +107,27 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
             <Button
               fullWidth
               sx={{
+                pr: 2,
+                fontSize: 12,
+                color: 'gray',
+                ':hover': {
+                  color: 'orange'
+                }
+              }}
+              variant='text'
+              startIcon={<AccountBoxRounded />}
+              onClick={() => {
+                setPageState(3)
+                setOpenSmallDrawer(false)
+              }}
+            >
+              Simulator System
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              fullWidth
+              sx={{
                 fontSize: 12,
                 color: 'gray',
                 ':hover': {
@@ -114,7 +137,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
               variant='text'
               startIcon={<AssistantPhotoIcon />}
               onClick={() => {
-                setPageState(2)
+                setPageState(3)
                 setOpenSmallDrawer(false)
               }}
             >
@@ -185,6 +208,17 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
+                  <Button
+                    variant='text'
+                    startIcon={<AccountBoxRounded />}
+                    onClick={() => {
+                      setPageState(3)
+                    }}
+                  >
+                    Simulator System
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
                   <Button variant='text' startIcon={<AssistantPhotoIcon />} onClick={() => setPageState(2)}>
                     Student Systems
                   </Button>
@@ -199,15 +233,16 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
           </Box>
         </Drawer>
       </Hidden>
+
       <Main open={open}>
+        <Hidden mdUp>
+          <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
+            <IconButton onClick={() => setOpenSmallDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Hidden>
         <Box sx={{ mt: 52, ml: 6 }}>
-          <Hidden mdUp>
-            <Box sx={{ marginTop: 0, display: 'flex', justifyContent: 'flex-start' }}>
-              <IconButton onClick={() => setOpenSmallDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          </Hidden>
           {pageState === 0 && (
             <Roadmap
               curriculumTree={curriculumTree}
@@ -218,6 +253,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
           )}
           {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
           {pageState === 2 && <StudentSystems />}
+          {pageState === 3 && <Simulator />}
         </Box>
       </Main>
     </Box>
