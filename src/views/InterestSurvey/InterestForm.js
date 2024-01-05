@@ -108,7 +108,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         console.log(err)
         setResultDisplay(false)
       }
-      setIsLoading(false)
+      // setIsLoading(false)
       console.log(answers)
     }
   }

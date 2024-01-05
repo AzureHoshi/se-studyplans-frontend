@@ -1,6 +1,6 @@
 export const userProfile = {
   std_id: 1,
-  std_no: '63543206021-1',
+  std_no: '63543206021-3',
   first_name: 'Kendra',
   last_name: 'Spence',
   email: 'dimita6440@watrf.com',

@@ -171,6 +171,18 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     }
   }
 
+  // useEffect(() => {
+  //   axios
+  //     .get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
+  //     // .then(response => console.log('test', response.data))
+  //     .then(response => console.log('test', response.data))
+
+  //     .catch(err => {
+  //       console.log('An error occurred. Awkward.. : ', err)
+  //       alert('Status: ' + err.response.data.status + ' ' + err.response.data.message)
+  //     })
+  // }, [])
+
   useEffect(() => {
     if (jobRecommended && interRestResult) {
       console.log('jobRecommended', jobRecommended)
@@ -679,7 +691,7 @@ StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
 export async function getServerSideProps() {
-  var InterestResult = []
+  var InterestResult = { labels: [], data: [] }
   var StudyPlanByStdNo = []
   var curriculumScope = []
   var jobRecommended = []
@@ -692,15 +704,6 @@ export async function getServerSideProps() {
       axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
       axios.get(url.BASE_URL + `/subject-job-relateds`)
     ])
-
-    axios
-      .get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
-      .then(response => (InterestResult = response.data))
-
-      .catch(err => {
-        console.log('An error occurred. Awkward.. : ', err)
-        alert('Status: ' + err.response.data.status + ' ' + err.response.data.message)
-      })
 
     // Process data from responses
     InterestResult = resInterestResult.data
@@ -718,14 +721,14 @@ export async function getServerSideProps() {
     console.error('Error fetching data concurrently:', errorArray.message)
   }
   // ย้ายกลับไปหน้า survey ถ้า InterestResult ไม่มีข้อมูล = ยังไม่ได้ทำ
-  // if (InterestResult.labels.length === 0) {
-  //   return {
-  //     redirect: {
-  //       destination: '/pages/front-office/student-systems/interest-survey/',
-  //       permanent: false // Set to true for permanent redirection
-  //     }
-  //   }
-  // }
+  if (InterestResult.labels.length === 0) {
+    return {
+      redirect: {
+        destination: '/pages/front-office/student-systems/interest-survey/',
+        permanent: false // Set to true for permanent redirection
+      }
+    }
+  }
 
   return {
     props: {
