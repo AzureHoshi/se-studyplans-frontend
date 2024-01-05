@@ -97,15 +97,15 @@ export const studentSystemNavigation = () => {
       path: '/pages/front-office/student-systems/dashboard'
     },
     {
-      title: 'Study Plan',
+      title: 'StudyPlan(แผนการเรียน)',
       // icon: BookOutline,
       path: '/pages/front-office/student-systems/studyplans'
+    },
+    {
+      title: 'Competencies(สมรรถนะ)'
+      // // icon: BookOutline,
+      // path: '/pages/studentsystems'
     }
-    // {
-    //   title: 'Projects Recommended'
-    //   // // icon: BookOutline,
-    //   // path: '/pages/studentsystems'
-    // },
     // {
     //   title: 'Competencies'
     //   // icon: BookOutline,

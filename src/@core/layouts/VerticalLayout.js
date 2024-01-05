@@ -64,7 +64,7 @@ const VerticalLayout = props => {
       <VerticalLayoutWrapper className='layout-wrapper'>
         <Navigation
           // navWidth={navWidth}
-          navWidth={250}
+          navWidth={270}
           navVisible={navVisible}
           setNavVisible={setNavVisible}
           toggleNavVisibility={toggleNavVisibility}

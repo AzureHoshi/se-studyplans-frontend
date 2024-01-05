@@ -1009,7 +1009,7 @@ export async function getServerSideProps() {
   var SubjectData = []
   var StudyPlanByStdNo = []
   var curriculumScope = []
-  var InterestResults = []
+  var InterestResults = { labels: [], data: [] }
 
   try {
     // Make multiple API requests concurrently using Promise.all
@@ -1037,7 +1037,7 @@ export async function getServerSideProps() {
     console.error('Error fetching data concurrently:', errorArray.message)
   }
 
-  if (InterestResults.labels.length === 0) {
+  if (InterestResults.labels === undefined) {
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/interest-survey/',

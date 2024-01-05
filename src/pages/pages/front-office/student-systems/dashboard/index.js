@@ -43,6 +43,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     labels: [],
     datasets: []
   })
+  const [feedback, setFeedback] = useState('')
   const [lastedSubjectSemester, setLastedSubjectsSemester] = useState([])
   const router = useRouter()
 
@@ -50,6 +51,24 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     router.push('studyplans')
   }
 
+  const handleSubmitFeedBack = (text, collegianCode) => {
+    if (!text || !collegianCode) return
+    const postFeedBackURL = `${url.BASE_URL}/feedback-records`
+    var isError = false
+    try {
+      const resFeedBack = axios.post(postFeedBackURL, {
+        collegian_code: String(collegianCode),
+        feedback_record_answer: String(text)
+      })
+      console.log('resFeedBack', resFeedBack)
+    } catch (error) {
+      console.log('err from feedback', error)
+      isError = true
+    }
+    if (!isError) {
+      alert('Thank you for your feedback')
+    }
+  }
   const mostRecentObject = lastedSubjectSemester.reduce((acc, current) => {
     const currentUpdatedAt = new Date(current.updated_at).getTime()
     const accUpdatedAt = acc ? new Date(acc.updated_at).getTime() : 0
@@ -206,7 +225,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   return (
     <CustomLayout
       content={
-        <Box sx={{ width: '100%', position: 'relative', background: grey[200], p: { xs: 6, md: 12 } }}>
+        <Box sx={{ width: '100%', position: 'relative', background: grey[200], p: 6 }}>
           <Box sx={{ position: 'absolute', top: 360, right: 30, height: 80, width: 20 }}>
             <Button
               onClick={handleOpenFeedBack}
@@ -219,7 +238,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
           </Box>
           <Grid container>
             {/* dashbord  */}
-            <Grid container item spacing={10} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 10 } }}>
+            <Grid container item spacing={6} xs={12} lg={9} sx={{ pr: { xs: 0, lg: 2.5 } }}>
               <Grid item xs={12} sm={5} lg={5}>
                 {interRestResult?.labels?.length > 0 ? (
                   <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
@@ -401,7 +420,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   ))}
                 </Card>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{ mt: { xs: 0, lg: -22 } }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
                     Project Recommended
@@ -505,7 +524,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
             </Grid>
             {/* reform shortcut */}
             <Grid item xs={12} lg={3} sx={{ p: 3.5, mt: { xs: 6, lg: 0 }, pt: 0 }}>
-              <Card sx={{ height: 500, background: 'white', mb: 6, textAlign: 'center', p: 4, pt: 0 }}>
+              <Card sx={{ height: 500, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
                 <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
                   Recommend Subjects By Job
                 </Typography>
@@ -627,6 +646,8 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   </Typography>
                   <Box sx={{ m: 3.5 }}>
                     <TextField
+                      value={feedback}
+                      onChange={e => setFeedback(e.target.value)}
                       multiline
                       label={'message'}
                       fullWidth
@@ -657,7 +678,7 @@ StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
 export async function getServerSideProps() {
-  var InterestResult = []
+  var InterestResult = { labels: [], data: [] }
   var StudyPlanByStdNo = []
   var curriculumScope = []
   var jobRecommended = []
@@ -685,6 +706,14 @@ export async function getServerSideProps() {
   } catch (errorArray) {
     // Handle errors separately for each API request
     console.error('Error fetching data concurrently:', errorArray.message)
+  }
+  if (InterestResult.labels.length === 0) {
+    return {
+      redirect: {
+        destination: '/pages/front-office/student-systems/interest-survey/',
+        permanent: false // Set to true for permanent redirection
+      }
+    }
   }
 
   return {

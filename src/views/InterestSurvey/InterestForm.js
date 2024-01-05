@@ -98,17 +98,17 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
           }
         })
 
-        console.log(res)
+        console.log('res from sendding survay', res)
         setTimeout(() => {
           router.push('/pages/front-office/student-systems/dashboard/')
-        }, 1000)
+        }, 2000)
 
         // setResultDisplay(true)
       } catch (err) {
         console.log(err)
         setResultDisplay(false)
       }
-
+      setIsLoading(false)
       console.log(answers)
     }
   }
