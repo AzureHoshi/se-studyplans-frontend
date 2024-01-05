@@ -10,6 +10,10 @@ import {
   Hidden,
   IconButton,
   LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
   TablePagination,
   TextField,
   Typography
@@ -27,11 +31,14 @@ import { url } from 'src/configs/urlConfig'
 import { userProfile } from 'src/dummy'
 import axios from 'axios'
 import router, { useRouter } from 'next/router'
+import { Selection } from 'src/components'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
+function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, jobRecommended }) {
   const [openFeedBack, setOpenFeedBack] = useState(false)
+  const [jobPosition, setJobPosition] = useState([])
+  const [jobSelected, setJobSelected] = useState([])
   const [interRestResult, setInterRestResult] = useState({
     labels: [],
     datasets: []
@@ -144,6 +151,34 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
       }
     }
   }
+  useEffect(() => {
+    if (jobRecommended && interRestResult) {
+      console.log('jobRecommended', jobRecommended)
+      const uniqueJobPositions = jobRecommended.reduce((result, currentItem, index) => {
+        const { job_position_id, job_position } = currentItem
+        if (!result[job_position_id]) {
+          result[job_position_id] = { index: index, ...job_position }
+        }
+        return result
+      }, {})
+
+      setJobPosition(
+        Object.values(uniqueJobPositions).sort(
+          (a, b) =>
+            interRestResult.labels.indexOf(a.job_position_name) - interRestResult.labels.indexOf(b.job_position_name)
+        )
+      )
+      const firstItem = Object.values(uniqueJobPositions).sort(
+        (a, b) =>
+          interRestResult.labels.indexOf(a.job_position_name) - interRestResult.labels.indexOf(b.job_position_name)
+      )
+      setJobSelected(firstItem[0])
+      console.log('interRestResult', interRestResult)
+      console.log(Object.values(uniqueJobPositions))
+    }
+  }, [jobRecommended, interRestResult])
+
+  console.log('jobRecommended', jobRecommended)
 
   useEffect(() => {
     console.log('InterestResult', InterestResult)
@@ -324,7 +359,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} lg={4} sx={{ textAlign: 'end' }}>
+                      <Grid item xs={12} lg={4} sx={{ textAlign: 'end', overflow: 'hidden' }}>
                         <Typography variant='caption' noWrap>
                           {reformattedDate}
                         </Typography>
@@ -469,7 +504,55 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo }) {
               </Grid>
             </Grid>
             {/* reform shortcut */}
-            <Grid item xs={12} lg={3} sx={{ background: 'white', p: 3.5, mt: { xs: 6, lg: 0 } }}>
+            <Grid item xs={12} lg={3} sx={{ p: 3.5, mt: { xs: 6, lg: 0 }, pt: 0 }}>
+              <Card sx={{ height: 500, background: 'white', mb: 6, textAlign: 'center', p: 4, pt: 0 }}>
+                <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
+                  Recommend Subjects By Job
+                </Typography>
+
+                <Selection
+                  height={40}
+                  width={'100%'}
+                  selectionValue={jobSelected}
+                  handleChange={e => {
+                    setJobSelected(e.target.value)
+                  }}
+                  Items={jobPosition?.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item.job_position_name}
+                    </MenuItem>
+                  ))}
+                />
+                <List sx={{ overflowY: 'auto', overflowX: 'hidden', maxHeight: 400, pb: 6 }}>
+                  {jobRecommended
+                    ?.filter(f => f.job_position_id === jobSelected.job_position_id)
+                    .map((subjectRelated, index) => (
+                      <ListItem
+                        key={index}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: { xs: 'row', lg: 'column' },
+                          alignItems: 'start',
+                          background: grey[100],
+                          borderBottom: 1,
+                          borderColor: grey[300]
+                        }}
+                      >
+                        <Typography variant='caption' noWrap sx={{ mr: { xs: 12, lg: 0 }, fontWeight: 'bold' }}>
+                          {subjectRelated.subject.subject_code}
+                          {subjectRelated.subject_structures[0]?.subject_category_id === 1
+                            ? ' ศึกษาทั่วไป'
+                            : subjectRelated.subject_structures[0]?.subject_category_id === 2
+                            ? ' วิชาเฉพาะ'
+                            : null}
+                        </Typography>
+                        <Typography variant='caption' sx={{ maxWidth: 240 }} noWrap>
+                          {subjectRelated.subject.subject_name_th}
+                        </Typography>
+                      </ListItem>
+                    ))}
+                </List>
+              </Card>
               <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
                 <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
                   Reform Shortcut
@@ -577,19 +660,22 @@ export async function getServerSideProps() {
   var InterestResult = []
   var StudyPlanByStdNo = []
   var curriculumScope = []
+  var jobRecommended = []
 
   try {
     // Make multiple API requests concurrently using Promise.all
-    const [resInterestResult, resStudyPlan, resCurriculumSE66Scope] = await Promise.all([
+    const [resInterestResult, resStudyPlan, resCurriculumSE66Scope, resJobRecommended] = await Promise.all([
       axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no),
       axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no),
-      axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id)
+      axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
+      axios.get(url.BASE_URL + `/subject-job-relateds`)
     ])
 
     // Process data from responses
     InterestResult = resInterestResult.data
     StudyPlanByStdNo = resStudyPlan.data.data
     curriculumScope = resCurriculumSE66Scope.data.data
+    jobRecommended = resJobRecommended.data.data
 
     // Your logic with the retrieved data
 
@@ -605,7 +691,8 @@ export async function getServerSideProps() {
     props: {
       InterestResult: InterestResult,
       StudyPlanByStdNo: StudyPlanByStdNo,
-      curriculumScope: curriculumScope
+      curriculumScope: curriculumScope,
+      jobRecommended: jobRecommended
     }
   }
 }
