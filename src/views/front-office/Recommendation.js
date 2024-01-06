@@ -42,7 +42,7 @@ const Recommendation = ({ jobRecommended }) => {
   }, [jobRecommended])
   return (
     <Box sx={{ m: 8 }}>
-      <Grid container spacing={4} sx={{ pb: 46 }}>
+      <Grid container spacing={4} sx={{ pb: { xs: 0, lg: 46 } }}>
         <Grid item xs={12} sm={8}>
           <Typography
             variant='h5'

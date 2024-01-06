@@ -222,7 +222,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   const getUniqueMultiValues = (arr, propertyPath1, propertyPath2, outputName1, outputName2) => {
     const uniqueValuesSet = new Set()
 
-    arr.forEach(obj => {
+    arr?.forEach(obj => {
       const nestedProperties1 = propertyPath1.split('.')
       const nestedProperties2 = propertyPath2.split('.')
       let propertyValue1 = obj
@@ -323,6 +323,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
 
       // console.log(...getNodeID)
     }
+    // console.log('curriculumTree', curriculumTree)
   }, [curriculumTree])
 
   return (
@@ -587,9 +588,10 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                       overflowX: 'hidden'
                     }}
                   >
-                    {curriculumTree?.length !== 0 && subjectSelected.subject_id === undefined
-                      ? Object.values(curriculumTree).map(nodes => recursionContinueSubjects(nodes))
-                      : Object.values(curriculumTree)
+                    {curriculumTree?.length !== 0 && curriculumTree !== null && subjectSelected.subject_id === undefined
+                      ? Object.values(curriculumTree)?.map(nodes => recursionContinueSubjects(nodes))
+                      : curriculumTree !== null &&
+                        Object.values(curriculumTree)
                           .sort((a, b) =>
                             a.subject_id === subjectSelected.subject_id
                               ? -1
@@ -618,7 +620,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                     component='div'
                     size='small'
                     count={
-                      subjectsSE66.filter(
+                      subjectsSE66?.filter(
                         f =>
                           // case 1 select all filters
                           (f.subject_structures[0]?.subjectCategory?.subject_category_name === categoriesSelected &&
@@ -820,14 +822,14 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
           </Grid>
         )}
         {displayMode === 2 && (
-          <Grid container item xs={12} sx={{ pb: 12 }}>
+          <Grid container item xs={12} sx={{ pb: { xs: 0, lg: 12 } }}>
             <Grid item xs={12}>
               <Grid item xs={12} sx={{ mb: 6 }}>
                 <Button onClick={() => handleChangeDisplayMode(0)} variant={'contained'}>
                   Back
                 </Button>
               </Grid>
-              <Box sx={{ textAlign: 'end', pr: 10, mt: -12 }}>
+              <Box sx={{ textAlign: 'end', pr: 10, mt: { xs: 0, lg: -12 } }}>
                 <Typography variant='h6' sx={{ fontFamily: 'Segoe UI', mb: 6 }}>
                   แผนแนะนำ มคอ.2 Software Engineering 66
                 </Typography>

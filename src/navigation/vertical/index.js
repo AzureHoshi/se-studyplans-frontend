@@ -102,9 +102,9 @@ export const studentSystemNavigation = () => {
       path: '/pages/front-office/student-systems/studyplans'
     },
     {
-      title: 'Competencies(สมรรถนะ)'
+      title: 'Competencies(สมรรถนะ)',
       // // icon: BookOutline,
-      // path: '/pages/studentsystems'
+      path: '/pages/front-office/student-systems/competencies'
     }
     // {
     //   title: 'Competencies'

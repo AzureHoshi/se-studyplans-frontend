@@ -242,7 +242,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
             </IconButton>
           </Box>
         </Hidden>
-        <Box sx={{ mt: 52, ml: 6 }}>
+        <Box sx={{ mt: { xs: 20, lg: 40 }, ml: 6 }}>
           {pageState === 0 && (
             <Roadmap
               curriculumTree={curriculumTree}
@@ -299,6 +299,14 @@ export async function getServerSideProps() {
 
   const [jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66] = apiData
 
+  const propsObject = {
+    jobRecommended: jobRecommended !== undefined ? jobRecommended : null,
+    curriculumTree: curriculumTree !== undefined ? curriculumTree : null,
+    subjectsSE66: subjectsSE66 !== undefined ? subjectsSE66 : null,
+    curriculumScopeSE66: curriculumScopeSE66 !== undefined ? curriculumScopeSE66 : null,
+    studyPlanSE66: studyPlanSE66 !== undefined ? studyPlanSE66 : null
+  }
+
   // Your logic with the retrieved data
   console.log('Data from endpoint jobRecommended:', jobRecommended)
   console.log('Data from endpoint curriculumTree:', curriculumTree)
@@ -307,13 +315,7 @@ export async function getServerSideProps() {
   console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
 
   return {
-    props: {
-      jobRecommended,
-      subjectsSE66,
-      curriculumScopeSE66,
-      studyPlanSE66,
-      curriculumTree
-    }
+    props: propsObject
   }
 }
 export default FrontOffice

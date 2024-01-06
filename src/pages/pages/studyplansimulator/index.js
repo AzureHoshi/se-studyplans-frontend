@@ -15,7 +15,11 @@ import {
   DialogTitle,
   DialogContent,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Snackbar,
+  Stack,
+  Alert,
+  AlertTitle
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { mdiClose, mdiTrashCan, mdiBookEducation, mdiAccount, mdiChevronLeft } from '@mdi/js'
@@ -40,6 +44,7 @@ function StudyPlanSimulatorPage() {
 
   const [subjectSelected, setSubjectSelected] = useState([])
   const [openDetails, setOpenDetails] = useState(false)
+  const [openSnack, setOpenSnack] = useState(false)
 
   const [openResult, setOpenResult] = useState(false)
 
@@ -118,7 +123,11 @@ function StudyPlanSimulatorPage() {
 
   const handleCheckPreviousSubject = subject => {
     if (!subject) return
-    if (subject?.continue_subjects[0]?.parent_id !== undefined && subject?.continue_subjects[0]?.parent_id !== null) {
+    if (
+      subject?.continue_subjects[0]?.parent_id !== undefined &&
+      subject?.continue_subjects[0]?.parent_id !== null &&
+      !simSubjects.find(s => s.subject_id === subject?.continue_subjects[0]?.parent_id)
+    ) {
       const checkParentInSim = simSubjects?.find(
         s => s.subject_id === subject?.continue_subjects[0]?.parent_id && value + 1 > s.term
       )
@@ -128,13 +137,25 @@ function StudyPlanSimulatorPage() {
         setDialogStatus(1)
         setOpenDetails(true)
         setSubjectSelected(subject)
+        alert(
+          'ต้องลงวิชา ' +
+            subject?.continue_subjects[0]?.parent.subject_name_th +
+            ' รหัส ' +
+            subject?.continue_subjects[0]?.parent.subject_code +
+            'ก่อนลงวิชา ' +
+            subject?.subject_name_th +
+            ' รหัส ' +
+            subject?.subject_code
+        )
 
         return 1
       }
       return 0
     }
-    setDialogStatus(0)
     setOpenDetails(false)
+    setTimeout(() => {
+      setDialogStatus(0)
+    }, 200)
 
     return 0 // is not has parent
   }
@@ -263,48 +284,56 @@ function StudyPlanSimulatorPage() {
   }
 
   const handleAddSimSubjects = (subject, checkParent = true) => {
+    // console.log('SubjectsTemp', SubjectsTemp)
     if (!subject) {
       return
     }
-    // console.log('Subject', subject)
+    // console.log('subject', subject)
+    const findSubject = SubjectsTemp?.find(s => s.subject_id === subject.subject_id)
     // if (subject.continue_subjects.length === 0) {
     if (checkParent) {
-      const hasParent = handleCheckPreviousSubject(subject)
+      // console.log('subject', subject)
+
+      // console.log('all subject ', SubjectsTemp)
+      // console.log('findSubject', findSubject)
+      const hasParent = handleCheckPreviousSubject(findSubject)
 
       // console.log('hasParent', hasParent)
       if (!hasParent) {
         if (
-          !simSubjects.find(s => s.subject_id === subject?.subject_id) &&
-          subject?.subject_credit + totalCredit <= 25
+          !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
+          findSubject?.subject_credit + totalCredit <= 25
         ) {
           const newObject = {
             term: value + 1,
-            subject_id: subject?.subject_id,
-            subject_code: subject?.subject_code,
-            subject_name_th: subject?.subject_name_th,
-            subject_name_en: subject?.subject_name_en,
-            subject_credit: subject?.subject_credit,
-            subject_structures: subject?.subject_structures
+            subject_id: findSubject?.subject_id,
+            subject_code: findSubject?.subject_code,
+            subject_name_th: findSubject?.subject_name_th,
+            subject_name_en: findSubject?.subject_name_en,
+            subject_credit: findSubject?.subject_credit,
+            subject_structures: findSubject?.subject_structures
           }
           const results = [...simSubjects, newObject]
           setSimSubjects(results)
           // console.log('added sim subject', results)
 
           // update count scope
-          const fintoUpdateScope = CurriculumStructures.filter(
+          const fintoUpdateScope = CurriculumStructures?.filter(
             scope =>
-              scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subjectGroup?.subject_group_id
+              scope.subjectGroup?.subject_group_id ===
+              findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
           ).map(pre => ({
             ...pre,
             countScope:
               pre.countScope !== undefined && !isNaN(pre.countScope)
-                ? pre.countScope + subject?.subject_credit
-                : subject?.subject_credit
+                ? pre.countScope + findSubject?.subject_credit
+                : findSubject?.subject_credit
           }))
           if (fintoUpdateScope) {
             const tempStructure = CurriculumStructures.filter(
               old =>
-                old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subjectGroup?.subject_group_id
+                old.subjectGroup?.subject_group_id !==
+                findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
             )
             const newUpdate = [fintoUpdateScope[0], ...tempStructure]
             // console.log('newUpdate', newUpdate)
@@ -316,40 +345,45 @@ function StudyPlanSimulatorPage() {
               )
             )
           }
-        } else if (simSubjects.find(s => s.subject_id === subject?.subject_id)) {
+          setSubjectSelected(findSubject)
+          setOpenSnack(true)
+        } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
           alert('this subject already in simulator')
-        } else if (subject?.subject_credit + totalCredit >= 25) {
+        } else if (findSubject?.subject_credit + totalCredit >= 25) {
           alert('this total credit is overflow (total credit must lest than 25 or equal)')
         }
       }
     } else {
-      if (!simSubjects.find(s => s.subject_id === subject?.subject_id) && subject?.subject_credit + totalCredit <= 25) {
+      if (
+        !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
+        findSubject?.subject_credit + totalCredit <= 25
+      ) {
         const newObject = {
           term: value + 1,
-          subject_id: subject?.subject_id,
-          subject_code: subject?.subject_code,
-          subject_name_th: subject?.subject_name_th,
-          subject_name_en: subject?.subject_name_en,
-          subject_credit: subject?.subject_credit,
-          subject_structures: subject?.subject_structures
+          subject_id: findSubject?.subject_id,
+          subject_code: findSubject?.subject_code,
+          subject_name_th: findSubject?.subject_name_th,
+          subject_name_en: findSubject?.subject_name_en,
+          subject_credit: findSubject?.subject_credit,
+          subject_structures: findSubject?.subject_structures
         }
         const results = [...simSubjects, newObject]
         setSimSubjects(results)
         // console.log('added sim subject', results)
 
         // update count scope with parent
-        const fintoUpdateScope = CurriculumStructures.filter(
-          scope => scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subject_group_id
+        const fintoUpdateScope = CurriculumStructures?.filter(
+          scope => scope.subjectGroup?.subject_group_id === findSubject?.subject_structures[0]?.subject_group_id
         ).map(pre => ({
           ...pre,
           countScope:
             pre.countScope !== undefined && !isNaN(pre.countScope)
-              ? pre.countScope + subject?.subject_credit
-              : subject?.subject_credit
+              ? pre.countScope + findSubject?.subject_credit
+              : findSubject?.subject_credit
         }))
         if (fintoUpdateScope) {
-          const tempStructure = CurriculumStructures.filter(
-            old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subject_group_id
+          const tempStructure = CurriculumStructures?.filter(
+            old => old.subjectGroup?.subject_group_id !== findSubject?.subject_structures[0]?.subject_group_id
           )
           const newUpdate = [fintoUpdateScope[0], ...tempStructure]
           console.log('newUpdate', newUpdate)
@@ -361,9 +395,11 @@ function StudyPlanSimulatorPage() {
             )
           )
         }
-      } else if (subject?.subject_credit + totalCredit >= 25) {
+        setSubjectSelected(findSubject)
+        setOpenSnack(true)
+      } else if (findSubject?.subject_credit + totalCredit >= 25) {
         alert('this total credit is overflow (total credit must lest than 21 or equal)')
-      } else if (simSubjects.find(s => s.subject_id === subject?.subject_id)) {
+      } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
         alert('this subject already in simulator')
       }
     }
@@ -1509,6 +1545,22 @@ function StudyPlanSimulatorPage() {
         <>
           {resultSelected !== 2 && !openResult && (
             <Grid container sx={{ m: { xs: 0, lg: 2 }, p: { xs: 6, lg: 0 } }} spacing={2}>
+              <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  open={openSnack}
+                  autoHideDuration={6000}
+                  onClose={() => setOpenSnack(false)}
+                >
+                  <Alert severity={'success'} onClose={() => setOpenSnack(false)} sx={{ mb: 6, ml: 2 }}>
+                    <AlertTitle sx={{ m: 0, p: 0 }}>
+                      {'เพิ่มรายวิชา ' + subjectSelected.subject_name_th + ' สำเร็จ'}
+                    </AlertTitle>
+                    {/* <AlertTitle sx={{ m: 0, p: 0 }}>ได้ เพิ่ม ENGSEXXX ในเทอมการศึกษาที่ 1/2023</AlertTitle> */}
+                  </Alert>
+                </Snackbar>
+              </Stack>
+
               <Grid container item xs={12} sm={12} md={6} lg={7} sx={{ height: { sm: 800, lg: '100%' } }} spacing={6}>
                 {/* Filter */}
                 <Grid item xs={12} sm={12} md={6} lg={8} sx={{ px: { xs: 6, sm: 6, lg: 2 } }}>
@@ -1704,7 +1756,7 @@ function StudyPlanSimulatorPage() {
                                     <Button
                                       onClick={() =>
                                         !simSubjects.find(v => v.subject_id === value.subject_id) &&
-                                        handleAddSimSubjects(value)
+                                        handleAddSimSubjects(value, true)
                                       }
                                       sx={{
                                         color: 'white',
@@ -2328,8 +2380,8 @@ function StudyPlanSimulatorPage() {
                       <IconButton
                         sx={{ color: grey[400], borderRadius: 1, m: 1, width: 48, ml: 6 }}
                         onClick={() => {
-                          handleAddSimSubjects(SubjectsRelations[0]?.parent, false)
-                          setOpenDetails(false)
+                          handleAddSimSubjects(SubjectsRelations[0]?.parent, true)
+                          // setOpenDetails(false)
                         }}
                       >
                         +

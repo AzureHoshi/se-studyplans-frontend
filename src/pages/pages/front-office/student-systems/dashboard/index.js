@@ -67,6 +67,8 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     }
     if (!isError) {
       alert('Thank you for your feedback')
+      setFeedback('')
+      setOpenFeedBack(false)
     }
   }
   const mostRecentObject = lastedSubjectSemester.reduce((acc, current) => {
@@ -393,31 +395,31 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   </Box>
                   {/* show studyplan */}
                   <Box sx={{ mt: 6, display: 'flex', justifyContent: 'space-between' }}>
-                    <Grid container>
-                      <Grid item xs={12} lg={8}>
-                        <Box sx={{ display: 'flex', justifyContent: { xs: 'space-between', lg: 'start' } }}>
-                          <Typography variant='caption' mr={lastedSubjectSemester[0] === undefined ? 0 : 6} noWrap>
-                            {'ปี: ' + lastedSubjectSemester[0]?.stu_acad_rec_year !== undefined &&
-                              lastedSubjectSemester[0]?.stu_acad_rec_year +
+                    {lastedSubjectSemester[0] !== undefined && (
+                      <Grid container>
+                        <Grid item xs={12} lg={8}>
+                          <Box sx={{ display: 'flex', justifyContent: { xs: 'space-between', lg: 'start' } }}>
+                            <Typography variant='caption' mr={lastedSubjectSemester[0] === undefined ? 0 : 6} noWrap>
+                              {'ปี: ' +
+                                String(lastedSubjectSemester[0]?.stu_acad_rec_year) +
                                 ' เทอม:' +
-                                lastedSubjectSemester[0]?.stu_acad_rec_semester !==
-                                undefined &&
-                              lastedSubjectSemester[0]?.stu_acad_rec_semester}
-                          </Typography>
-                          <Typography variant='caption' mr={6} noWrap>
-                            {lastedSubjectSemester?.length} subjects
-                          </Typography>
+                                lastedSubjectSemester[0]?.stu_acad_rec_semester}
+                            </Typography>
+                            <Typography variant='caption' mr={6} noWrap>
+                              {lastedSubjectSemester?.length} subjects
+                            </Typography>
+                            <Typography variant='caption' noWrap>
+                              {totalCreditByLastedSemester} total credit
+                            </Typography>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={12} lg={4} sx={{ textAlign: 'end', overflow: 'hidden' }}>
                           <Typography variant='caption' noWrap>
-                            {totalCreditByLastedSemester} total credit
+                            {reformattedDate}
                           </Typography>
-                        </Box>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} lg={4} sx={{ textAlign: 'end', overflow: 'hidden' }}>
-                        <Typography variant='caption' noWrap>
-                          {reformattedDate}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+                    )}
                   </Box>
                   <Box sx={{ mt: 3.5, display: 'flex', justifyContent: 'space-between' }}>
                     <Box sx={{ width: '60%', display: 'flex', justifyContent: 'space-between' }}>
@@ -695,7 +697,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     />
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'center', m: 3.5, mt: 6 }}>
-                    <Button variant='contained' fullWidth>
+                    <Button
+                      onClick={() => handleSubmitFeedBack(feedback, userProfile.std_no)}
+                      variant='contained'
+                      fullWidth
+                    >
                       Send Feedback
                     </Button>
                   </Box>

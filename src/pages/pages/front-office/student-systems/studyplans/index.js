@@ -784,7 +784,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
             <CardContent>
               <Grid container>
                 <Grid item xs={12} sm={8}>
-                  <Typography variant='h4'>Update Study Plan</Typography>
+                  <Typography variant='h5'>Update Study Plan</Typography>
                   <Typography variant='body2'>Add subjects you have learned</Typography>
                 </Grid>
                 <Hidden smDown>
