@@ -189,7 +189,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   //     })
   // }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (jobRecommended && interRestResult) {
       console.log('jobRecommended', jobRecommended)
       const uniqueJobPositions = jobRecommended.reduce((result, currentItem, index) => {
@@ -199,18 +199,31 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         }
         return result
       }, {})
+      const sortData = Object.values(uniqueJobPositions)?.sort((a, b) => {
+        const positionA = interRestResult.labels.indexOf(a.job_position_name)
+        const positionB = interRestResult.labels.indexOf(b.job_position_name)
 
-      setJobPosition(
-        Object.values(uniqueJobPositions).sort(
-          (a, b) =>
-            interRestResult.labels.indexOf(a.job_position_name) - interRestResult.labels.indexOf(b.job_position_name)
-        )
-      )
-      const firstItem = Object.values(uniqueJobPositions).sort(
-        (a, b) =>
-          interRestResult.labels.indexOf(a.job_position_name) - interRestResult.labels.indexOf(b.job_position_name)
-      )
-      setJobSelected(firstItem[0])
+        // If both positions are in the labels array, compare their positions
+        if (positionA !== -1 && positionB !== -1) {
+          return positionA - positionB
+        }
+
+        // If only one of them is in the labels array, prioritize it
+        if (positionA !== -1) {
+          return -1
+        }
+
+        if (positionB !== -1) {
+          return 1
+        }
+
+        // If none of them are in the labels array, maintain their original order
+        return 0
+      })
+
+      setJobPosition(sortData)
+      // const firstItem = Object.values(uniqueJobPositions).sort((a, b) => interRestResult.labels === a.job_position_name)
+      setJobSelected(sortData[0])
       console.log('interRestResult', interRestResult)
       console.log(Object.values(uniqueJobPositions))
     }
