@@ -691,53 +691,58 @@ StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
 export async function getServerSideProps() {
-  var InterestResult = { labels: [], data: [] }
-  var StudyPlanByStdNo = []
-  var curriculumScope = []
-  var jobRecommended = []
+  const apiEndpoints = [
+    `/interest-results/${userProfile.std_no}`,
+    `/stu-acad-recs/${userProfile.std_no}`,
+    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
+    `/subject-job-relateds`
+  ]
 
-  try {
-    // Make multiple API requests concurrently using Promise.all
-    const [resInterestResult, resStudyPlan, resCurriculumSE66Scope, resJobRecommended] = await Promise.all([
-      axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no),
-      axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no),
-      axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
-      axios.get(url.BASE_URL + `/subject-job-relateds`)
-    ])
+  const apiData = []
 
-    // Process data from responses
-    InterestResult = resInterestResult.data
-    StudyPlanByStdNo = resStudyPlan.data.data
-    curriculumScope = resCurriculumSE66Scope.data.data
-    jobRecommended = resJobRecommended.data.data
+  for (let i = 0; i < apiEndpoints.length; i++) {
+    try {
+      const response = await axios.get(url.BASE_URL + apiEndpoints[i])
+      apiData[i] = i !== 0 ? response.data.data : response.data // Assuming data is stored in a property named "data" for consistency
 
-    // Your logic with the retrieved data
+      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
 
-    console.log('Data from endpoint InterestResult:', InterestResult)
-    console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
-    console.log('Data from endpoint curriculumScope:', curriculumScope)
-  } catch (errorArray) {
-    // Handle errors separately for each API request
-    console.error('Error fetching data concurrently:', errorArray.message)
+        if (i === 0) {
+          return {
+            redirect: {
+              destination: '/pages/front-office/student-systems/interest-survey/',
+              permanent: false
+            }
+          }
+        }
+      } else {
+        console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
+      }
+    }
   }
-  // ย้ายกลับไปหน้า survey ถ้า InterestResult ไม่มีข้อมูล = ยังไม่ได้ทำ
-  if (InterestResult.labels.length === 0) {
+
+  const [InterestResult, StudyPlanByStdNo, curriculumScope, jobRecommended] = apiData
+
+  // Continue with the logic only if InterestResult is available
+  if (InterestResult.labels === undefined) {
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/interest-survey/',
-        permanent: false // Set to true for permanent redirection
+        permanent: false
       }
     }
   }
 
   return {
     props: {
-      InterestResult: InterestResult,
-      StudyPlanByStdNo: StudyPlanByStdNo,
-      curriculumScope: curriculumScope,
-      jobRecommended: jobRecommended
+      InterestResult,
+      StudyPlanByStdNo,
+      curriculumScope,
+      jobRecommended
     }
   }
 }
-
 export default StudentSystems

@@ -1006,51 +1006,62 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
 export async function getServerSideProps() {
-  var SubjectData = []
-  var StudyPlanByStdNo = []
-  var curriculumScope = []
-  var InterestResults = { labels: [], data: [] }
+  const apiEndpoints = [
+    `/subjects-by-curriculum/2`,
+    `/stu-acad-recs/${userProfile.std_no}`,
+    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
+    `/interest-results/${userProfile.std_no}`
+  ]
 
-  try {
-    // Make multiple API requests concurrently using Promise.all
-    const [resSubjects, resStudyPlan, resCurriculumSE66Scope, resInterestResult] = await Promise.all([
-      axios.get(url.BASE_URL + `/subjects-by-curriculum/` + 2),
-      axios.get(url.BASE_URL + `/stu-acad-recs/` + userProfile.std_no),
-      axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
-      axios.get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
-    ])
+  const apiData = []
 
-    const addCountScope = resCurriculumSE66Scope.data.data.map(c => ({ ...c, countScope: 0 }))
+  for (let i = 0; i < apiEndpoints.length; i++) {
+    try {
+      const response = await axios.get(url.BASE_URL + apiEndpoints[i])
+      apiData[i] = i !== 3 ? response.data.data : response.data // Assuming data is stored in a property named "data" for consistency
 
-    // Process data from responses
-    SubjectData = resSubjects.data.data
-    StudyPlanByStdNo = resStudyPlan.data.data
-    curriculumScope = addCountScope
-    InterestResults = resInterestResult.data
-    // Your logic with the retrieved data
+      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
 
-    console.log('Data from endpoint SubjectData:', SubjectData)
-    console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
-    console.log('Data from endpoint curriculumScope:', curriculumScope)
-  } catch (errorArray) {
-    // Handle errors separately for each API request
-    console.error('Error fetching data concurrently:', errorArray.message)
+        if (i === 0) {
+          return {
+            redirect: {
+              destination: '/pages/front-office/student-systems/interest-survey/',
+              permanent: false
+            }
+          }
+        }
+      } else {
+        console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
+      }
+    }
   }
+
+  const [SubjectData, StudyPlanByStdNo, addCountScope, InterestResults] = apiData
+
+  // Your logic with the retrieved data
+  console.log('Data from endpoint SubjectData:', SubjectData)
+  console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
+  console.log('Data from endpoint curriculumScope:', addCountScope)
 
   if (InterestResults.labels === undefined) {
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/interest-survey/',
-        permanent: false // Set to true for permanent redirection
+        permanent: false
       }
     }
   }
 
+  const curriculumScope = addCountScope.map(c => ({ ...c, countScope: 0 }))
+
   return {
     props: {
-      SubjectData: SubjectData,
-      StudyPlanByStdNo: StudyPlanByStdNo,
-      curriculumScope: curriculumScope
+      SubjectData,
+      StudyPlanByStdNo,
+      curriculumScope
     }
   }
 }
