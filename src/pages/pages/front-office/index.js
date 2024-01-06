@@ -263,51 +263,57 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
 export async function getServerSideProps() {
-  var jobRecommended = []
-  var curriculumTree = []
-  var subjectsSE66 = []
-  var curriculumScopeSE66 = []
-  var studyPlanSE66 = []
+  const apiEndpoints = [
+    `/subject-job-relateds`,
+    `/continue-subjects-curriculum/${userProfile.curriculum_id}`,
+    `/subjects-by-curriculum/${userProfile.curriculum_id}`,
+    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
+    `/study-plan-records/${userProfile.curriculum_id}`
+  ]
 
-  try {
-    // Make multiple API requests concurrently using Promise.all
-    const [resJobRecommended, resCurriculumSE66Tree, resSubjectsSE66, resCurriculumSE66Scope, resStudyPlanRecords] =
-      await Promise.all([
-        axios.get(url.BASE_URL + `/subject-job-relateds`),
-        axios.get(url.BASE_URL + `/continue-subjects-curriculum/` + userProfile.curriculum_id),
-        axios.get(url.BASE_URL + `/subjects-by-curriculum/` + userProfile.curriculum_id),
-        axios.get(url.BASE_URL + `/curriculum-structures-v2/` + userProfile.curriculum_id),
-        axios.get(url.BASE_URL + `/study-plan-records/` + userProfile.curriculum_id)
-      ])
+  const apiData = []
 
-    // Process data from responses
-    jobRecommended = resJobRecommended.data.data
-    curriculumTree = resCurriculumSE66Tree.data.data
-    subjectsSE66 = resSubjectsSE66.data.data
-    curriculumScopeSE66 = resCurriculumSE66Scope.data.data
-    studyPlanSE66 = resStudyPlanRecords.data.data
+  for (let i = 0; i < apiEndpoints.length; i++) {
+    try {
+      const response = await axios.get(url.BASE_URL + apiEndpoints[i])
+      apiData[i] = response.data.data || response.data // Assuming data is stored in a property named "data" for consistency
 
-    // Your logic with the retrieved data
+      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
 
-    console.log('Data from endpoint jobRecommended:', jobRecommended)
-    console.log('Data from endpoint curriculumTree:', curriculumTree)
-    console.log('Data from endpoint subjectsSE66:', subjectsSE66)
-    console.log('Data from endpoint curriculumScopeSE66:', curriculumScopeSE66)
-    console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
-  } catch (errorArray) {
-    // Handle errors separately for each API request
-    console.error('Error fetching data concurrently:', errorArray.message)
+        if (i === 0) {
+          return {
+            redirect: {
+              destination: '/pages/front-office/student-systems/interest-survey/',
+              permanent: false
+            }
+          }
+        }
+      } else {
+        console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
+      }
+    }
   }
+
+  const [jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66] = apiData
+
+  // Your logic with the retrieved data
+  console.log('Data from endpoint jobRecommended:', jobRecommended)
+  console.log('Data from endpoint curriculumTree:', curriculumTree)
+  console.log('Data from endpoint subjectsSE66:', subjectsSE66)
+  console.log('Data from endpoint curriculumScopeSE66:', curriculumScopeSE66)
+  console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
 
   return {
     props: {
-      jobRecommended: jobRecommended,
-      subjectsSE66: subjectsSE66,
-      curriculumScopeSE66: curriculumScopeSE66,
-      studyPlanSE66: studyPlanSE66,
-      curriculumTree: curriculumTree
+      jobRecommended,
+      subjectsSE66,
+      curriculumScopeSE66,
+      studyPlanSE66,
+      curriculumTree
     }
   }
 }
-
 export default FrontOffice
