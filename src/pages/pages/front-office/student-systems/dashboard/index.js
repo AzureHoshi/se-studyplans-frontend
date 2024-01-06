@@ -710,14 +710,14 @@ export async function getServerSideProps() {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
 
-        if (i === 0) {
-          return {
-            redirect: {
-              destination: '/pages/front-office/student-systems/interest-survey/',
-              permanent: false
-            }
-          }
-        }
+        // if (i === 0) {
+        //   return {
+        //     redirect: {
+        //       destination: '/pages/front-office/student-systems/interest-survey/',
+        //       permanent: false
+        //     }
+        //   }
+        // }
       } else {
         console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
       }
