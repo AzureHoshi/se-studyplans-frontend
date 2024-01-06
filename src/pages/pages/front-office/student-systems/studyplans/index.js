@@ -1046,7 +1046,7 @@ export async function getServerSideProps() {
   console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
   console.log('Data from endpoint curriculumScope:', addCountScope)
 
-  if (InterestResults.labels === undefined) {
+  if (InterestResults === null) {
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/interest-survey/',

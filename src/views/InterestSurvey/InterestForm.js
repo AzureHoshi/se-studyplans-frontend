@@ -21,6 +21,7 @@ import {
 import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
 import { useRouter } from 'next/router'
+import { userProfile } from 'src/dummy'
 
 const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisplay }) => {
   const router = useRouter()
@@ -99,9 +100,9 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         })
 
         console.log('res from sendding survay', res)
-        setTimeout(() => {
-          router.push('/pages/front-office/student-systems/dashboard/')
-        }, 2000)
+        // setTimeout(() => {
+        //   router.push('/pages/front-office/student-systems/dashboard/')
+        // }, 2000)
 
         // setResultDisplay(true)
       } catch (err) {
@@ -109,6 +110,13 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         setResultDisplay(false)
       }
       // setIsLoading(false)
+      setTimeout(() => {
+        axios
+          .get(url.BASE_URL + `/interest-results/${userProfile.std_no}`)
+          .then(res => res.data && router.push('/pages/front-office/student-systems/dashboard/'))
+          .catch(err => console.log('err from navigate to dashboard', err))
+      }, 2000)
+
       console.log(answers)
     }
   }

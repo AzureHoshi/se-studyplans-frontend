@@ -108,16 +108,20 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     }
   }, 0)
 
-  const totalCurrentSubjectCredit = StudyPlanByStdNo.reduce((sum, currentItem) => {
-    // Check if the subject property exists and has the subject_credit property
-    if (currentItem.subject && currentItem.subject.subject_credit) {
-      // Add the subject_credit to the sum
-      return sum + currentItem.subject.subject_credit
-    } else {
-      // If the property is missing or doesn't have subject_credit, return the current sum
-      return sum
-    }
-  }, 0)
+  // Check if StudyPlanByStdNo is null, if so, return 0
+  const totalCurrentSubjectCredit =
+    StudyPlanByStdNo === null || StudyPlanByStdNo === undefined
+      ? 0
+      : StudyPlanByStdNo.reduce((sum, currentItem) => {
+          // Check if the subject property exists and has the subject_credit property
+          if (currentItem.subject && currentItem.subject.subject_credit) {
+            // Add the subject_credit to the sum
+            return sum + currentItem.subject.subject_credit
+          } else {
+            // If the property is missing or doesn't have subject_credit, return the current sum
+            return sum
+          }
+        }, 0)
 
   function findMaxYearAndSemester(data) {
     if (!Array.isArray(data) || data.length === 0) {
@@ -152,7 +156,9 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     }
 
     const percentage = (totalCurrentSubjectCredit / totalCreditByScope) * 100
-    return parseInt(percentage)
+
+    if (percentage) return parseInt(percentage)
+    else return 0
   }
 
   const handleOpenFeedBack = () => {
@@ -377,10 +383,12 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     <Grid container>
                       <Grid item xs={12} lg={8}>
                         <Box sx={{ display: 'flex', justifyContent: { xs: 'space-between', lg: 'start' } }}>
-                          <Typography variant='caption' mr={6} noWrap>
-                            {'ปี: ' +
+                          <Typography variant='caption' mr={lastedSubjectSemester[0] === undefined ? 0 : 6} noWrap>
+                            {'ปี: ' + lastedSubjectSemester[0]?.stu_acad_rec_year !== undefined &&
                               lastedSubjectSemester[0]?.stu_acad_rec_year +
-                              ' เทอม:' +
+                                ' เทอม:' +
+                                lastedSubjectSemester[0]?.stu_acad_rec_semester !==
+                                undefined &&
                               lastedSubjectSemester[0]?.stu_acad_rec_semester}
                           </Typography>
                           <Typography variant='caption' mr={6} noWrap>
@@ -709,15 +717,6 @@ export async function getServerSideProps() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
-
-        // if (i === 0) {
-        //   return {
-        //     redirect: {
-        //       destination: '/pages/front-office/student-systems/interest-survey/',
-        //       permanent: false
-        //     }
-        //   }
-        // }
       } else {
         console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
       }
@@ -727,7 +726,7 @@ export async function getServerSideProps() {
   const [InterestResult, StudyPlanByStdNo, curriculumScope, jobRecommended] = apiData
 
   // Continue with the logic only if InterestResult is available
-  if (InterestResult.labels === undefined) {
+  if (InterestResult === undefined) {
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/interest-survey/',
@@ -735,14 +734,15 @@ export async function getServerSideProps() {
       }
     }
   }
-
+  // Replace undefined variables with null in the props object
+  const propsObject = {
+    InterestResult,
+    StudyPlanByStdNo: StudyPlanByStdNo !== undefined ? StudyPlanByStdNo : null,
+    curriculumScope: curriculumScope !== undefined ? curriculumScope : null,
+    jobRecommended: jobRecommended !== undefined ? jobRecommended : null
+  }
   return {
-    props: {
-      InterestResult,
-      StudyPlanByStdNo,
-      curriculumScope,
-      jobRecommended
-    }
+    props: propsObject
   }
 }
 export default StudentSystems
