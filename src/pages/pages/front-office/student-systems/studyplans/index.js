@@ -56,7 +56,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const [gradeSelected, setGradeSelected] = useState('A+')
   const AddAPI = url.BASE_URL + `/stu-acad-recs/`
 
-  const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo)
+  const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo === null ? [] : StudyPlanByStdNo)
   const [curriculumScopeToDisplay, setCurriculumScopeToDisplay] = useState(curriculumScope)
 
   const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−', 'F']
@@ -157,7 +157,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     'subject_type_name'
   )
 
-  const totalCreditByScope = curriculumScope.reduce((sum, currentItem) => {
+  const totalCreditByScope = curriculumScope?.reduce((sum, currentItem) => {
     // Check if the subject property exists and has the subject_credit property
     if (currentItem.credit_total) {
       // Add the subject_credit to the sum
@@ -168,7 +168,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     }
   }, 0)
 
-  const totalCurrentSubjectCredit = stdStudyPlans.reduce((sum, currentItem) => {
+  const totalCurrentSubjectCredit = stdStudyPlans?.reduce((sum, currentItem) => {
     // Check if the subject property exists and has the subject_credit property
     if (currentItem.subject && currentItem.subject.subject_credit) {
       // Add the subject_credit to the sum
@@ -178,6 +178,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       return sum
     }
   }, 0)
+
+  const handleUndefined = totalCurrentSubjectCredit === undefined ? 0 : totalCurrentSubjectCredit
 
   useLayoutEffect(() => {
     if (!userProfile) return
@@ -355,7 +357,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
       console.log('term', getTerm)
       console.log('All Plans', stdStudyPlans)
-      if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+      if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
             (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
@@ -372,19 +374,6 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
           )
       }
       // console.log('subjectSelected', subjectSelected)
-      const newLocalObject = {
-        subject: {
-          ...subjectSelected
-        },
-        subject_code: subjectSelected.subject_code,
-        subject_id: subjectSelected.subject_id,
-        stu_acad_rec_year: getTerm.year,
-        stu_acad_rec_semester: getTerm.semester,
-        stu_acad_rec_grade: gradeSelected,
-        continue_subjects: [...subjectSelected.continue_subjects],
-        subject_structure: subjectSelected.subject_structures[0],
-        termLabel: currentTerm
-      }
 
       const newPostObject = {
         collegian_code: String(userProfile.std_no),
@@ -394,23 +383,54 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         stu_acad_rec_grade: gradeSelected
       }
       console.log('newPostObject', newPostObject)
-      console.log('newLocalObject', newLocalObject)
-      try {
-        axios.post(AddAPI, newPostObject)
 
-        const updatePlan = [...stdStudyPlans, newLocalObject]
-        setStdStudyPlans(updatePlan)
-        setOpenAddDialog(false)
-        handleShowAlert(
-          'ได้เพิ่มวิชา' +
-            subjectSelected.subject_code +
-            ' ' +
-            subjectSelected.subject_name_th +
-            ' ' +
-            'ในปีการศึกษา ' +
-            currentTerm
-        )
-        setGradeSelected('A+')
+      try {
+        const resData = await axios.post(AddAPI, newPostObject)
+        // console.log('resData', resData.data.data)
+        const newLocalObject = {
+          stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
+          subject: {
+            ...subjectSelected
+          },
+          subject_code: subjectSelected.subject_code,
+          subject_id: subjectSelected.subject_id,
+          stu_acad_rec_year: getTerm.year,
+          stu_acad_rec_semester: getTerm.semester,
+          stu_acad_rec_grade: gradeSelected,
+          continue_subjects: [...subjectSelected.continue_subjects],
+          subject_structure: subjectSelected.subject_structures[0],
+          termLabel: currentTerm
+        }
+        if (stdStudyPlans) {
+          console.log('newLocalObject', newLocalObject)
+          const updatePlan = [...stdStudyPlans, newLocalObject]
+
+          setStdStudyPlans(updatePlan)
+          setOpenAddDialog(false)
+          handleShowAlert(
+            'ได้เพิ่มวิชา' +
+              subjectSelected.subject_code +
+              ' ' +
+              subjectSelected.subject_name_th +
+              ' ' +
+              'ในปีการศึกษา ' +
+              currentTerm
+          )
+          setGradeSelected('A+')
+        } else {
+          setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
+          setOpenAddDialog(false)
+          handleShowAlert(
+            'ได้เพิ่มวิชา' +
+              subjectSelected.subject_code +
+              ' ' +
+              subjectSelected.subject_name_th +
+              ' ' +
+              'ในปีการศึกษา ' +
+              currentTerm
+          )
+          setGradeSelected('A+')
+        }
         // Handle the successful response here
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -425,7 +445,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     } else if (type === 'summer') {
       const getTerm = summerLabel?.find(t => t.label === currentTerm)
       // console.log(getTerm)
-      if (subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+      if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
             cp.subject.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
@@ -437,19 +457,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
               subjectSelected?.continue_subjects[0]?.parent?.subject_code
           )
       }
-      const newLocalObject = {
-        subject: {
-          ...subjectSelected
-        },
-        subject_code: subjectSelected.subject_code,
-        subject_id: subjectSelected.subject_id,
-        stu_acad_rec_year: getTerm.year,
-        stu_acad_rec_semester: getTerm.semester,
-        stu_acad_rec_grade: gradeSelected,
-        continue_subjects: [...subjectSelected.continue_subjects],
-        subject_structure: subjectSelected.subject_structures[0],
-        termLabel: currentTerm
-      }
+
       const newPostObject = {
         collegian_code: String(userProfile.std_no),
         subject_id: String(subjectSelected.subject_id),
@@ -460,21 +468,51 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
       console.log('newPostObject', newPostObject)
       try {
-        axios.post(AddAPI, newPostObject)
-        const updatePlan = [...stdStudyPlans, newLocalObject]
+        const resData = await axios.post(AddAPI, newPostObject)
+        // console.log('resData', resData.data.data)
+        const newLocalObject = {
+          stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
+          subject: {
+            ...subjectSelected
+          },
+          subject_code: subjectSelected.subject_code,
+          subject_id: subjectSelected.subject_id,
+          stu_acad_rec_year: getTerm.year,
+          stu_acad_rec_semester: getTerm.semester,
+          stu_acad_rec_grade: gradeSelected,
+          continue_subjects: [...subjectSelected.continue_subjects],
+          subject_structure: subjectSelected.subject_structures[0],
+          termLabel: currentTerm
+        }
+        if (stdStudyPlans) {
+          const updatePlan = [...stdStudyPlans, newLocalObject]
 
-        setStdStudyPlans(updatePlan)
-        setOpenAddDialog(false)
-        handleShowAlert(
-          'ได้เพิ่มวิชา' +
-            subjectSelected.subject_code +
-            ' ' +
-            subjectSelected.subject_name_th +
-            ' ' +
-            'ในปีการศึกษา ' +
-            currentTerm
-        )
-        setGradeSelected('A+')
+          setStdStudyPlans(updatePlan)
+          setOpenAddDialog(false)
+          handleShowAlert(
+            'ได้เพิ่มวิชา' +
+              subjectSelected.subject_code +
+              ' ' +
+              subjectSelected.subject_name_th +
+              ' ' +
+              'ในปีการศึกษา ' +
+              currentTerm
+          )
+          setGradeSelected('A+')
+        } else {
+          setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
+          setOpenAddDialog(false)
+          handleShowAlert(
+            'ได้เพิ่มวิชา' +
+              subjectSelected.subject_code +
+              ' ' +
+              subjectSelected.subject_name_th +
+              ' ' +
+              'ในปีการศึกษา ' +
+              currentTerm
+          )
+          setGradeSelected('A+')
+        }
       } catch (error) {
         if (error.response && error.response.status === 404) {
           // Handle 404 error (Not Found) here
@@ -490,6 +528,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
   const handleRemoveStudyPlan = studyPlan => {
     if (!studyPlan) return
+    console.log('studyPlan', studyPlan)
     const checkChildren = stdStudyPlans?.filter(s => s.continue_subjects[0]?.parent_id === studyPlan?.subject_id)
     console.log('checkChildren', checkChildren)
     if (checkChildren.length > 0) {
@@ -832,7 +871,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                       <Grid item xs={12} sx={{ pb: 6 }}>
                         <Typography variant='body2'>
                           {' '}
-                          {'current total credit : ' + totalCurrentSubjectCredit + '/' + totalCreditByScope}
+                          {'current total credit : ' + handleUndefined + '/' + totalCreditByScope}
                         </Typography>
                       </Grid>
                       {UniqueCategories.map(categoryHeader => (
@@ -1054,15 +1093,16 @@ export async function getServerSideProps() {
       }
     }
   }
-
   const curriculumScope = addCountScope.map(c => ({ ...c, countScope: 0 }))
+  // Replace undefined variables with null in the props object
+  const propsObject = {
+    SubjectData: SubjectData !== undefined ? SubjectData : null,
+    StudyPlanByStdNo: StudyPlanByStdNo !== undefined ? StudyPlanByStdNo : null,
+    curriculumScope: curriculumScope !== undefined ? curriculumScope : null
+  }
 
   return {
-    props: {
-      SubjectData,
-      StudyPlanByStdNo,
-      curriculumScope
-    }
+    props: propsObject
   }
 }
 
