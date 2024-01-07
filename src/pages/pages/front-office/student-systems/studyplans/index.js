@@ -182,31 +182,136 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const handleUndefined = totalCurrentSubjectCredit === undefined ? 0 : totalCurrentSubjectCredit
 
   useLayoutEffect(() => {
-    if (!userProfile) return
-    const createTermLabel = termLabel.map(pre => {
-      const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
-      return {
-        ...pre,
-        label: String(pre.semester + '/' + yearFromStdNo)
+    if (!userProfile || !StudyPlanByStdNo) return
+
+    // create academic year item from year/semester rage from studyplan
+    var storeLabel = termLabel
+    StudyPlanByStdNo?.forEach(studentObject => {
+      // Check if the combination of year and semester exists in storeLabel
+      const exists = storeLabel.some(
+        item => item.year === studentObject.stu_acad_rec_year && item.semester === studentObject.stu_acad_rec_semester
+      )
+
+      // If not, add a new object to storeLabel
+      if (!exists) {
+        storeLabel = [
+          ...storeLabel,
+          {
+            i: storeLabel.length + 1,
+            year: studentObject.stu_acad_rec_year,
+            semester: studentObject.stu_acad_rec_semester,
+            label: ''
+          }
+        ]
+      } else {
+        // If the combination exists, update the label or perform other modifications
+        storeLabel = storeLabel.map(
+          item => ({ ...item }) // Update label or make other changes
+        )
       }
     })
-    const createSummerLabel = summerLabel.map(pre => {
-      const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
-      return {
-        ...pre,
-        label: String(pre.semester + '/' + yearFromStdNo)
+
+    const createTermLabel = storeLabel
+      .filter(s => s.semester !== 3)
+      .map(pre => {
+        const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+        return {
+          ...pre,
+          label: String(pre.semester + '/' + yearFromStdNo)
+        }
+      })
+
+    var storeSummerLabel = summerLabel
+    StudyPlanByStdNo?.forEach(studentObject => {
+      // Check if the combination of year and semester exists in storeLabel
+      const exists = storeSummerLabel.some(
+        item => item.year === studentObject.stu_acad_rec_year && item.semester === studentObject.stu_acad_rec_semester
+      )
+
+      // If not, add a new object to storeLabel
+      if (!exists) {
+        storeSummerLabel = [
+          ...storeSummerLabel,
+          {
+            i: storeSummerLabel.length + 1,
+            year: studentObject.stu_acad_rec_year,
+            semester: studentObject.stu_acad_rec_semester,
+            label: ''
+          }
+        ]
+      } else {
+        // If the combination exists, update the label or perform other modifications
+        storeSummerLabel = storeSummerLabel.map(
+          item => ({ ...item }) // Update label or make other changes
+        )
       }
     })
+
+    const createSummerLabel = storeSummerLabel
+      .filter(s => s.semester === 3)
+      .map(pre => {
+        const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+        return {
+          ...pre,
+          label: String(pre.semester + '/' + yearFromStdNo)
+        }
+      })
+
+    // Access the updated storeLabel
+    console.log('storeLabel', storeLabel)
+    console.log('createSummerLabel', createSummerLabel)
+
     setSummerLabel(createSummerLabel)
     setTermLabel(createTermLabel)
     setCurrentTerm(createTermLabel[0].label)
-  }, [userProfile])
+  }, [userProfile, StudyPlanByStdNo])
 
   useLayoutEffect(() => {
     if (!StudyPlanByStdNo) {
       return
     }
-    const createTermLabel = StudyPlanByStdNo?.map(pre => {
+
+    // var storeLabel = termLabel
+
+    // StudyPlanByStdNo?.forEach(studentObject => {
+    //   // Check if the combination of year and semester exists in storeLabel
+    //   const exists = storeLabel.some(
+    //     item => item.year === studentObject.stu_acad_rec_year && item.semester === studentObject.stu_acad_rec_semester
+    //   )
+
+    //   // If not, add a new object to storeLabel
+    //   if (!exists) {
+    //     storeLabel = [
+    //       ...storeLabel,
+    //       {
+    //         ...studentObject,
+    //         i: storeLabel.length + 1,
+    //         year: studentObject.stu_acad_rec_year,
+    //         semester: studentObject.stu_acad_rec_semester,
+    //         label: ''
+    //       }
+    //     ]
+    //   } else {
+    //     // If the combination exists, update the label or perform other modifications
+    //     storeLabel = storeLabel.map(
+    //       item => ({ ...item, ...studentObject, label: '' }) // Update label or make other changes
+    //     )
+    //   }
+    // })
+
+    // // Access the updated storeLabel
+    // console.log('storeLabel', storeLabel)
+
+    // const createTermLabel = storeLabel?.map(pre => {
+    //   const yearFromStdNo =
+    //     '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
+    //   return {
+    //     ...pre,
+    //     label: String(pre.stu_acad_rec_semester + '/' + yearFromStdNo)
+    //   }
+    // })
+
+    const createTermLabelStd = StudyPlanByStdNo?.map(pre => {
       const yearFromStdNo =
         '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
       return {
@@ -215,8 +320,10 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         termLabel: String(pre.stu_acad_rec_semester + '/' + yearFromStdNo)
       }
     })
-    setStdStudyPlans(createTermLabel)
-    console.log('createTermLabel', createTermLabel)
+    // console.log('StudyPlanByStdNo', StudyPlanByStdNo)
+    setStdStudyPlans(createTermLabelStd)
+    // setTermLabel(createTermLabel)
+    // console.log('createTermLabel', createTermLabel)
   }, [StudyPlanByStdNo])
 
   // updatescope
@@ -584,13 +691,13 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
             i: termLabel[termLabel.length - 1].i + 1,
             year:
               termLabel[termLabel.length - 1].semester === 2
-                ? termLabel[termLabel.length - 1].year
-                : termLabel[termLabel.length - 1].year + 1,
+                ? termLabel[termLabel.length - 1].year + 1
+                : termLabel[termLabel.length - 1].year,
             semester: newSemester,
             label: newTermLabel
           }
         ]
-
+        console.log('newObject', newObject)
         setTermLabel(newObject)
         setSemesterType('normal')
         setCurrentTerm(newTermLabel)
