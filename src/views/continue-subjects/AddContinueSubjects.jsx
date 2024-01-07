@@ -206,6 +206,10 @@ function AddContinueSubjects({ open, handleClose, subject }) {
     ContinueSubjects && console.log(ContinueSubjects)
   }, [ContinueSubjects])
 
+  useEffect(()=>{
+    if(open) reFetchContinueSubjects()
+  },[open])
+
   if (ContinueSubjectsError && SubjectError) {
     return <Box>Error Fetching...</Box>
   }
