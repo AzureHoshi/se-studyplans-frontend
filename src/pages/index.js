@@ -77,7 +77,11 @@ const MasterData = () => {
         <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
           <Visible>
             <OnHover>
-              <CardMenu handleclick={() => console.log('Report')} MenuIcon={mdiFileTableOutline} MenuName={'Reports'} />
+              <CardMenu
+                handleclick={() => router.push('/comingsoon')}
+                MenuIcon={mdiFileTableOutline}
+                MenuName={'Reports'}
+              />
             </OnHover>
           </Visible>
         </Grid>

@@ -17,10 +17,9 @@ const Simulator = () => {
         </Grid>
         <Grid item xs={12} sx={{ mt: 6 }}>
           <Typography variant='caption' sx={{ color: '#909094' }}>
-            Building a recommendation system for software engineering involves leveraging data to suggest relevant
-            resources, tools, or technologies to users based on their preferences, skills, and the needs of their
-            projects. Here's a high-level overview of how you could design such a system. Building an effective
-            recommendation system requires ongoing refinement based on user feedback and changing industry trends.
+            A Study Plan Simulator is a software tool designed to assist students in creating, managing, and optimizing
+            their academic study plans. It aims to provide a user-friendly interface that allows students to plan their
+            coursework
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ mt: 12 }}>

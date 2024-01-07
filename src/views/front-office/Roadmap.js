@@ -348,7 +348,8 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Hidden mdDown>
-                  <HeadTypography>Introduction to Computer Science:</HeadTypography>
+                  <HeadTypography>Introduction to Software Engineering:</HeadTypography>
+
                   <Typography variant='caption' sx={{ color: '#909094' }}>
                     <ul style={{ marginLeft: -12 }}>
                       <li>Basic programming concepts (variables, loops, conditionals)</li>
