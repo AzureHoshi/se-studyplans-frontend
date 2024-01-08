@@ -139,12 +139,12 @@ const Recommendation = ({ jobRecommended }) => {
                             alignItems: 'center'
                           }}
                         >
-                          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                          <Box sx={{ display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
                             <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                               {sjRecommend.subject.subject_code}
                             </Typography>
-                            <Typography variant='body2' sx={{ marginLeft: 6, maxWidth: { xs: 300, sm: 250 } }} noWrap>
-                              {sjRecommend.subject.subject_name_en}
+                            <Typography variant='body2' sx={{ marginLeft: 6 }} noWrap>
+                              {sjRecommend.subject.subject_name_th}
                             </Typography>
                           </Box>
                         </Box>

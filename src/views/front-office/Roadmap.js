@@ -809,7 +809,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                                   noWrap
                                 >
                                   {/* Subject ................................................................... */}
-                                  {value.subject_name_en}
+                                  {value.subject_name_th}
                                 </Typography>
                               </Box>
                             </Card>

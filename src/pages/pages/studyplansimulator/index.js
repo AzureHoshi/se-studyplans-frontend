@@ -1785,7 +1785,7 @@ function StudyPlanSimulatorPage() {
                                     noWrap
                                   >
                                     {/* Subject ................................................................... */}
-                                    {value.subject_name_en}
+                                    {value.subject_name_th}
                                   </Typography>
                                 </Box>
                               </Card>
@@ -1940,7 +1940,7 @@ function StudyPlanSimulatorPage() {
                                     sx={{ maxWidth: { xs: 300, sm: 600, md: 200, lg: 300 }, m: 2 }}
                                     noWrap
                                   >
-                                    {subjectInterm.subject_name_en}
+                                    {subjectInterm.subject_name_th}
                                   </Typography>
                                   <Typography
                                     sx={{

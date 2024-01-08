@@ -59,7 +59,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo === null ? [] : StudyPlanByStdNo)
   const [curriculumScopeToDisplay, setCurriculumScopeToDisplay] = useState(curriculumScope)
 
-  const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−', 'F']
+  const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−']
 
   // จริงๆต้องดึงข้อมูลการศึกษาของนักศึกษามาว่ามีกี่เทอมแล้วเอามาทำข้อมูล ด้านล่างนี้เป็น Default สำหรับนักศึกษาที่ยังไม่ได้เพิ่มข้อมูลลงในระบบ
   const [termLabel, setTermLabel] = useState([

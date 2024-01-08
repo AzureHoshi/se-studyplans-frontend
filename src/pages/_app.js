@@ -59,6 +59,12 @@ const App = props => {
         />
         <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
         <meta name='viewport' content='initial-scale=1, width=device-width' /> */}
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+        <link
+          href='https://fonts.googleapis.com/css2?family=Noto+Sans&family=Prompt:wght@300&display=swap'
+          rel='stylesheet'
+        />
       </Head>
 
       <SettingsProvider>

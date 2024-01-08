@@ -1,7 +1,9 @@
 import { Box, Button, Card, CardHeader, Grid, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
+import { useRouter } from 'next/router'
 
 const StudentSystems = () => {
+  const router = useRouter()
   return (
     <Box sx={{ maxWidth: 1200, m: 8 }}>
       <Grid container spacing={2} sx={{ pb: 58 }}>
@@ -20,6 +22,7 @@ const StudentSystems = () => {
         </Grid>
         <Grid item xs={12} sx={{ mt: 12 }}>
           <Button
+            onClick={() => router.push('front-office/student-systems')}
             variant='contained'
             sx={{
               marginTop: '1rem',
