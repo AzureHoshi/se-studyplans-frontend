@@ -413,65 +413,96 @@ function StudyPlanSimulatorPage() {
     handleCheckLimitCredit(value + 1)
   }, [simSubjects])
 
-  const handleRemoveSimSubject = subject => {
+  const handleRemoveSimSubject = async subject => {
+    var hasChildren
+    await axios
+      .get(url.BASE_URL + '/continue-subjects-subject/' + subject?.subject_id)
+      .then(res => {
+        hasChildren = res.data.data[0].children
+        console.log(res.data.data)
+      })
+      .catch(err => console.log('err from handle delete', err))
+
+    console.log('hasChildren', hasChildren)
+    var checkButOk = false
     // Filter out the subject with the given subject_id
-    const updatedSimSubjects = simSubjects.filter(s => s.subject_id !== subject?.subject_id)
-    // update count scope
-    // console.log('subject', subject)
-    if (subject?.subject_structures[0]?.subjectGroup !== undefined) {
-      const finetoUpdateScope = CurriculumStructures.filter(
-        scope => scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subjectGroup?.subject_group_id
-      ).map(pre => ({
-        ...pre,
-        countScope:
-          pre.countScope !== undefined && !isNaN(pre.countScope)
-            ? pre.countScope - subject?.subject_credit
-            : subject?.subject_credit
-      }))
-      if (finetoUpdateScope) {
-        const tempStructure = CurriculumStructures.filter(
-          old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subjectGroup?.subject_group_id
-        )
-        const newUpdate = [finetoUpdateScope[0], ...tempStructure]
-        // console.log('newUpdate', newUpdate)
-        setCurriculumStructures(
-          newUpdate.sort(
-            (a, b) =>
-              a.countScope - b.countScope &&
-              a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+    if (hasChildren.length > 0) {
+      hasChildren?.map(children => {
+        const foundChildren = simSubjects?.filter(sim => sim.subject_id === children.subject_id)
+        console.log('foundChildren', foundChildren)
+        if (foundChildren.length > 0) {
+          const childrenCode = foundChildren.map(child => child.subject_code).join(', ')
+          alert(
+            `ไม่สามารถลบวิชานี้ได้เนื่องจากมีวิชาต่อเนื่องในแผนการเรียน ลบวิชาต่อเนื่องที่เกี่ยวข้องก่อนที่จะลบวิชานี้ : ${childrenCode}`
           )
-        )
-      }
-
-      // Update the state with the filtered array
-      setSimSubjects(updatedSimSubjects)
+        } else {
+          console.log('this ok to delete')
+          checkButOk = true
+        }
+      })
     } else {
-      const finetoUpdateScope = CurriculumStructures.filter(
-        scope => scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subject_group_id
-      ).map(pre => ({
-        ...pre,
-        countScope:
-          pre.countScope !== undefined && !isNaN(pre.countScope)
-            ? pre.countScope - subject?.subject_credit
-            : subject?.subject_credit
-      }))
-      if (finetoUpdateScope) {
-        const tempStructure = CurriculumStructures.filter(
-          old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subject_group_id
-        )
-        const newUpdate = [finetoUpdateScope[0], ...tempStructure]
-        console.log('newUpdate', newUpdate)
-        setCurriculumStructures(
-          newUpdate.sort(
-            (a, b) =>
-              a.countScope - b.countScope &&
-              a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+      checkButOk = true
+    }
+    if (checkButOk) {
+      const updatedSimSubjects = simSubjects.filter(s => s.subject_id !== subject?.subject_id)
+      // update count scope
+      // console.log('subject', subject)
+      if (subject?.subject_structures[0]?.subjectGroup !== undefined) {
+        const finetoUpdateScope = CurriculumStructures.filter(
+          scope =>
+            scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subjectGroup?.subject_group_id
+        ).map(pre => ({
+          ...pre,
+          countScope:
+            pre.countScope !== undefined && !isNaN(pre.countScope)
+              ? pre.countScope - subject?.subject_credit
+              : subject?.subject_credit
+        }))
+        if (finetoUpdateScope) {
+          const tempStructure = CurriculumStructures.filter(
+            old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subjectGroup?.subject_group_id
           )
-        )
-      }
+          const newUpdate = [finetoUpdateScope[0], ...tempStructure]
+          // console.log('newUpdate', newUpdate)
+          setCurriculumStructures(
+            newUpdate.sort(
+              (a, b) =>
+                a.countScope - b.countScope &&
+                a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+            )
+          )
+        }
 
-      // Update the state with the filtered array
-      setSimSubjects(updatedSimSubjects)
+        // Update the state with the filtered array
+        setSimSubjects(updatedSimSubjects)
+      } else {
+        const finetoUpdateScope = CurriculumStructures.filter(
+          scope => scope.subjectGroup?.subject_group_id === subject?.subject_structures[0]?.subject_group_id
+        ).map(pre => ({
+          ...pre,
+          countScope:
+            pre.countScope !== undefined && !isNaN(pre.countScope)
+              ? pre.countScope - subject?.subject_credit
+              : subject?.subject_credit
+        }))
+        if (finetoUpdateScope) {
+          const tempStructure = CurriculumStructures.filter(
+            old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subject_group_id
+          )
+          const newUpdate = [finetoUpdateScope[0], ...tempStructure]
+          console.log('newUpdate', newUpdate)
+          setCurriculumStructures(
+            newUpdate.sort(
+              (a, b) =>
+                a.countScope - b.countScope &&
+                a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+            )
+          )
+        }
+
+        // Update the state with the filtered array
+        setSimSubjects(updatedSimSubjects)
+      }
     }
   }
 

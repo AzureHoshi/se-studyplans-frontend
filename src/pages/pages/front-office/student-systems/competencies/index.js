@@ -92,9 +92,17 @@ function StudentComcetencies() {
                                 {plan.subject?.subject_name_th}
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
                               <Typography variant='caption'> competencies</Typography>
-                              <Typography>-</Typography>
+                              {plan?.competencies.length > 0 ? (
+                                plan?.competencies?.map(c => (
+                                  <Typography variant={'caption'} key={c.competency_id}>
+                                    -{c.competency_name}
+                                  </Typography>
+                                ))
+                              ) : (
+                                <Typography>-</Typography>
+                              )}
                             </Grid>
                             <Grid item xs={12}>
                               {index + 1 !== dummy.length && <Divider sx={{ mt: 2 }} />}
