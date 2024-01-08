@@ -559,7 +559,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
               </Grid>
             </Grid>
             {/* reform shortcut */}
-            <Grid item xs={12} lg={3} sx={{ p: 3.5, mt: { xs: 6, lg: 0 }, pt: 0 }}>
+            <Grid item xs={12} lg={3} sx={{ p: { xs: 0, sm: 3.5 }, mt: { xs: 6, lg: 0 }, pt: 0 }}>
               <Card sx={{ height: 500, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
                 <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
                   Recommend Subjects By Job
