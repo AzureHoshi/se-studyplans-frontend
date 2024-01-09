@@ -47,9 +47,9 @@ const VerticalNavHeader = props => {
       ) : (
         <Link href='/' passHref>
           <img
-            src='/images/logos/studyplan-horizontal.png'
+            src='/images/logos/logo.png'
             alt='logo'
-            style={{ width: 200, height: 'auto', marginTop: 16, cursor: 'pointer' }}
+            style={{ width: 110, height: 'auto', margin: 40, marginBottom: 0, cursor: 'pointer' }}
           />
           {/* <StyledLink>
             <svg

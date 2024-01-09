@@ -191,11 +191,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
             >
               <Grid container sx={{ display: 'grid', justifyContent: 'center' }}>
                 <Grid item xs={12} sx={{ m: 16 }}>
-                  <img
-                    src='/images/logos/studyplan-vertical.png'
-                    alt='logo'
-                    style={{ width: 140, height: 'auto', marginTop: 16 }}
-                  />
+                  <img src='/images/logos/logo.png' alt='logo' style={{ width: 140, height: 'auto', marginTop: 16 }} />
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant='text' startIcon={<LibraryBooksIcon />} onClick={() => setPageState(0)}>
