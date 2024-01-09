@@ -23,7 +23,7 @@ import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { TreeItem, TreeView, treeItemClasses } from '@mui/x-tree-view'
 import { ChevronDown, ChevronRight } from 'mdi-material-ui'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { CircleLoading, Selection } from 'src/components'
 import { url } from 'src/configs/urlConfig'
 import { useFetch } from 'src/hooks'
@@ -58,6 +58,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   const [categoriesSubject, setCategoriesSubject] = useState([])
   const [typesSubject, setTypesSubject] = useState([])
   const [groupsSubject, setGroupsSubject] = useState([])
+  const [customSubjects, setCustomSubjects] = useState([]) // for autocomplete
 
   // for display study plan
   const yearSemesterArray = [
@@ -313,12 +314,17 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
     }
   }, [displayMode])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (curriculumTree) {
       const dummy = []
       const getNodeID = recursionGetNodeID(dummy, curriculumTree)
       setExpandedNodes(...getNodeID)
-
+      const customLabelForAutocomplete = curriculumTree?.map(d => ({
+        ...d,
+        label: d.subjects.subject_code + ' ' + d.subjects.subject_name_th
+      }))
+      // console.log('customLabelForAutocomplete', customLabelForAutocomplete)
+      setCustomSubjects(customLabelForAutocomplete)
       // console.log(...getNodeID)
 
       // console.log(...getNodeID)
@@ -555,10 +561,8 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                   disablePortal
                   fullWidth
                   freeSolo
-                  options={curriculumTree}
-                  getOptionLabel={option =>
-                    option ? `${option?.subjects?.subject_code || ''} ${option?.subjects?.subject_name_th || ''}` : ''
-                  }
+                  options={customSubjects}
+                  getOptionLabel={option => option.label || ''}
                   renderInput={params => <TextField {...params} label='Subject Name, Code' />}
                   onChange={(e, value) => {
                     if (value !== null) {
