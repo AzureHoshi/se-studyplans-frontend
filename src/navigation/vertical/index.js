@@ -1,5 +1,20 @@
-import BookOutline from 'mdi-material-ui/BookOutline'
-import Domain from 'mdi-material-ui/Domain'
+import {
+  FileTreeOutline,
+  Domain,
+  BookOutline,
+  BookCogOutline,
+  FileCogOutline,
+  ViewGridOutline,
+  ViewGrid,
+  DotsGrid,
+  AccountGroupOutline,
+  FileCompare,
+  FileDocumentMultipleOutline,
+  AccountHardHatOutline,
+  FlagOutline,
+  SchoolOutline,
+  HeadSnowflakeOutline
+} from 'mdi-material-ui'
 
 export const masterNavigation = () => {
   return [
@@ -13,19 +28,19 @@ export const masterNavigation = () => {
     },
     {
       title: 'Curriculum Tree',
-      icon: Domain,
+      icon: FileTreeOutline,
       path: '/pages/masterdata/curriculumtree'
       // openInNewTab: true
     },
     {
       title: 'Curriculum Structures',
-      icon: Domain,
+      icon: BookCogOutline,
       path: '/pages/masterdata/curriculumstructure'
       // openInNewTab: true
     },
     {
       title: 'Subject Structures',
-      icon: Domain,
+      icon: FileCogOutline,
       path: '/pages/masterdata/subjectstructures'
       // openInNewTab: true
     },
@@ -38,26 +53,32 @@ export const masterNavigation = () => {
 
     {
       title: 'Subject Categories',
-      icon: Domain,
+      icon: ViewGridOutline,
       path: '/pages/masterdata/subjectcategories'
       // openInNewTab: true
     },
     {
       title: 'Subject Types',
-      icon: Domain,
+      icon: ViewGrid,
       path: '/pages/masterdata/subjecttypes'
       // openInNewTab: true
     },
     {
       title: 'Subject Groups',
-      icon: Domain,
+      icon: DotsGrid,
       path: '/pages/masterdata/subjectgroups'
       // openInNewTab: true
     },
     {
       title: 'Student Groups',
-      icon: Domain,
+      icon: AccountGroupOutline,
       path: '/pages/masterdata/studentgroups'
+      // openInNewTab: true
+    },
+    {
+      title: 'YLOs PLOs',
+      icon: FileCompare,
+      path: '/pages/masterdata/yloplo'
       // openInNewTab: true
     }
   ]
@@ -69,7 +90,7 @@ export const surveysNavigation = () => {
     },
     {
       title: 'Interest Surveys',
-      icon: BookOutline,
+      icon: FileDocumentMultipleOutline,
       path: '/pages/surveys/interestsurveys'
     }
     // {
@@ -84,7 +105,7 @@ export const jobSubjectRelatedNavigation = () => {
   return [
     {
       title: 'Job & Subject Related',
-      icon: BookOutline,
+      icon: AccountHardHatOutline,
       path: '/pages/job-subjectrelated'
     }
   ]
@@ -93,23 +114,18 @@ export const studentSystemNavigation = () => {
   return [
     {
       title: 'Dashboard',
-      // icon: BookOutline,
+      icon: FlagOutline,
       path: '/pages/front-office/student-systems/dashboard'
     },
     {
       title: 'StudyPlan(แผนการเรียน)',
-      // icon: BookOutline,
+      icon: SchoolOutline,
       path: '/pages/front-office/student-systems/studyplans'
     },
     {
       title: 'Competencies(สมรรถนะ)',
-      // // icon: BookOutline,
+      icon: HeadSnowflakeOutline,
       path: '/pages/front-office/student-systems/competencies'
     }
-    // {
-    //   title: 'Competencies'
-    //   // icon: BookOutline,
-    //   // path: '/pages/studentsystems'
-    // }
   ]
 }

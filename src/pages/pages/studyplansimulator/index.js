@@ -290,14 +290,19 @@ function StudyPlanSimulatorPage() {
     }
     // console.log('subject', subject)
     const findSubject = SubjectsTemp?.find(s => s.subject_id === subject.subject_id)
-    // if (subject.continue_subjects.length === 0) {
+
     if (checkParent) {
+      // if (subject.continue_subjects.length === 0) {
       // console.log('subject', subject)
 
       // console.log('all subject ', SubjectsTemp)
       // console.log('findSubject', findSubject)
       const hasParent = handleCheckPreviousSubject(findSubject)
-
+      // if (
+      //   hasParent &&
+      //   !simSubjects?.find(s => s.subject_id === findSubject?.continue_subjects[0]?.parent_id && value + 1 > s.term)
+      // )
+      //   return alert('Incorect term selected')
       // console.log('hasParent', hasParent)
       if (!hasParent) {
         if (
@@ -347,62 +352,67 @@ function StudyPlanSimulatorPage() {
           }
           setSubjectSelected(findSubject)
           setOpenSnack(true)
+        } else if (
+          !simSubjects?.find(s => s.subject_id === findSubject?.continue_subjects[0]?.parent_id && value + 1 > s.term)
+        ) {
+          alert('Incorect term selected')
         } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
           alert('this subject already in simulator')
         } else if (findSubject?.subject_credit + totalCredit >= 25) {
           alert('this total credit is overflow (total credit must lest than 25 or equal)')
         }
       }
-    } else {
-      if (
-        !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
-        findSubject?.subject_credit + totalCredit <= 25
-      ) {
-        const newObject = {
-          term: value + 1,
-          subject_id: findSubject?.subject_id,
-          subject_code: findSubject?.subject_code,
-          subject_name_th: findSubject?.subject_name_th,
-          subject_name_en: findSubject?.subject_name_en,
-          subject_credit: findSubject?.subject_credit,
-          subject_structures: findSubject?.subject_structures
-        }
-        const results = [...simSubjects, newObject]
-        setSimSubjects(results)
-        // console.log('added sim subject', results)
-
-        // update count scope with parent
-        const fintoUpdateScope = CurriculumStructures?.filter(
-          scope => scope.subjectGroup?.subject_group_id === findSubject?.subject_structures[0]?.subject_group_id
-        ).map(pre => ({
-          ...pre,
-          countScope:
-            pre.countScope !== undefined && !isNaN(pre.countScope)
-              ? pre.countScope + findSubject?.subject_credit
-              : findSubject?.subject_credit
-        }))
-        if (fintoUpdateScope) {
-          const tempStructure = CurriculumStructures?.filter(
-            old => old.subjectGroup?.subject_group_id !== findSubject?.subject_structures[0]?.subject_group_id
-          )
-          const newUpdate = [fintoUpdateScope[0], ...tempStructure]
-          console.log('newUpdate', newUpdate)
-          setCurriculumStructures(
-            newUpdate.sort(
-              (a, b) =>
-                a.countScope - b.countScope &&
-                a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
-            )
-          )
-        }
-        setSubjectSelected(findSubject)
-        setOpenSnack(true)
-      } else if (findSubject?.subject_credit + totalCredit >= 25) {
-        alert('this total credit is overflow (total credit must lest than 21 or equal)')
-      } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
-        alert('this subject already in simulator')
-      }
     }
+    // else {
+    //   if (
+    //     !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
+    //     findSubject?.subject_credit + totalCredit <= 25 &&
+    //   ) {
+    //     const newObject = {
+    //       term: value + 1,
+    //       subject_id: findSubject?.subject_id,
+    //       subject_code: findSubject?.subject_code,
+    //       subject_name_th: findSubject?.subject_name_th,
+    //       subject_name_en: findSubject?.subject_name_en,
+    //       subject_credit: findSubject?.subject_credit,
+    //       subject_structures: findSubject?.subject_structures
+    //     }
+    //     const results = [...simSubjects, newObject]
+    //     setSimSubjects(results)
+    //     // console.log('added sim subject', results)
+
+    //     // update count scope with parent
+    //     const fintoUpdateScope = CurriculumStructures?.filter(
+    //       scope => scope.subjectGroup?.subject_group_id === findSubject?.subject_structures[0]?.subject_group_id
+    //     ).map(pre => ({
+    //       ...pre,
+    //       countScope:
+    //         pre.countScope !== undefined && !isNaN(pre.countScope)
+    //           ? pre.countScope + findSubject?.subject_credit
+    //           : findSubject?.subject_credit
+    //     }))
+    //     if (fintoUpdateScope) {
+    //       const tempStructure = CurriculumStructures?.filter(
+    //         old => old.subjectGroup?.subject_group_id !== findSubject?.subject_structures[0]?.subject_group_id
+    //       )
+    //       const newUpdate = [fintoUpdateScope[0], ...tempStructure]
+    //       console.log('newUpdate', newUpdate)
+    //       setCurriculumStructures(
+    //         newUpdate.sort(
+    //           (a, b) =>
+    //             a.countScope - b.countScope &&
+    //             a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+    //         )
+    //       )
+    //     }
+    //     setSubjectSelected(findSubject)
+    //     setOpenSnack(true)
+    //   } else if (findSubject?.subject_credit + totalCredit >= 25) {
+    //     alert('this total credit is overflow (total credit must lest than 21 or equal)')
+    //   } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
+    //     alert('this subject already in simulator')
+    //   }
+    // }
   }
 
   // useEffect(() => {

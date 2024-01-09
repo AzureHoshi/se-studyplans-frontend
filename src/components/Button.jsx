@@ -5,6 +5,7 @@ function Btn(props) {
   return (
     <Button
       {...props}
+      variant={props.variant}
       sx={{
         width: props.width || '100%',
         bgcolor: 'primary.main',
