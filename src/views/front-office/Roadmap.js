@@ -718,8 +718,8 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Box sx={{ mt: 6, overflow: 'auto' }}>
-                    <Grid container spacing={6} sx={{ p: 2, minHeight: 600 }}>
+                  <Box sx={{ mt: 6, overflow: 'auto', minHeight: 600 }}>
+                    <Grid container spacing={6} sx={{ p: 2 }}>
                       {subjectsSE66
                         .sort((a, b) =>
                           a.subject_id === subjectSelected.subject_id
