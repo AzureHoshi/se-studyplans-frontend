@@ -567,9 +567,15 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                   onChange={(e, value) => {
                     if (value !== null) {
                       setSubjectSelected(value)
+                      setCategoriesSelected(0)
+                      setTypesSelected(0)
+                      setGroupsSelected(0)
                       // setState(pre => ({ ...pre, subject_group_id: value.subject_group_id }))
                     } else {
                       setSubjectSelected([])
+                      setCategoriesSelected(0)
+                      setTypesSelected(0)
+                      setGroupsSelected(0)
                       // setState(pre => ({ ...pre, subject_group_id: null }))
                     }
                   }}
