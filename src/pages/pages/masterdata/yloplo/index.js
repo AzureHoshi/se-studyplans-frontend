@@ -8,6 +8,7 @@ import YloDialogMangement from 'src/views/yloplo/YloDialogManangement'
 import SubPloDialogMapping from 'src/views/yloplo/SubPloDialogMapping'
 import { useFetch } from 'src/hooks'
 import { url } from 'src/configs/urlConfig'
+import axios from 'axios'
 
 function YLOPLOManagement() {
   const [openPloManagement, setOpenPloMangement] = useState(false)
@@ -32,6 +33,24 @@ function YLOPLOManagement() {
     setYloDisplayType(type)
     setOpenYloMangement(true)
   }
+  const handleRemoveYLO = async ylo => {
+    if (!ylo) return
+    else {
+      let result = window.confirm('ต้องการลบ YLO' + ylo.ylo_year + '?')
+      if (result) {
+        console.log('api endpoint', URL_GET_YLOs + ylo.ylo_id)
+        await axios
+          .delete(URL_GET_YLOs + ylo.ylo_id)
+          .then(res => {
+            if (res.data) {
+              console.log(res.data)
+              reFetchYLOsData()
+            }
+          })
+          .catch(err => alert('err', err))
+      }
+    }
+  }
 
   const columns = [
     { field: 'ylo_year', headerName: 'Title', width: 200, renderCell: params => 'YLO' + params.row.ylo_year + '' },
@@ -51,9 +70,9 @@ function YLOPLOManagement() {
         })
     },
     {
-      field: 'fn',
+      field: 'edit',
       headerName: '',
-      width: 200,
+      width: 130,
       renderCell: params => (
         <Grid container spacing={2}>
           <Grid item>
@@ -63,24 +82,30 @@ function YLOPLOManagement() {
           </Grid>
         </Grid>
       )
+    },
+    {
+      field: 'remove',
+      headerName: '',
+      width: 130,
+      renderCell: params => (
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button onClick={() => handleRemoveYLO(params.row)} color='error' variant='outlined'>
+              Remove
+            </Button>
+          </Grid>
+        </Grid>
+      )
     }
   ]
 
   return (
     <Box>
-      {/* // header */}
-
       <Typography variant='h6'>YLOs (Year Learning Outcomes)</Typography>
-
       <Typography variant='body2' sx={{ ml: 1.5 }}>
         ผลลัพธ์การเรียนรู้ที่คาดหวังรายชั้นปี
       </Typography>
       <Grid container spacing={6} sx={{ mt: 5 }}>
-        {/* <Grid item xs={12} sm={12} md={4} lg={3}>
-          <Box display={'flex'} flexDirection={'row'}>
-            <TextSearch onChange={e => null} />
-          </Box>
-        </Grid> */}
         <Grid item xs={6} sm={6} lg={3}>
           <Button variant='contained' onClick={() => handleOpenYlo(0)} sx={{ minWidth: 200 }} fullWidth>
             + Add New YLO

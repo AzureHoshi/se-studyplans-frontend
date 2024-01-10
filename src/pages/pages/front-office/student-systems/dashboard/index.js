@@ -199,7 +199,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         if (!result[job_position_id]) {
           result[job_position_id] = { index: index, ...job_position }
         }
-        return result
+        return
       }, {})
       const sortData = Object.values(uniqueJobPositions)?.sort((a, b) => {
         const positionA = interRestResult.labels.indexOf(a.job_position_name)

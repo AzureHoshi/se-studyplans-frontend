@@ -17,10 +17,12 @@ import { DataGrid } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
+import { CircleLoading } from 'src/components'
 
 function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
   const initialDesc = [{ id: 0, ylo_description: '' }]
   const [displayController, setDisplayController] = useState(displayType)
+  const [fakeLoading, setFakeLoading] = useState(false)
   const [yloState, setYloState] = useState(YloSelected)
   const [descriptionArray, setDescriptionArray] = useState(initialDesc)
   const [openDescEdit, setOpenDescEdit] = useState(false)
@@ -217,8 +219,9 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
         </Typography>
         <Box sx={{ my: 2 }}>
           <TextField
+            disabled
             value={yloState?.ylo_year}
-            onChange={e => setYloState(pre => ({ ...pre, ylo_year: e.target.value }))}
+            // onChange={e => setYloState(pre => ({ ...pre, ylo_year: e.target.value }))}
             fullWidth
             type='number'
             size={'small'}
@@ -313,9 +316,10 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
   )
 
   useEffect(() => {
-    if (open && YloSelected) {
+    if (open) {
       setDisplayController(displayType)
       setYloState(YloSelected)
+      setFakeLoading(true)
     } else {
       setTimeout(() => {
         setYloState([])
@@ -323,6 +327,13 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
       }, 100)
     }
   }, [open, YloSelected])
+
+  useEffect(() => {
+    if (fakeLoading === true)
+      setTimeout(() => {
+        setFakeLoading(false)
+      }, 200)
+  }, [fakeLoading])
 
   useEffect(() => {
     if (!yloState) {
@@ -354,8 +365,23 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
           {displayController === 0 && 'YLO Create Form'}
           {displayController === 1 && 'YLO Edit Form'}
         </DialogTitle>
-        {displayController === 0 && <DialogContent sx={{ minHeight: 600 }}> {DisplayCreateForm}</DialogContent>}
-        {displayController === 1 && <DialogContent sx={{ minHeight: 600 }}> {DisplayEditYloPLOs}</DialogContent>}
+        {fakeLoading ? (
+          <DialogContent
+            sx={{
+              minHeight: 600
+            }}
+          >
+            <Box sx={{ m: 60, overflow: 'hidden' }}>
+              <CircleLoading />
+            </Box>
+          </DialogContent>
+        ) : (
+          <DialogContent sx={{ minHeight: 600 }}>
+            {displayController === 0 && DisplayCreateForm}
+            {displayController === 1 && DisplayEditYloPLOs}
+          </DialogContent>
+        )}
+
         <DialogActions>
           <Button
             onClick={() => {
