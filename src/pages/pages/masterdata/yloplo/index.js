@@ -6,42 +6,32 @@ import { Btn, DataGridTable, TextSearch } from 'src/components'
 import PloDialogMangement from 'src/views/yloplo/PloDialogMangement'
 import YloDialogMangement from 'src/views/yloplo/YloDialogManangement'
 import SubPloDialogMapping from 'src/views/yloplo/SubPloDialogMapping'
+import { useFetch } from 'src/hooks'
+import { url } from 'src/configs/urlConfig'
 
 function YLOPLOManagement() {
   const [openPloManagement, setOpenPloMangement] = useState(false)
   const [openYloManagement, setOpenYloMangement] = useState(false)
   const [openSubPloMapping, setOpenSubPloMapping] = useState(false)
   const [yloDisplayType, setYloDisplayType] = useState(0)
-  const handleOpenYlo = type => {
-    setTimeout(() => {
-      setYloDisplayType(type)
-    }, 100)
-    setTimeout(() => {
-      setOpenYloMangement(true)
-    }, 200)
-  }
+  const [YloSelected, setYloSelected] = useState([])
+  const URL_GET_YLOs = `${url.BASE_URL}/ylos/`
 
-  const dummyYLOs = [
-    {
-      ylo_id: 1,
-      ylo_year: 1,
-      updated_at: '2024-01-08T18:24:35.000+00:00',
-      created_at: '2024-01-08T18:24:35.000+00:00'
-    },
-    {
-      ylo_id: 2,
-      ylo_year: 2,
-      updated_at: '2024-01-08T18:24:35.000+00:00',
-      created_at: '2024-01-08T18:24:35.000+00:00'
-    },
-    {
-      ylo_id: 3,
-      ylo_year: 3,
-      updated_at: '2024-01-08T18:24:35.000+00:00',
-      created_at: '2024-01-08T18:24:35.000+00:00'
-    },
-    { ylo_id: 4, ylo_year: 4, updated_at: '2024-01-08T18:24:35.000+00:00', created_at: '2024-01-08T18:24:35.000+00:00' }
-  ]
+  const {
+    error: YLOsDataError,
+    data: YLOsData,
+    setData: setYLOsData,
+    loading: YLOsDataLoading,
+    reFetch: reFetchYLOsData
+  } = useFetch(URL_GET_YLOs)
+
+  const handleOpenYlo = (type, ylo) => {
+    if (ylo) setYloSelected(ylo)
+    else setYloSelected([])
+
+    setYloDisplayType(type)
+    setOpenYloMangement(true)
+  }
 
   const columns = [
     { field: 'ylo_year', headerName: 'Title', width: 200, renderCell: params => 'YLO' + params.row.ylo_year + '' },
@@ -67,7 +57,7 @@ function YLOPLOManagement() {
       renderCell: params => (
         <Grid container spacing={2}>
           <Grid item>
-            <Button onClick={() => handleOpenYlo(1)} color='secondary' variant='outlined'>
+            <Button onClick={() => handleOpenYlo(1, params.row)} color='secondary' variant='outlined'>
               Edit
             </Button>
           </Grid>
@@ -91,18 +81,18 @@ function YLOPLOManagement() {
             <TextSearch onChange={e => null} />
           </Box>
         </Grid> */}
-        <Grid item xs={6} sm={6} md={3} lg={2}>
+        <Grid item xs={6} sm={6} lg={3}>
           <Button variant='contained' onClick={() => handleOpenYlo(0)} sx={{ minWidth: 200 }} fullWidth>
             + Add New YLO
           </Button>
         </Grid>
-        <Grid item xs={6} sm={6} md={3} lg={2}>
+        <Grid item xs={6} sm={6} lg={3}>
           <Button onClick={() => setOpenPloMangement(true)} variant={'outlined'} sx={{ minWidth: 200 }} fullWidth>
             <Icon path={mdiCog} size={1} style={{ marginRight: 6 }} />
             PLO Mangement
           </Button>
         </Grid>
-        <Grid item xs={6} sm={6} md={3} lg={2}>
+        <Grid item xs={6} sm={6} lg={3}>
           <Button onClick={() => setOpenSubPloMapping(true)} variant={'outlined'} sx={{ minWidth: 200 }} fullWidth>
             <Icon path={mdiHeadCogOutline} size={1} style={{ marginRight: 6 }} /> Sub PLO Mapping
           </Button>
@@ -110,19 +100,24 @@ function YLOPLOManagement() {
       </Grid>
       <Grid container>
         <Grid item xs={12} sm={12} lg={12} mt={6}>
-          <DataGridTable
-            rows={dummyYLOs}
-            columns={columns}
-            uniqueKey={'ylo_id'}
+          {YLOsData.length === 0 && !YLOsDataLoading ? (
+            <Typography variant='body2'> API response is null</Typography>
+          ) : (
+            <DataGridTable
+              rows={YLOsData}
+              columns={columns}
+              uniqueKey={'ylo_id'}
 
-            // isLoading={StudentGroupsLoading === null ? true : StudentGroupsLoading}
-          />
+              // isLoading={StudentGroupsLoading === null ? true : StudentGroupsLoading}
+            />
+          )}
         </Grid>
       </Grid>
       <YloDialogMangement
         open={openYloManagement}
         handleClose={() => setOpenYloMangement(false)}
         displayType={yloDisplayType}
+        YloSelected={YloSelected}
       />
       <PloDialogMangement open={openPloManagement} handleClose={() => setOpenPloMangement(false)} />
       <SubPloDialogMapping open={openSubPloMapping} handleClose={() => setOpenSubPloMapping(false)} />
