@@ -1,16 +1,24 @@
 import { Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from '@mui/material'
 import { useState } from 'react'
+import { mdiHeadCogOutline, mdiCog } from '@mdi/js'
+import Icon from '@mdi/react'
 import { Btn, DataGridTable, TextSearch } from 'src/components'
 import PloDialogMangement from 'src/views/yloplo/PloDialogMangement'
 import YloDialogMangement from 'src/views/yloplo/YloDialogManangement'
+import SubPloDialogMapping from 'src/views/yloplo/SubPloDialogMapping'
 
 function YLOPLOManagement() {
   const [openPloManagement, setOpenPloMangement] = useState(false)
   const [openYloManagement, setOpenYloMangement] = useState(false)
+  const [openSubPloMapping, setOpenSubPloMapping] = useState(false)
   const [yloDisplayType, setYloDisplayType] = useState(0)
   const handleOpenYlo = type => {
-    setOpenYloMangement(true)
-    setYloDisplayType(type)
+    setTimeout(() => {
+      setYloDisplayType(type)
+    }, 100)
+    setTimeout(() => {
+      setOpenYloMangement(true)
+    }, 200)
   }
 
   const dummyYLOs = [
@@ -90,7 +98,13 @@ function YLOPLOManagement() {
         </Grid>
         <Grid item xs={6} sm={6} md={3} lg={2}>
           <Button onClick={() => setOpenPloMangement(true)} variant={'outlined'} sx={{ minWidth: 200 }} fullWidth>
+            <Icon path={mdiCog} size={1} style={{ marginRight: 6 }} />
             PLO Mangement
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={6} md={3} lg={2}>
+          <Button onClick={() => setOpenSubPloMapping(true)} variant={'outlined'} sx={{ minWidth: 200 }} fullWidth>
+            <Icon path={mdiHeadCogOutline} size={1} style={{ marginRight: 6 }} /> Sub PLO Mapping
           </Button>
         </Grid>
       </Grid>
@@ -111,6 +125,7 @@ function YLOPLOManagement() {
         displayType={yloDisplayType}
       />
       <PloDialogMangement open={openPloManagement} handleClose={() => setOpenPloMangement(false)} />
+      <SubPloDialogMapping open={openSubPloMapping} handleClose={() => setOpenSubPloMapping(false)} />
     </Box>
   )
 }
