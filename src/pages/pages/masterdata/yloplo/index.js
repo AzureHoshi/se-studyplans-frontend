@@ -7,6 +7,12 @@ import YloDialogMangement from 'src/views/yloplo/YloDialogManangement'
 function YLOPLOManagement() {
   const [openPloManagement, setOpenPloMangement] = useState(false)
   const [openYloManagement, setOpenYloMangement] = useState(false)
+  const [yloDisplayType, setYloDisplayType] = useState(0)
+  const handleOpenYlo = type => {
+    setOpenYloMangement(true)
+    setYloDisplayType(type)
+  }
+
   const dummyYLOs = [
     {
       ylo_id: 1,
@@ -53,8 +59,8 @@ function YLOPLOManagement() {
       renderCell: params => (
         <Grid container spacing={2}>
           <Grid item>
-            <Button color='secondary' variant='outlined'>
-              Edit PLOs
+            <Button onClick={() => handleOpenYlo(1)} color='secondary' variant='outlined'>
+              Edit
             </Button>
           </Grid>
         </Grid>
@@ -78,7 +84,7 @@ function YLOPLOManagement() {
           </Box>
         </Grid> */}
         <Grid item xs={6} sm={6} md={3} lg={2}>
-          <Button variant='contained' onClick={() => setOpenYloMangement(true)} sx={{ minWidth: 200 }} fullWidth>
+          <Button variant='contained' onClick={() => handleOpenYlo(0)} sx={{ minWidth: 200 }} fullWidth>
             + Add New YLO
           </Button>
         </Grid>
@@ -99,7 +105,11 @@ function YLOPLOManagement() {
           />
         </Grid>
       </Grid>
-      <YloDialogMangement open={openYloManagement} handleClose={() => setOpenYloMangement(false)} />
+      <YloDialogMangement
+        open={openYloManagement}
+        handleClose={() => setOpenYloMangement(false)}
+        displayType={yloDisplayType}
+      />
       <PloDialogMangement open={openPloManagement} handleClose={() => setOpenPloMangement(false)} />
     </Box>
   )

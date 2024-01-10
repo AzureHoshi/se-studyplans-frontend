@@ -82,7 +82,7 @@ function PloDialogMangement({ state, open, handleClose }) {
 
   const DisplayPLO = (
     <Grid container spacing={6}>
-      <Grid item xs={12} md={6} container spacing={2} sx={{ height: { xs: null, md: 350 } }}>
+      <Grid item xs={12} md={6} container spacing={2} sx={{ minHeight: 350 }}>
         <Grid item xs={12}>
           <Typography variant='body2'>PLO Create Form</Typography>
         </Grid>
@@ -114,7 +114,9 @@ function PloDialogMangement({ state, open, handleClose }) {
       <DialogTitle sx={{ background: grey[100], mb: 3 }}>PLO Management</DialogTitle>
       {displayController === 0 && <DialogContent sx={{ minHeight: 600 }}> {DisplayPLO}</DialogContent>}
       <DialogActions>
-        <Button color='secondary'>Close</Button>
+        <Button onClick={handleClose} color='secondary'>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   )
