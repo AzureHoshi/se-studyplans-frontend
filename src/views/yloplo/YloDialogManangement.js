@@ -51,8 +51,8 @@ function YloDialogMangement({ state, open, handleClose, displayType }) {
   }
 
   const columns = [
-    { field: 'firstName', headerName: 'Title', width: 400 },
-
+    { field: 'plo_title', headerName: 'Title', width: 100 },
+    { field: 'plo_desc', headerName: 'Desc', width: 400 },
     {
       field: 'delete',
       headerName: '',
@@ -66,9 +66,14 @@ function YloDialogMangement({ state, open, handleClose, displayType }) {
   ]
 
   const rows = [
-    { id: 1, firstName: 'PLO1' },
-    { id: 2, firstName: 'PLO2' },
-    { id: 3, firstName: 'PLO3' }
+    { id: 1, plo_title: 'PLO1', plo_desc: 'มีความรู้ ความเข้าใจในหลักการและทฤษฎีที่สำคัญของวิศวกรรมซอฟแวร์' },
+    {
+      id: 2,
+      plo_title: 'PLO2',
+      plo_desc:
+        'มีความรู้พื้นฐานของกระบวนการวิเคราะห์ระบบงาน การออกแบบ พัฒนา และการใช้งานซอฟต์แวร์ โดยคำนึงถึงสถาปัตยกรรมที่เหมาะสม'
+    },
+    { id: 3, plo_title: 'PLO3', plo_desc: 'มีความสามารถพัฒนาซอฟต์แวร์ในงานอุตสาหกรรม' }
     // Add more dummy data as needed
   ]
 
