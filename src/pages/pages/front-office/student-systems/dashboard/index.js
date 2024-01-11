@@ -194,12 +194,12 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   useLayoutEffect(() => {
     if (jobRecommended && interRestResult) {
       console.log('jobRecommended', jobRecommended)
-      const uniqueJobPositions = jobRecommended.reduce((result, currentItem, index) => {
+      const uniqueJobPositions = jobRecommended?.reduce((result, currentItem, index) => {
         const { job_position_id, job_position } = currentItem
         if (!result[job_position_id]) {
           result[job_position_id] = { index: index, ...job_position }
         }
-        return
+        return result
       }, {})
       const sortData = Object.values(uniqueJobPositions)?.sort((a, b) => {
         const positionA = interRestResult.labels.indexOf(a.job_position_name)
