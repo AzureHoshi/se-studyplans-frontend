@@ -104,7 +104,7 @@ function YloDialogMangement({
         .then(res => {
           if (res.data) {
             console.log(res.data)
-            refetchYLOs()
+            refetchYLOs
             handleClose()
           }
         })
@@ -145,17 +145,21 @@ function YloDialogMangement({
           // console.log(res.data)
           updateYloDescriptionLocal(yloState, descId, descriptionSelected, setYloState)
           setOpenDescEdit(false)
+          refetchYLOs()
         }
       })
       .catch(err => alert('err', err))
   }
 
   const handleRemovePLORelated = plo_id => {
+    console.log('plo_id', plo_id)
+    console.log('ylo_id', YloSelected.ylo_id)
     axios
       .delete(URL_YLO_PLO_RELATED, { ylo_id: YloSelected.ylo_id, plo_id: plo_id })
       .then(res => {
         if (res.data) {
           console.log(res.data)
+          refetchYLOs()
           handleUpdateYloSelect()
         }
       })
@@ -176,6 +180,7 @@ function YloDialogMangement({
           // console.log(updatedUserObject)
           setYloState(updatedUserObject)
           setOpenAddDescription(false)
+          refetchYLOs()
         }
       })
       .catch(err => alert('err', err))
@@ -196,13 +201,10 @@ function YloDialogMangement({
             ylo_description: [...filterData, { ...res.data.data }]
           }
           setYloState(updatedUserObject)
+          refetchYLOs()
         }
       })
       .catch(err => alert('err', err))
-  }
-
-  const handleUpdatePLOsRelated = () => {
-    refetchYLOs()
   }
 
   const columns = [

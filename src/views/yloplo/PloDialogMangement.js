@@ -17,13 +17,18 @@ import { grey } from '@mui/material/colors'
 import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
 
-function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
+function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFetchYLOsData }) {
   const [displayController, setDisplayController] = useState(0)
   const [openPloEdit, setOpenPloEdit] = useState(false)
   const [openSubPloEdit, setOpenSubPloEdit] = useState(false)
   const [PLOSelected, setPLOSelected] = useState([])
+  const [PLOCreateForm, setPLOCreateForm] = useState({ plo_name: '', plo_description: '' })
+  const [subPLOSelected, setSubPLOSelected] = useState([])
+  const [subPLOCreateForm, setSubPLOCreateForm] = useState({ sub_plo_title: '', sub_plo_description: '' })
+  const initialPLOForm = { plo_name: '', plo_description: '' }
+  const initialSubPLOForm = { sub_plo_title: '', sub_plo_description: '' }
 
-  const URL_YLO = `${url.BASE_URL}/plos/`
+  const URL_PLO = `${url.BASE_URL}/plos/`
 
   const handleOpenEditPLO = plo => {
     setPLOSelected(plo)
@@ -56,19 +61,69 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
       />
     )
   }
+
+  // for create form (PLO)
   const handleChangePloDesc = newValue => {
+    // Update the state with the new value
+    setPLOCreateForm(pre => ({ ...pre, plo_description: newValue }))
+  }
+  const handleChangePloTitle = newValue => {
+    // Update the state with the new value
+    setPLOCreateForm(pre => ({ ...pre, plo_name: newValue }))
+  }
+
+  // for dialog (PLO)
+  const handleChangeEditPloDesc = newValue => {
     // Update the state with the new value
     setPLOSelected(pre => ({ ...pre, plo_description: newValue }))
   }
-  const handleChangePloTitle = newValue => {
+  const handleChangeEditPloTitle = newValue => {
     // Update the state with the new value
     setPLOSelected(pre => ({ ...pre, plo_name: newValue }))
   }
 
-  const handleUpdatePlo = () => {
-    if (PLOSelected) {
+  // for create form (Sub PLO)
+  const handleChangeSubPloDesc = newValue => {
+    // Update the state with the new value
+    setSubPLOCreateForm(pre => ({ ...pre, sub_plo_description: newValue }))
+  }
+  const handleChangeSubPloTitle = newValue => {
+    // Update the state with the new value
+    setSubPLOCreateForm(pre => ({ ...pre, sub_plo_title: newValue }))
+  }
+
+  // for dialog (Sub PLO)
+  const handleChangeEditSubPloDesc = newValue => {
+    // Update the state with the new value
+    setSubPLOSelected(pre => ({ ...pre, sub_plo_description: newValue }))
+  }
+  const handleChangeEditSubPloTitle = newValue => {
+    // Update the state with the new value
+    setSubPLOSelected(pre => ({ ...pre, sub_plo_title: newValue }))
+  }
+
+  const handleCreatePlo = () => {
+    if (PLOCreateForm.plo_name !== '' && PLOCreateForm.plo_description !== '') {
       axios
-        .put(URL_YLO + PLOSelected.plo_id, {
+        .post(URL_PLO, {
+          plo_name: PLOCreateForm.plo_name,
+          plo_description: PLOCreateForm.plo_description
+        })
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            reFetchPLOsData()
+            reFetchYLOsData()
+            setPLOCreateForm(initialPLOForm)
+          }
+        })
+        .catch(err => console.log('err from create PLO', err))
+    }
+  }
+  const handleUpdatePlo = () => {
+    if (PLOSelected.plo_name !== '' && PLOSelected.plo_description !== '') {
+      axios
+        .put(URL_PLO + PLOSelected.plo_id, {
           plo_name: PLOSelected.plo_name,
           plo_description: PLOSelected.plo_description
         })
@@ -76,7 +131,22 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
           if (res.data) {
             console.log(res.data)
             reFetchPLOsData()
+            reFetchYLOsData()
             setOpenPloEdit(false)
+          }
+        })
+        .catch(err => console.log('err from update PLO', err))
+    }
+  }
+  const handleRemovePlo = plo_id => {
+    if (PLOSelected) {
+      axios
+        .delete(URL_PLO + plo_id)
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            reFetchPLOsData()
+            reFetchYLOsData()
           }
         })
         .catch(err => console.log('err from update PLO', err))
@@ -100,7 +170,15 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
       headerName: '',
       width: 130,
       renderCell: params => (
-        <Button onClick={() => setDisplayController(1)} color='secondary' variant='outlined' fullWidth>
+        <Button
+          onClick={() => {
+            setDisplayController(1)
+            setPLOSelected(params.row)
+          }}
+          color='secondary'
+          variant='outlined'
+          fullWidth
+        >
           Sub PLOs
         </Button>
       )
@@ -110,7 +188,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
       headerName: '',
       width: 130,
       renderCell: params => (
-        <Button color='error' variant='outlined' fullWidth>
+        <Button onClick={() => handleRemovePlo(params.row.plo_id)} color='error' variant='outlined' fullWidth>
           Remove
         </Button>
       )
@@ -118,13 +196,21 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
   ]
   const subcolumns = [
     { field: 'sub_plo_title', headerName: 'Title', width: 100 },
-    { field: 'sub_plo_desc', headerName: 'Desc', width: 300 },
+    { field: 'sub_plo_description', headerName: 'Desc', width: 300 },
     {
       field: 'edit',
       headerName: 'Desciption',
       width: 130,
       renderCell: params => (
-        <Button onClick={() => setOpenSubPloEdit(true)} color='secondary' variant='outlined' fullWidth>
+        <Button
+          onClick={() => {
+            setSubPLOSelected(params.row)
+            setOpenSubPloEdit(true)
+          }}
+          color='secondary'
+          variant='outlined'
+          fullWidth
+        >
           Edit
         </Button>
       )
@@ -169,13 +255,25 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
           <Typography variant='body2'>PLO Create Form</Typography>
         </Grid>
         <Grid item xs={12}>
-          <PloTextField label={'Title :'} />
+          {/* <PloTextField label={'Title :'} /> */}
+          {PloTextField({
+            label: 'PLO Title :',
+            value: PLOCreateForm.plo_name || '',
+            onChange: handleChangePloTitle
+          })}
         </Grid>
         <Grid item xs={12}>
-          <PloTextField label={'Description :'} multiline={true} />
+          {/* <PloTextField label={'Description :'} multiline={true} />
+           */}
+          {PloTextField({
+            multiline: true,
+            label: 'PLO Description :',
+            value: PLOCreateForm.plo_description || '',
+            onChange: handleChangePloDesc
+          })}
         </Grid>
         <Grid item xs={12}>
-          <Button variant='contained' fullWidth>
+          <Button onClick={handleCreatePlo} variant='contained' fullWidth>
             Create PLO
           </Button>
         </Grid>
@@ -206,10 +304,19 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
             <Typography variant='body2'>Sub PLO Create Form</Typography>
           </Grid>
           <Grid item xs={12}>
-            <PloTextField label={'Sub Title :'} />
+            {PloTextField({
+              label: 'Sub Title :',
+              value: subPLOCreateForm.sub_plo_title || '',
+              onChange: handleChangeSubPloTitle
+            })}
           </Grid>
           <Grid item xs={12}>
-            <PloTextField label={'Description :'} multiline={true} />
+            {PloTextField({
+              multiline: true,
+              label: 'Sub Description :',
+              value: subPLOCreateForm.sub_plo_description || '',
+              onChange: handleChangeSubPloDesc
+            })}
           </Grid>
           <Grid item xs={12}>
             <Button variant='contained' fullWidth>
@@ -225,8 +332,9 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
           </Grid>
           <Grid item xs={12}>
             <DataGrid
+              getRowId={row => row.sub_plo_id}
               sx={{ my: 2 }}
-              rows={subrows}
+              rows={PLOSelected?.sub_plos || []}
               columns={subcolumns}
               pageSize={5}
               disableRowSelectionOnClick
@@ -288,7 +396,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
               {PloTextField({
                 label: 'PLO Title :',
                 value: PLOSelected.plo_name || '',
-                onChange: handleChangePloTitle
+                onChange: handleChangeEditPloTitle
               })}
             </Grid>
             <Grid item xs={12}>
@@ -296,7 +404,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
                 label: 'Description :',
                 multiline: true,
                 value: PLOSelected.plo_description || '',
-                onChange: handleChangePloDesc
+                onChange: handleChangeEditPloDesc
               })}
             </Grid>
             <Grid item xs={12}>
@@ -327,10 +435,20 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
               <Typography variant='body2'>Sub PLO Edit Form</Typography>
             </Grid>
             <Grid item xs={12}>
-              <PloTextField label={'Sub PLO Title :'} />
+              {PloTextField({
+                label: 'Sub PLO Title:',
+
+                value: subPLOSelected.sub_plo_title || '',
+                onChange: handleChangeEditSubPloTitle
+              })}
             </Grid>
             <Grid item xs={12}>
-              <PloTextField label={'Description :'} multiline={true} />
+              {PloTextField({
+                label: 'Sub PLO Description :',
+                multiline: true,
+                value: subPLOSelected.sub_plo_description || '',
+                onChange: handleChangeEditSubPloDesc
+              })}
             </Grid>
             <Grid item xs={12}>
               <Button variant='contained' fullWidth>

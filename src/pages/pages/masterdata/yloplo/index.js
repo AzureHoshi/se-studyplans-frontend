@@ -174,6 +174,7 @@ function YLOPLOManagement() {
       />
       <PloDialogMangement
         PLOsData={PLOsData}
+        reFetchYLOsData={reFetchYLOsData}
         reFetchPLOsData={reFetchPLOsData}
         open={openPloManagement}
         handleClose={() => setOpenPloMangement(false)}
