@@ -2319,6 +2319,48 @@ function StudyPlanSimulatorPage() {
                             </Typography>
                           )}
                     </Grid>
+                    {subjectSelected.subject_structures !== undefined &&
+                    subjectSelected?.subject_structures[0]?.subjectCategory !== null ? (
+                      <Grid item xs={6}>
+                        <Typography variant='subtitle2' color={grey[500]}>
+                          Category
+                        </Typography>
+
+                        <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }}>
+                          <p style={{ fontWeight: 'bold' }}>
+                            {subjectSelected?.subject_structures[0]?.subjectCategory?.subject_category_name}
+                          </p>
+                        </Typography>
+                      </Grid>
+                    ) : null}
+                    {subjectSelected.subject_structures !== undefined &&
+                    subjectSelected?.subject_structures[0]?.subjectType !== null ? (
+                      <Grid item xs={6}>
+                        <Typography variant='subtitle2' color={grey[500]}>
+                          Type
+                        </Typography>
+
+                        <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }}>
+                          <p style={{ fontWeight: 'bold' }}>
+                            {subjectSelected?.subject_structures[0]?.subjectType?.subject_type_name}
+                          </p>
+                        </Typography>
+                      </Grid>
+                    ) : null}
+                    {subjectSelected.subject_structures !== undefined &&
+                    subjectSelected?.subject_structures[0]?.subjectGroup !== null ? (
+                      <Grid item xs={6}>
+                        <Typography variant='subtitle2' color={grey[500]}>
+                          Group
+                        </Typography>
+
+                        <Typography variant='body2' sx={{ display: 'flex', mt: -2.5 }}>
+                          <p style={{ fontWeight: 'bold' }}>
+                            {subjectSelected?.subject_structures[0]?.subjectGroup?.subject_group_name}
+                          </p>
+                        </Typography>
+                      </Grid>
+                    ) : null}
                     <Grid item xs={12}>
                       <Typography variant='body2' sx={{ color: 'gray', mt: 8 }}>
                         Subject Description
