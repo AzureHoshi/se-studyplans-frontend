@@ -17,6 +17,7 @@ function YLOPLOManagement() {
   const [yloDisplayType, setYloDisplayType] = useState(0)
   const [YloSelected, setYloSelected] = useState([])
   const URL_GET_YLOs = `${url.BASE_URL}/ylos/`
+  const URL_GET_PLOs = `${url.BASE_URL}/plos/`
 
   const {
     error: YLOsDataError,
@@ -26,6 +27,14 @@ function YLOPLOManagement() {
     reFetch: reFetchYLOsData
   } = useFetch(URL_GET_YLOs)
 
+  const {
+    error: PLOsDataError,
+    data: PLOsData,
+    setData: setPLOsData,
+    loading: PLOsDataLoading,
+    reFetch: reFetchPLOsData
+  } = useFetch(URL_GET_PLOs)
+
   const handleOpenYlo = (type, ylo) => {
     if (ylo) setYloSelected(ylo)
     else setYloSelected([])
@@ -33,6 +42,22 @@ function YLOPLOManagement() {
     setYloDisplayType(type)
     setOpenYloMangement(true)
   }
+  const handleUpdateYloSelect = ylo => {
+    if (YLOsData) {
+      axios
+        .get(URL_GET_YLOs)
+        .then(res => {
+          if (res.data) {
+            const resultData = res.data.data
+            const YLOById = resultData?.find(y => y.ylo_id === ylo.ylo_id)
+            console.log('YLOById', YLOById)
+            setYloSelected(YLOById)
+          }
+        })
+        .catch(err => console.log('err from update Plo', err))
+    }
+  }
+
   const handleRemoveYLO = async ylo => {
     if (!ylo) return
     else {
@@ -143,8 +168,16 @@ function YLOPLOManagement() {
         handleClose={() => setOpenYloMangement(false)}
         displayType={yloDisplayType}
         YloSelected={YloSelected}
+        refetchYLOs={reFetchYLOsData}
+        PLOsData={PLOsData}
+        handleUpdateYloSelect={handleUpdateYloSelect}
       />
-      <PloDialogMangement open={openPloManagement} handleClose={() => setOpenPloMangement(false)} />
+      <PloDialogMangement
+        PLOsData={PLOsData}
+        reFetchPLOsData={reFetchPLOsData}
+        open={openPloManagement}
+        handleClose={() => setOpenPloMangement(false)}
+      />
       <SubPloDialogMapping open={openSubPloMapping} handleClose={() => setOpenSubPloMapping(false)} />
     </Box>
   )

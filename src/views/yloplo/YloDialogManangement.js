@@ -19,7 +19,15 @@ import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
 import { CircleLoading } from 'src/components'
 
-function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
+function YloDialogMangement({
+  YloSelected,
+  open,
+  handleClose,
+  displayType,
+  refetchYLOs,
+  PLOsData,
+  handleUpdateYloSelect
+}) {
   const initialDesc = [{ id: 0, ylo_description: '' }]
   const [displayController, setDisplayController] = useState(displayType)
   const [fakeLoading, setFakeLoading] = useState(false)
@@ -29,12 +37,16 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
   const [openAddDescription, setOpenAddDescription] = useState(false)
   const [descId, setDescId] = useState(0)
   const [descriptionSelected, setDescriptionSelected] = useState('')
+  const [yloYear, setYloYear] = useState(1)
 
+  const URL_YLO = `${url.BASE_URL}/ylos/`
   const URL_YLO_DESC = `${url.BASE_URL}/ylo-descriptions/`
+  const URL_YLO_PLO_RELATED = `${url.BASE_URL}/ylo-plos/`
 
-  const YloTextField = ({ label, value, multiline = false, type, disabled }) => {
+  const YloTextField = ({ label, value, multiline = false, type, disabled, onChange }) => {
     return (
       <TextField
+        onChange={e => onChange(e.target.value)}
         disabled={disabled}
         type={type}
         multiline={multiline}
@@ -65,6 +77,40 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
       ]
 
       setDescriptionArray(newDescriptionArray)
+    }
+  }
+
+  const handleChangeDesc = (value, i) => {
+    const DescDataByIndex = descriptionArray?.find((d, index) => index === i)
+    DescDataByIndex.ylo_description = value
+    const updatedDescObject = {
+      ...descriptionArray.map(yloDesc => (yloDesc.id === i ? { ...DescDataByIndex } : yloDesc))
+    }
+    // console.log('updatedDescObject', Object.values(updatedDescObject))
+    // console.log('descriptionArray', descriptionArray)
+    setDescriptionArray(Object.values(updatedDescObject))
+  }
+
+  const handleCreateYLO = () => {
+    const checkDesc = descriptionArray?.find(d => d.ylo_description !== '')
+    console.log('checkDesc', checkDesc)
+    if (checkDesc && yloYear) {
+      const removeEmptyStringArray = descriptionArray
+        ?.filter(d => d.ylo_description !== '')
+        .map(onlyString => onlyString.ylo_description)
+      console.log('removeEmptyStringArray', removeEmptyStringArray)
+      axios
+        .post(URL_YLO, { ylo_year: yloYear, ylo_description: removeEmptyStringArray })
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            refetchYLOs()
+            handleClose()
+          }
+        })
+        .catch(err => console.log('err from create YLO', err))
+    } else {
+      alert('Please fill description of at least one')
     }
   }
 
@@ -102,6 +148,18 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
         }
       })
       .catch(err => alert('err', err))
+  }
+
+  const handleRemovePLORelated = plo_id => {
+    axios
+      .delete(URL_YLO_PLO_RELATED, { ylo_id: YloSelected.ylo_id, plo_id: plo_id })
+      .then(res => {
+        if (res.data) {
+          console.log(res.data)
+          handleUpdateYloSelect()
+        }
+      })
+      .catch(err => console.log('err from remove plo related', err))
   }
 
   const handleAddDesc = async () => {
@@ -143,6 +201,10 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
       .catch(err => alert('err', err))
   }
 
+  const handleUpdatePLOsRelated = () => {
+    refetchYLOs()
+  }
+
   const columns = [
     { field: 'plo_title', headerName: 'Title', width: 100 },
     { field: 'plo_desc', headerName: 'Desc', width: 400 },
@@ -158,23 +220,40 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
     }
   ]
 
-  const rows = [
-    { id: 1, plo_title: 'PLO1', plo_desc: 'มีความรู้ ความเข้าใจในหลักการและทฤษฎีที่สำคัญของวิศวกรรมซอฟแวร์' },
+  const PLOcolumns = [
+    { field: 'plo_name', headerName: 'Title', width: 100 },
+    { field: 'plo_description', headerName: 'Desc', width: 400 },
     {
-      id: 2,
-      plo_title: 'PLO2',
-      plo_desc:
-        'มีความรู้พื้นฐานของกระบวนการวิเคราะห์ระบบงาน การออกแบบ พัฒนา และการใช้งานซอฟต์แวร์ โดยคำนึงถึงสถาปัตยกรรมที่เหมาะสม'
-    },
-    { id: 3, plo_title: 'PLO3', plo_desc: 'มีความสามารถพัฒนาซอฟต์แวร์ในงานอุตสาหกรรม' }
-    // Add more dummy data as needed
+      field: 'delete',
+      headerName: '',
+      width: 130,
+      renderCell: params => (
+        <Button onClick={() => handleRemovePLORelated(params.row.plo_id)} color='error' variant='outlined' fullWidth>
+          Remove
+        </Button>
+      )
+    }
   ]
+
+  // const rows = [
+  //   { id: 1, plo_title: 'PLO1', plo_desc: 'มีความรู้ ความเข้าใจในหลักการและทฤษฎีที่สำคัญของวิศวกรรมซอฟแวร์' },
+  //   {
+  //     id: 2,
+  //     plo_title: 'PLO2',
+  //     plo_desc:
+  //       'มีความรู้พื้นฐานของกระบวนการวิเคราะห์ระบบงาน การออกแบบ พัฒนา และการใช้งานซอฟต์แวร์ โดยคำนึงถึงสถาปัตยกรรมที่เหมาะสม'
+  //   },
+  //   { id: 3, plo_title: 'PLO3', plo_desc: 'มีความสามารถพัฒนาซอฟต์แวร์ในงานอุตสาหกรรม' }
+  //   // Add more dummy data as needed
+  // ]
 
   const DisplayCreateForm = (
     <Grid container spacing={6}>
       <Grid item xs={12} container spacing={2} sx={{ minHeight: 200 }}>
         <Grid item xs={3}>
           <TextField
+            value={yloYear}
+            onChange={e => setYloYear(e.target.value)}
             fullWidth
             type='number'
             size={'small'}
@@ -193,8 +272,23 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
         </Grid>
 
         {Object.values(descriptionArray)?.map((d, index) => (
-          <Grid item xs={12}>
-            <YloTextField label={'Description :'} multiline={true} />
+          <Grid key={index} item xs={12}>
+            <TextField
+              value={d.ylo_description}
+              multiline={true}
+              onChange={e => handleChangeDesc(e.target.value, index)}
+              size={'small'}
+              rows={3}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Typography variant='body2'>Description :</Typography>
+                  </InputAdornment>
+                ),
+                style: { fontSize: 15 }
+              }}
+              fullWidth
+            />
           </Grid>
         ))}
         <Grid item xs={4}>
@@ -203,7 +297,7 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
           </Button>
         </Grid>
         <Grid item xs={8}>
-          <Button variant='contained' fullWidth>
+          <Button onClick={handleCreateYLO} variant='contained' fullWidth>
             Create YLO
           </Button>
         </Grid>
@@ -285,7 +379,15 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
             <Typography variant='body2'>PLO Relation</Typography>
           </Grid>
           <Grid item xs={12}>
-            <DataGrid sx={{ my: 2 }} rows={rows} columns={columns} pageSize={5} disableRowSelectionOnClick hideFooter />
+            <DataGrid
+              sx={{ my: 2 }}
+              getRowId={param => param.plo_id}
+              rows={yloState?.plos || []}
+              columns={PLOcolumns}
+              pageSize={5}
+              disableRowSelectionOnClick
+              hideFooter
+            />
           </Grid>
           <Grid item xs={12} sx={{ mt: 3 }}>
             <Autocomplete
@@ -294,20 +396,29 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
               disablePortal
               fullWidth
               freeSolo
-              // options={customSubjects}
-              // getOptionLabel={option => option.label || ''}
+              options={PLOsData.filter(plo => !yloState?.plos?.find(y => y.plo_id === plo.plo_id))}
+              getOptionLabel={option => option.plo_name || ''}
               renderInput={params => <TextField {...params} label='+Add PLO Relation' />}
-              // onChange={(e, value) => {
-              //   if (value !== null) {
-              //     setSearchSubject(value)
-              //     setSubjectSelected(data?.find(s => s.subject_id === value.subject_id))
-              //     // setState(pre => ({ ...pre, subject_group_id: value.subject_group_id }))
-              //   } else {
-              //     setSearchSubject([])
-              //     setSubjectSelected([])
-              //     // setState(pre => ({ ...pre, subject_group_id: null }))
-              //   }
-              // }}
+              onChange={(e, value) => {
+                if (value !== null) {
+                  console.log(value)
+                  let result = window.confirm('ต้องการเพิ่ม ' + value.plo_name + 'ใน YLO' + yloState.ylo_year)
+                  if (result) {
+                    axios
+                      .post(URL_YLO_PLO_RELATED, { ylo_id: yloState.ylo_id, plo_id: value.plo_id })
+                      .then(res => {
+                        if (res.data) {
+                          console.log(res.data)
+                          setTimeout(() => {
+                            handleUpdateYloSelect(yloState)
+                          }, 500)
+                        }
+                      })
+                      .catch(err => console.log('err from add plo in ylo', err))
+                  }
+                } else {
+                }
+              }}
             />
           </Grid>
         </Grid>
@@ -327,6 +438,12 @@ function YloDialogMangement({ YloSelected, open, handleClose, displayType }) {
       }, 100)
     }
   }, [open, YloSelected])
+
+  useEffect(() => {
+    if (YloSelected) {
+      setYloState(YloSelected)
+    }
+  }, [YloSelected])
 
   useEffect(() => {
     if (fakeLoading === true)

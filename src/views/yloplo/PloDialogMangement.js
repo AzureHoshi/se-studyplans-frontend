@@ -14,13 +14,29 @@ import {
 } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
+import axios from 'axios'
+import { url } from 'src/configs/urlConfig'
 
-function PloDialogMangement({ state, open, handleClose }) {
+function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData }) {
   const [displayController, setDisplayController] = useState(0)
   const [openPloEdit, setOpenPloEdit] = useState(false)
   const [openSubPloEdit, setOpenSubPloEdit] = useState(false)
+  const [PLOSelected, setPLOSelected] = useState([])
 
-  const PloTextField = ({ label, value, multiline = false }) => {
+  const URL_YLO = `${url.BASE_URL}/plos/`
+
+  const handleOpenEditPLO = plo => {
+    setPLOSelected(plo)
+    console.log(plo)
+    setOpenPloEdit(true)
+  }
+
+  const PloTextField = ({ label, value, multiline = false, onChange }) => {
+    const handleChange = event => {
+      // Call the provided onChange callback with the new value
+      onChange(event.target.value)
+    }
+
     return (
       <TextField
         rows={8}
@@ -34,20 +50,47 @@ function PloDialogMangement({ state, open, handleClose }) {
           )
         }}
         value={value}
+        onChange={handleChange} // Attach the onChange callback
         sx={{ mt: 2, mb: 1 }}
         fullWidth
       />
     )
   }
+  const handleChangePloDesc = newValue => {
+    // Update the state with the new value
+    setPLOSelected(pre => ({ ...pre, plo_description: newValue }))
+  }
+  const handleChangePloTitle = newValue => {
+    // Update the state with the new value
+    setPLOSelected(pre => ({ ...pre, plo_name: newValue }))
+  }
+
+  const handleUpdatePlo = () => {
+    if (PLOSelected) {
+      axios
+        .put(URL_YLO + PLOSelected.plo_id, {
+          plo_name: PLOSelected.plo_name,
+          plo_description: PLOSelected.plo_description
+        })
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            reFetchPLOsData()
+            setOpenPloEdit(false)
+          }
+        })
+        .catch(err => console.log('err from update PLO', err))
+    }
+  }
 
   const columns = [
-    { field: 'plo_title', headerName: 'Title', width: 200 },
+    { field: 'plo_name', headerName: 'Title', width: 200 },
     {
       field: 'edit',
       headerName: '',
       width: 130,
       renderCell: params => (
-        <Button onClick={() => setOpenPloEdit(true)} color='secondary' variant='outlined' fullWidth>
+        <Button onClick={() => handleOpenEditPLO(params.row)} color='secondary' variant='outlined' fullWidth>
           Edit
         </Button>
       )
@@ -142,7 +185,15 @@ function PloDialogMangement({ state, open, handleClose }) {
           <Typography variant='body2'>PLO Data</Typography>
         </Grid>
         <Grid item xs={12}>
-          <DataGrid sx={{ my: 2 }} rows={rows} columns={columns} pageSize={5} disableRowSelectionOnClick hideFooter />
+          <DataGrid
+            sx={{ my: 2 }}
+            getRowId={row => row.plo_id}
+            rows={PLOsData}
+            columns={columns}
+            pageSize={5}
+            disableRowSelectionOnClick
+            hideFooter
+          />
         </Grid>
       </Grid>
     </Grid>
@@ -233,13 +284,23 @@ function PloDialogMangement({ state, open, handleClose }) {
               <Typography variant='body2'>PLO Edit Form</Typography>
             </Grid>
             <Grid item xs={12}>
-              <PloTextField label={'PLO Title :'} />
+              {/* <PloTextField label={'PLO Title :'} value={PLOSelected.plo_name || ''} /> */}
+              {PloTextField({
+                label: 'PLO Title :',
+                value: PLOSelected.plo_name || '',
+                onChange: handleChangePloTitle
+              })}
             </Grid>
             <Grid item xs={12}>
-              <PloTextField label={'Description :'} multiline={true} />
+              {PloTextField({
+                label: 'Description :',
+                multiline: true,
+                value: PLOSelected.plo_description || '',
+                onChange: handleChangePloDesc
+              })}
             </Grid>
             <Grid item xs={12}>
-              <Button variant='contained' fullWidth>
+              <Button onClick={handleUpdatePlo} variant='contained' fullWidth>
                 Update PLO
               </Button>
             </Grid>
