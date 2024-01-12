@@ -179,7 +179,6 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
     }
   }
 
-  // รอ API
   const handleUpdateSubPlo = () => {
     if (subPLOSelected.sub_plo_title !== '' && subPLOSelected.sub_plo_description !== '') {
       axios

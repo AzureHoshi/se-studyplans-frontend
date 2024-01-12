@@ -246,7 +246,12 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
                       justifyContent: 'center',
                       borderLeft: subPLO.hasPloIdChanged ? 1 : 0
                     }}
-                    control={<Checkbox size='small' />}
+                    control={
+                      <Checkbox
+                        size='small'
+                        checked={s.sub_plo_mappings?.find(mapping => mapping.sub_plo_id === subPLO.sub_plo_id)}
+                      />
+                    }
                   />
                 ))}
               </Grid>
