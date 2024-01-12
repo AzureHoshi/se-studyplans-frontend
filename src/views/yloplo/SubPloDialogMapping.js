@@ -90,17 +90,40 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
 
   useEffect(() => {
     if (PLOsData) {
-      const newObjectArray = PLOsData?.flatMap(item =>
-        item.sub_plos.map(subPlo => ({
-          plo_id: item.plo_id,
-          sub_plo_id: item.sub_plo_id,
-          plo_name: item.plo_name,
-          sub_plo_id: subPlo.sub_plo_id,
-          sub_plo_title: subPlo.sub_plo_title,
-          sub_plo_description: subPlo.sub_plo_description
-          // ... other properties you want to include
-        }))
-      )
+      // const newObjectArray = PLOsData?.flatMap(item =>
+      //   item.sub_plos.map(subPlo => ({
+      //     plo_id: item.plo_id,
+      //     sub_plo_id: item.sub_plo_id,
+      //     plo_name: item.plo_name,
+      //     sub_plo_id: subPlo.sub_plo_id,
+      //     sub_plo_title: subPlo.sub_plo_title,
+      //     sub_plo_description: subPlo.sub_plo_description
+      //     // ... other properties you want to include
+      //   }))
+      // )
+      const newObjectArray = PLOsData?.flatMap((item, index) => {
+        let previousPloId = null
+
+        return item.sub_plos.map(subPlo => {
+          const currentPloId = item.plo_id
+          var hasPloIdChanged = previousPloId !== currentPloId
+          if (index === 0) {
+            hasPloIdChanged = false
+          }
+          // Update previousPloId for the next iteration
+          previousPloId = currentPloId
+
+          return {
+            plo_id: currentPloId,
+            sub_plo_id: subPlo.sub_plo_id,
+            plo_name: item.plo_name,
+            sub_plo_title: subPlo.sub_plo_title,
+            sub_plo_description: subPlo.sub_plo_description,
+            hasPloIdChanged // Flag indicating if plo_id has changed
+            // ... other properties you want to include
+          }
+        })
+      })
       setAllSubPLOs(newObjectArray)
       console.log('newObjectArray', newObjectArray)
     }
@@ -217,7 +240,12 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
                 {AllSubPLOs?.map(subPLO => (
                   <FormControlLabel
                     key={subPLO.sub_plo_id}
-                    sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      borderLeft: subPLO.hasPloIdChanged ? 1 : 0
+                    }}
                     control={<Checkbox size='small' />}
                   />
                 ))}
