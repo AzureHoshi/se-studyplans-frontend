@@ -19,10 +19,12 @@ import {
   Snackbar,
   Stack,
   Alert,
-  AlertTitle
+  AlertTitle,
+  Tooltip
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { mdiClose, mdiTrashCan, mdiBookEducation, mdiAccount, mdiChevronLeft } from '@mdi/js'
+import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import Icon from '@mdi/react'
 
 import BlankLayout from 'src/@core/layouts/BlankLayout'
@@ -1781,6 +1783,7 @@ function StudyPlanSimulatorPage() {
                                     }}
                                   >
                                     {value.subject_code}
+
                                     <Typography
                                       variant='caption'
                                       color={'gray'}
@@ -1791,6 +1794,11 @@ function StudyPlanSimulatorPage() {
                                     >
                                       {simSubjects.find(v => v.subject_id === value.subject_id) &&
                                         '(TERM ' + simSubjects.find(v => v.subject_id === value.subject_id).term + ')'}
+                                      {value.continue_subjects[0]?.parent_id !== null && (
+                                        <Tooltip title='has previous subject'>
+                                          <AlertCircleOutline sx={{ fontSize: 20, pt: 1.5 }} />
+                                        </Tooltip>
+                                      )}
                                     </Typography>
                                   </Typography>
                                   {simSubjects.find(v => v.subject_id === value.subject_id) ? null : (
