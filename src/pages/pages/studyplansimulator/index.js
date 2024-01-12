@@ -294,70 +294,108 @@ function StudyPlanSimulatorPage() {
     const findSubject = SubjectsTemp?.find(s => s.subject_id === subject.subject_id)
 
     if (checkParent) {
-      // if (subject.continue_subjects.length === 0) {
-      // console.log('subject', subject)
-
-      // console.log('all subject ', SubjectsTemp)
-      // console.log('findSubject', findSubject)
       const hasParent = handleCheckPreviousSubject(findSubject)
-      // if (
-      //   hasParent &&
-      //   !simSubjects?.find(s => s.subject_id === findSubject?.continue_subjects[0]?.parent_id && value + 1 > s.term)
-      // )
-      //   return alert('Incorect term selected')
-      // console.log('hasParent', hasParent)
+
       if (!hasParent) {
         if (
           !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
           findSubject?.subject_credit + totalCredit <= 25
         ) {
-          const newObject = {
-            term: value + 1,
-            subject_id: findSubject?.subject_id,
-            subject_code: findSubject?.subject_code,
-            subject_name_th: findSubject?.subject_name_th,
-            subject_name_en: findSubject?.subject_name_en,
-            subject_credit: findSubject?.subject_credit,
-            subject_structures: findSubject?.subject_structures
-          }
-          const results = [...simSubjects, newObject]
-          setSimSubjects(results)
-          // console.log('added sim subject', results)
+          if (
+            simSubjects?.find(
+              s => s.subject_id === findSubject?.continue_subjects[0]?.parent_id && value + 1 > s.term
+            ) &&
+            findSubject?.continue_subjects[0]?.parent_id !== null
+          ) {
+            const newObject = {
+              term: value + 1,
+              subject_id: findSubject?.subject_id,
+              subject_code: findSubject?.subject_code,
+              subject_name_th: findSubject?.subject_name_th,
+              subject_name_en: findSubject?.subject_name_en,
+              subject_credit: findSubject?.subject_credit,
+              subject_structures: findSubject?.subject_structures
+            }
+            const results = [...simSubjects, newObject]
+            setSimSubjects(results)
 
-          // update count scope
-          const fintoUpdateScope = CurriculumStructures?.filter(
-            scope =>
-              scope.subjectGroup?.subject_group_id ===
-              findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
-          ).map(pre => ({
-            ...pre,
-            countScope:
-              pre.countScope !== undefined && !isNaN(pre.countScope)
-                ? pre.countScope + findSubject?.subject_credit
-                : findSubject?.subject_credit
-          }))
-          if (fintoUpdateScope) {
-            const tempStructure = CurriculumStructures.filter(
-              old =>
-                old.subjectGroup?.subject_group_id !==
+            // update count scope
+            const fintoUpdateScope = CurriculumStructures?.filter(
+              scope =>
+                scope.subjectGroup?.subject_group_id ===
                 findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
-            )
-            const newUpdate = [fintoUpdateScope[0], ...tempStructure]
-            // console.log('newUpdate', newUpdate)
-            setCurriculumStructures(
-              newUpdate.sort(
-                (a, b) =>
-                  a.countScope - b.countScope &&
-                  a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+            ).map(pre => ({
+              ...pre,
+              countScope:
+                pre.countScope !== undefined && !isNaN(pre.countScope)
+                  ? pre.countScope + findSubject?.subject_credit
+                  : findSubject?.subject_credit
+            }))
+            if (fintoUpdateScope) {
+              const tempStructure = CurriculumStructures.filter(
+                old =>
+                  old.subjectGroup?.subject_group_id !==
+                  findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
               )
-            )
+              const newUpdate = [fintoUpdateScope[0], ...tempStructure]
+              // console.log('newUpdate', newUpdate)
+              setCurriculumStructures(
+                newUpdate.sort(
+                  (a, b) =>
+                    a.countScope - b.countScope &&
+                    a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+                )
+              )
+            }
+            setSubjectSelected(findSubject)
+            setOpenSnack(true)
+          } else if (findSubject?.continue_subjects[0]?.parent_id === null) {
+            const newObject = {
+              term: value + 1,
+              subject_id: findSubject?.subject_id,
+              subject_code: findSubject?.subject_code,
+              subject_name_th: findSubject?.subject_name_th,
+              subject_name_en: findSubject?.subject_name_en,
+              subject_credit: findSubject?.subject_credit,
+              subject_structures: findSubject?.subject_structures
+            }
+            const results = [...simSubjects, newObject]
+            setSimSubjects(results)
+            // console.log('added sim subject', results)
+
+            // update count scope
+            const fintoUpdateScope = CurriculumStructures?.filter(
+              scope =>
+                scope.subjectGroup?.subject_group_id ===
+                findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
+            ).map(pre => ({
+              ...pre,
+              countScope:
+                pre.countScope !== undefined && !isNaN(pre.countScope)
+                  ? pre.countScope + findSubject?.subject_credit
+                  : findSubject?.subject_credit
+            }))
+            if (fintoUpdateScope) {
+              const tempStructure = CurriculumStructures.filter(
+                old =>
+                  old.subjectGroup?.subject_group_id !==
+                  findSubject?.subject_structures[0]?.subjectGroup?.subject_group_id
+              )
+              const newUpdate = [fintoUpdateScope[0], ...tempStructure]
+              // console.log('newUpdate', newUpdate)
+              setCurriculumStructures(
+                newUpdate.sort(
+                  (a, b) =>
+                    a.countScope - b.countScope &&
+                    a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
+                )
+              )
+            }
+            setSubjectSelected(findSubject)
+            setOpenSnack(true)
+          } else {
+            alert('วิชาต่อเนื่องไม่สามารถลงเทอมก่อน/เทอมเดียวกันกับวิชาก่อนหน้าได้')
           }
-          setSubjectSelected(findSubject)
-          setOpenSnack(true)
-        } else if (
-          !simSubjects?.find(s => s.subject_id === findSubject?.continue_subjects[0]?.parent_id && value + 1 > s.term)
-        ) {
-          alert('Incorect term selected')
         } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
           alert('this subject already in simulator')
         } else if (findSubject?.subject_credit + totalCredit >= 25) {
@@ -426,6 +464,7 @@ function StudyPlanSimulatorPage() {
   }, [simSubjects])
 
   const handleRemoveSimSubject = async subject => {
+    console.log('subject', subject)
     var hasChildren
     await axios
       .get(url.BASE_URL + '/continue-subjects-subject/' + subject?.subject_id)
