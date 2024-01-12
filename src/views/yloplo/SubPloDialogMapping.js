@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Hidden,
+  TablePagination,
+  Typography
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import { url } from 'src/configs/urlConfig'
 import { useFetch } from 'src/hooks'
 import Icon from '@mdi/react'
 import { mdiSitemapOutline } from '@mdi/js'
+import { CircleLoading } from 'src/components'
 
-function SubPloDialogMapping({ state, open, handleClose }) {
+function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   const [displayController, setDisplayController] = useState(0)
-  const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
+  const [fakeLoading, setFakeLoading] = useState(false)
   const [curriculumSelected, setCurriculumSelected] = useState([])
+  const [AllSubPLOs, setAllSubPLOs] = useState([])
+  const [page, setPage] = useState(0)
+  const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
+  const URL_GET_SUBJECTS = `${url.BASE_URL}/subjects-by-curriculum/`
 
   const curriculumColumns = [
     { field: 'curriculum_year', headerName: 'Year', width: 100 },
@@ -47,11 +67,57 @@ function SubPloDialogMapping({ state, open, handleClose }) {
     reFetch: reFetchCurriculums
   } = useFetch(URL_GET_CURRICULUM)
 
+  const {
+    error: SubjectsError,
+    data: Subjects,
+    setData: setSubjects,
+    loading: SubjectsLoading,
+    reFetch: reFetchSubjects
+  } = useFetch(URL_GET_SUBJECTS + curriculumSelected.curriculum_id)
+
   const handleCurriculumSelect = row => {
     console.log(row)
     setCurriculumSelected(row)
-    setDisplayController(1)
+    setTimeout(() => {
+      setDisplayController(1)
+    }, 500)
   }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  useEffect(() => {
+    if (PLOsData) {
+      const newObjectArray = PLOsData?.flatMap(item =>
+        item.sub_plos.map(subPlo => ({
+          plo_id: item.plo_id,
+          sub_plo_id: item.sub_plo_id,
+          plo_name: item.plo_name,
+          sub_plo_id: subPlo.sub_plo_id,
+          sub_plo_title: subPlo.sub_plo_title,
+          sub_plo_description: subPlo.sub_plo_description
+          // ... other properties you want to include
+        }))
+      )
+      setAllSubPLOs(newObjectArray)
+      console.log('newObjectArray', newObjectArray)
+    }
+  }, [PLOsData])
+
+  useEffect(() => {
+    if (curriculumSelected) {
+      setFakeLoading(true)
+      reFetchSubjects(URL_GET_SUBJECTS + curriculumSelected.curriculum_id)
+    }
+  }, [curriculumSelected])
+
+  useEffect(() => {
+    if (fakeLoading === true)
+      setTimeout(() => {
+        setFakeLoading(false)
+      }, 200)
+  }, [fakeLoading])
 
   const DisplaySelecteCurriculums = (
     <Grid container spacing={6}>
@@ -73,15 +139,84 @@ function SubPloDialogMapping({ state, open, handleClose }) {
     </Grid>
   )
 
+  const calculateWidth = subPLOs => {
+    const totalSubPLOs = subPLOs.length
+    // You can adjust the multiplier as needed based on your preference
+    return `${totalSubPLOs * 300 + 60}%` // Example formula: more sub-PLOs -> more width
+  }
+  const greyColors = [
+    '#f7f7f7', // Lighter grey
+    '#e5e5e5',
+    '#d4d4d4',
+    '#c2c2c2',
+    '#b0b0b0' // Light grey
+  ]
+
   const DisplaySubPloSubjectMapping = (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Typography sx={{ m: 2 }} variant='body2'>
-          หลักสูตร {' (' + curriculumSelected?.curriculum_name_th + ' ' + curriculumSelected?.curriculum_year}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        Show Subjects
+      <Grid item xs={12} container>
+        <Grid container item xs={12} sx={{ pb: 3, pr: 3, pl: 1 }}>
+          <Grid item xs={12}>
+            <TablePagination
+              rowsPerPageOptions={[]}
+              component='div'
+              size='small'
+              count={Subjects.length}
+              rowsPerPage={12}
+              page={page}
+              onPageChange={handleChangePage}
+            />
+          </Grid>
+          <Grid item xs={2.4} />
+          <Grid item xs={9.6} sx={{ display: 'flex' }}>
+            {PLOsData?.map((PLO, index) => (
+              <Typography
+                variant='body1'
+                sx={{
+                  width: calculateWidth(PLO.sub_plos),
+                  background: greyColors[index],
+                  textAlign: 'center',
+                  fontWeight: 'bold'
+                }}
+              >
+                {PLO.plo_name}
+              </Typography>
+            ))}
+          </Grid>
+        </Grid>
+        <Grid container item xs={12} sx={{ pb: 3, pr: 3, pl: 1 }}>
+          <Grid item xs={2.4}>
+            <Typography variant='body1'>รายวิชา</Typography>
+          </Grid>
+          <Grid item xs={9.6} sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            {AllSubPLOs?.map(subPLO => (
+              <Typography variant='body1' sx={{ width: '100%', borderRight: 1, textAlign: 'center' }}>
+                {subPLO.sub_plo_title}
+              </Typography>
+            ))}
+          </Grid>
+        </Grid>
+        {Subjects?.slice(page * 12, page * 12 + 12).map((s, index) => (
+          <Grid key={s.subject_id} item xs={12} container>
+            <Grid item xs={2.5}>
+              <Typography variant='body2' sx={{ height: 40 }}>
+                {index + 1 + page * 12 + '. ' + s.subject_code + ' ' + s.subject_name_th}
+              </Typography>
+            </Grid>
+            <Grid item xs={9.5} sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              {AllSubPLOs?.map(subPLO => (
+                <FormControlLabel
+                  key={subPLO.sub_plo_id}
+                  sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                  control={<Checkbox size='small' />}
+                />
+              ))}
+            </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+          </Grid>
+        ))}
       </Grid>
     </Grid>
   )
@@ -92,26 +227,56 @@ function SubPloDialogMapping({ state, open, handleClose }) {
         handleClose()
       }}
       maxWidth={'xl'}
+      fullScreen={displayController === 1 ? true : false}
       fullWidth
     >
-      <DialogTitle sx={{ background: grey[100], mb: 3 }}>{displayController === 0 && 'Sub Plo Mapping'}</DialogTitle>
-      {displayController === 0 && <DialogContent sx={{ minHeight: 600 }}> {DisplaySelecteCurriculums}</DialogContent>}
-      {displayController === 1 && <DialogContent sx={{ minHeight: 600 }}> {DisplaySubPloSubjectMapping}</DialogContent>}
-      <DialogActions>
-        {displayController > 0 && (
-          <Button onClick={() => setDisplayController(pre => pre - 1)} variant='outlined'>
-            Back
-          </Button>
+      <Hidden lgDown>
+        <DialogTitle sx={{ background: grey[100], mb: 3 }}>
+          {displayController === 0 && 'Sub Plo Mapping'}
+          {displayController === 1 &&
+            'Sub Plo Mapping' +
+              ' หลักสูตร' +
+              ' (' +
+              curriculumSelected?.curriculum_name_th +
+              ') ' +
+              curriculumSelected?.curriculum_year}
+        </DialogTitle>
+        {displayController === 0 && <DialogContent sx={{ height: 600 }}> {DisplaySelecteCurriculums}</DialogContent>}
+        {displayController !== 0 && (fakeLoading || SubjectsLoading) ? (
+          <DialogContent
+            sx={{
+              minHeight: 600
+            }}
+          >
+            <Box sx={{ m: 60, overflow: 'hidden' }}>
+              <CircleLoading />
+            </Box>
+          </DialogContent>
+        ) : (
+          displayController === 1 && <DialogContent> {DisplaySubPloSubjectMapping}</DialogContent>
         )}
-        <Button
-          onClick={() => {
-            handleClose()
-          }}
-          color='secondary'
-        >
-          Close
-        </Button>
-      </DialogActions>
+
+        <DialogActions sx={{}}>
+          {displayController > 0 && (
+            <Button onClick={() => setDisplayController(pre => pre - 1)} variant='outlined'>
+              Back
+            </Button>
+          )}
+          <Button
+            onClick={() => {
+              handleClose()
+            }}
+            color='secondary'
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Hidden>
+      <Hidden lgUp>
+        <DialogContent>
+          <Typography>this page not support small screen</Typography>
+        </DialogContent>
+      </Hidden>
     </Dialog>
   )
 }

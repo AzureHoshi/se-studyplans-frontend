@@ -180,7 +180,11 @@ function YLOPLOManagement() {
         open={openPloManagement}
         handleClose={() => setOpenPloMangement(false)}
       />
-      <SubPloDialogMapping open={openSubPloMapping} handleClose={() => setOpenSubPloMapping(false)} />
+      <SubPloDialogMapping
+        PLOsData={PLOsData}
+        open={openSubPloMapping}
+        handleClose={() => setOpenSubPloMapping(false)}
+      />
     </Box>
   )
 }
