@@ -32,6 +32,7 @@ function YloDialogMangement({
   const [displayController, setDisplayController] = useState(displayType)
   const [fakeLoading, setFakeLoading] = useState(false)
   const [yloState, setYloState] = useState(YloSelected)
+  const [yloPLO, setYloPLO] = useState([])
   const [descriptionArray, setDescriptionArray] = useState(initialDesc)
   const [openDescEdit, setOpenDescEdit] = useState(false)
   const [openAddDescription, setOpenAddDescription] = useState(false)
@@ -230,7 +231,7 @@ function YloDialogMangement({
       width: 130,
       renderCell: params => (
         <Button
-          onClick={() => handleRemovePLORelated(params.row.ylo_plo_id)}
+          onClick={() => handleRemovePLORelated(params.row.ylo_plos.ylo_plo_id)}
           color='error'
           variant='outlined'
           fullWidth
@@ -388,7 +389,7 @@ function YloDialogMangement({
             <DataGrid
               sx={{ my: 2 }}
               getRowId={param => param.plo_id}
-              rows={yloState?.plos || []}
+              rows={yloPLO || []}
               columns={PLOcolumns}
               pageSize={5}
               disableRowSelectionOnClick
@@ -450,6 +451,28 @@ function YloDialogMangement({
       setYloState(YloSelected)
     }
   }, [YloSelected])
+
+  useEffect(() => {
+    if (yloState) {
+      const filteredPlos = yloState?.plos?.filter(plo => plo.ylo_plos !== null)
+
+      // Create an object to store the first item for each unique plo_id
+      const firstItems = {}
+
+      // Iterate through the filteredPlos and store the first item for each plo_id
+      filteredPlos?.forEach(plo => {
+        if (!firstItems[plo.plo_id]) {
+          firstItems[plo.plo_id] = plo
+        }
+      })
+
+      // Convert the object values back to an array
+      const resultArray = Object.values(firstItems)
+      setYloPLO(resultArray)
+    } else {
+      setYloPLO([])
+    }
+  }, [yloState])
 
   useEffect(() => {
     if (fakeLoading === true)

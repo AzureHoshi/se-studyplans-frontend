@@ -65,6 +65,8 @@ function JobSubjectRelated() {
   const [newJobName, setNewJobName] = useState('')
   const [subjectSelected, setSubjectSelected] = useState([])
 
+  const [openCompetencies, setOpenCompetencies] = useState(false)
+
   const handleGetSubjectRelated = position => {
     if (!position) {
       return
@@ -174,6 +176,12 @@ function JobSubjectRelated() {
     setSubjectSelected([])
   }
 
+  const handleOpenJobCompetencies = jobRow => {
+    setJobNameSelected(jobRow.job_position_name)
+    setJobIdSelected(jobRow.job_position_id)
+    setOpenCompetencies(true)
+  }
+
   useEffect(() => {
     if (SubjectRelated) {
       console.log('SubjectRelated', SubjectRelated)
@@ -184,7 +192,7 @@ function JobSubjectRelated() {
     {
       field: 'job_position_name',
       headerName: 'Job Name',
-      width: 600
+      width: 450
     },
     {
       field: 'created_at',
@@ -223,12 +231,19 @@ function JobSubjectRelated() {
     {
       field: 'fn',
       headerName: '',
-      width: 300,
+      width: 400,
       renderCell: params => (
         <Grid container spacing={2}>
           <Grid item>
             <Button color='secondary' variant='outlined' onClick={() => handleGetSubjectRelated(params.row)}>
-              <Icon path={mdiPen} size={1} />
+              {/* <Icon path={mdiPen} size={1} /> */}
+              วิชาที่เกี่ยวข้อง
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button color='secondary' variant='outlined' onClick={() => handleOpenJobCompetencies(params.row)}>
+              {/* <Icon path={mdiPen} size={1} /> */}
+              สมรรถนะ
             </Button>
           </Grid>
           <Grid item>
@@ -492,9 +507,79 @@ function JobSubjectRelated() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <Button onClick={handleSubmitNewJob} variant='contained' sx={{ width: '100%' }}>
-                    Submit
+                    Submi
                   </Button>
                 </Grid>
+              </Grid>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={openCompetencies}
+            onClose={() => {
+              setOpenCompetencies(false)
+              setJobNameSelected('')
+              setJobIdSelected(0)
+            }}
+            // fullScreen
+            fullWidth
+            maxWidth={'lg'}
+          >
+            <DialogTitle
+              sx={{
+                height: 70,
+                width: '100%',
+                background: 'lightgray',
+                pr: 6,
+                borderBottom: 1,
+                borderColor: grey[500],
+                position: 'relative'
+              }}
+            >
+              <Typography sx={{ pt: 2, position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+                สมรรถนะอาชีพ {jobNameSelected}
+              </Typography>
+
+              <IconButton
+                sx={{
+                  p: 0,
+                  color: grey[700],
+                  borderRadius: 1,
+                  m: 1,
+                  ml: 6,
+                  fontSize: 16,
+                  p: 2,
+                  position: 'absolute',
+                  right: 18,
+                  left: null,
+                  top: 12
+                }}
+                onClick={() => {
+                  setOpenCompetencies(false)
+                  setJobNameSelected('')
+                  setJobIdSelected(0)
+                }}
+              >
+                <Icon path={mdiClose} size={1} />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ pb: 12 }}>
+              <Grid container spacing={2}>
+                {/* <Grid item xs={12}>
+                  <Typography sx={{ mt: 6 }}>Job name</Typography>
+                </Grid> */}
+                {/* <Grid item xs={12} md={8} lg={10}>
+                  <TextField
+                    size={'small'}
+                    value={newJobName}
+                    onChange={e => setNewJobName(e.target.value)}
+                    sx={{ width: '100%', mb: 6 }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4} lg={2}>
+                  <Button onClick={handleSubmitNewJob} variant='contained' sx={{ width: '100%' }}>
+                    Submit
+                  </Button>
+                </Grid> */}
               </Grid>
             </DialogContent>
           </Dialog>
