@@ -179,6 +179,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
     }
   }
 
+  // รอ API
   const handleUpdateSubPlo = () => {
     if (subPLOSelected.sub_plo_title !== '' && subPLOSelected.sub_plo_description !== '') {
       axios
@@ -189,9 +190,29 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         .then(res => {
           if (res.data) {
             console.log(res.data)
+            // reFetchPLOsData()
+            // reFetchYLOsData()
+            // setOpenPloEdit(false)
+          }
+        })
+        .catch(err => console.log('err from update PLO', err))
+    }
+  }
+
+  const handleRemoveSubPlo = sub_plo_id => {
+    if (sub_plo_id) {
+      console.log('sub_plo_id', sub_plo_id)
+      axios
+        .delete(URL_SubPLO + sub_plo_id)
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
-            setOpenPloEdit(false)
+            setSubPLOCreateForm(initialSubPLOForm)
+            const tempSubPlos = PLOSelected?.sub_plos?.filter(subPlo => subPlo.sub_plo_id !== sub_plo_id)
+            console.log('tempSubPlos', tempSubPlos)
+            setPLOSelected(pre => ({ ...pre, sub_plos: tempSubPlos }))
           }
         })
         .catch(err => console.log('err from update PLO', err))
@@ -270,7 +291,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
       headerName: '',
       width: 130,
       renderCell: params => (
-        <Button color='error' variant='outlined' fullWidth>
+        <Button onClick={() => handleRemoveSubPlo(params.row.sub_plo_id)} color='error' variant='outlined' fullWidth>
           Remove
         </Button>
       )
