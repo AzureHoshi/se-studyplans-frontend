@@ -28,6 +28,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   const [fakeLoading, setFakeLoading] = useState(false)
   const [curriculumSelected, setCurriculumSelected] = useState([])
   const [AllSubPLOs, setAllSubPLOs] = useState([])
+  const [SubjectsData, setSubjectsData] = useState([])
   const [page, setPage] = useState(0)
   const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
   const URL_GET_SUBJECTS = `${url.BASE_URL}/subjects-by-curriculum/`
@@ -113,6 +114,14 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   }, [curriculumSelected])
 
   useEffect(() => {
+    if (Subjects) {
+      setSubjectsData(Subjects)
+    } else {
+      setSubjectsData([])
+    }
+  }, [Subjects])
+
+  useEffect(() => {
     if (fakeLoading === true)
       setTimeout(() => {
         setFakeLoading(false)
@@ -196,27 +205,31 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
             ))}
           </Grid>
         </Grid>
-        {Subjects?.slice(page * 12, page * 12 + 12).map((s, index) => (
-          <Grid key={s.subject_id} item xs={12} container>
-            <Grid item xs={2.5}>
-              <Typography variant='body2' sx={{ height: 40 }}>
-                {index + 1 + page * 12 + '. ' + s.subject_code + ' ' + s.subject_name_th}
-              </Typography>
+        {SubjectsData.length > 0 ? (
+          SubjectsData?.slice(page * 12, page * 12 + 12).map((s, index) => (
+            <Grid key={s.subject_id} item xs={12} container>
+              <Grid item xs={2.5}>
+                <Typography variant='body2' sx={{ height: 40 }}>
+                  {index + 1 + page * 12 + '. ' + s.subject_code + ' ' + s.subject_name_th}
+                </Typography>
+              </Grid>
+              <Grid item xs={9.5} sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                {AllSubPLOs?.map(subPLO => (
+                  <FormControlLabel
+                    key={subPLO.sub_plo_id}
+                    sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                    control={<Checkbox size='small' />}
+                  />
+                ))}
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
             </Grid>
-            <Grid item xs={9.5} sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              {AllSubPLOs?.map(subPLO => (
-                <FormControlLabel
-                  key={subPLO.sub_plo_id}
-                  sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-                  control={<Checkbox size='small' />}
-                />
-              ))}
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-          </Grid>
-        ))}
+          ))
+        ) : (
+          <Typography>ไม่มีข้อมูลรายวิชาในหลักสูตร</Typography>
+        )}
       </Grid>
     </Grid>
   )
@@ -232,9 +245,9 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
     >
       <Hidden lgDown>
         <DialogTitle sx={{ background: grey[100], mb: 3 }}>
-          {displayController === 0 && 'Sub Plo Mapping'}
+          {displayController === 0 && 'Sub PLO Mapping'}
           {displayController === 1 &&
-            'Sub Plo Mapping' +
+            'Sub PLO Mapping' +
               ' หลักสูตร' +
               ' (' +
               curriculumSelected?.curriculum_name_th +
