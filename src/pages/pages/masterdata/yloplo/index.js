@@ -42,6 +42,7 @@ function YLOPLOManagement() {
     setYloDisplayType(type)
     setOpenYloMangement(true)
   }
+
   const handleUpdateYloSelect = ylo => {
     if (YLOsData) {
       axios

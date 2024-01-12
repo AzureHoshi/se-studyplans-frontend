@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Box,
@@ -19,6 +19,7 @@ import { url } from 'src/configs/urlConfig'
 
 function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFetchYLOsData }) {
   const [displayController, setDisplayController] = useState(0)
+  const [fakeLoading, setFakeLoading] = useState(false)
   const [openPloEdit, setOpenPloEdit] = useState(false)
   const [openSubPloEdit, setOpenSubPloEdit] = useState(false)
   const [PLOSelected, setPLOSelected] = useState([])
@@ -29,6 +30,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
   const initialSubPLOForm = { sub_plo_title: '', sub_plo_description: '' }
 
   const URL_PLO = `${url.BASE_URL}/plos/`
+  const URL_SubPLO = `${url.BASE_URL}/sub-plos/`
 
   const handleOpenEditPLO = plo => {
     setPLOSelected(plo)
@@ -152,6 +154,53 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         .catch(err => console.log('err from update PLO', err))
     }
   }
+
+  const handleCreateSubPlo = () => {
+    if (subPLOCreateForm.sub_plo_title !== '' && subPLOCreateForm.sub_plo_description !== '') {
+      axios
+        .post(URL_SubPLO, {
+          plo_id: PLOSelected.plo_id,
+          sub_plo_title: subPLOCreateForm.sub_plo_title,
+          sub_plo_description: subPLOCreateForm.sub_plo_description
+        })
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            reFetchPLOsData()
+            reFetchYLOsData()
+            setSubPLOCreateForm(initialSubPLOForm)
+            const tempSubPlos = PLOSelected?.sub_plos
+            tempSubPlos = [...tempSubPlos, res.data.data]
+            console.log('tempSubPlos', tempSubPlos)
+            setPLOSelected(pre => ({ ...pre, sub_plos: tempSubPlos }))
+          }
+        })
+        .catch(err => console.log('err from create PLO', err))
+    }
+  }
+
+  const handleUpdateSubPlo = () => {
+    if (subPLOSelected.sub_plo_title !== '' && subPLOSelected.sub_plo_description !== '') {
+      axios
+        .put(URL_SubPLO + subPLOSelected.sub_plo_id, {
+          sub_plo_title: subPLOSelected.sub_plo_title,
+          sub_plo_description: subPLOSelected.sub_plo_description
+        })
+        .then(res => {
+          if (res.data) {
+            console.log(res.data)
+            reFetchPLOsData()
+            reFetchYLOsData()
+            setOpenPloEdit(false)
+          }
+        })
+        .catch(err => console.log('err from update PLO', err))
+    }
+  }
+
+  useEffect(() => {
+    console.log('PLOSelected', PLOSelected)
+  }, [PLOSelected])
 
   const columns = [
     { field: 'plo_name', headerName: 'Title', width: 200 },
@@ -319,7 +368,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
             })}
           </Grid>
           <Grid item xs={12}>
-            <Button variant='contained' fullWidth>
+            <Button onClick={handleCreateSubPlo} variant='contained' fullWidth>
               Create Sub PLO
             </Button>
           </Grid>
@@ -346,6 +395,12 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
     </Box>
   )
 
+  useEffect(() => {
+    if (fakeLoading === true)
+      setTimeout(() => {
+        setFakeLoading(false)
+      }, 200)
+  }, [fakeLoading])
   return (
     <>
       <Dialog
@@ -357,12 +412,20 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         maxWidth={'xl'}
         fullWidth
       >
-        <DialogTitle sx={{ background: grey[100], mb: 3 }}>PLO Management</DialogTitle>
+        <DialogTitle sx={{ background: grey[100], mb: 3 }}>
+          PLO Management {PLOSelected?.plo_name !== undefined ? '(' + PLOSelected?.plo_name + ')' : null}
+        </DialogTitle>
         {displayController === 0 && <DialogContent sx={{ minHeight: 600 }}> {DisplayPLO}</DialogContent>}
         {displayController === 1 && <DialogContent sx={{ minHeight: 600 }}> {DisplaySubPLO}</DialogContent>}
         <DialogActions>
           {displayController > 0 && (
-            <Button onClick={() => setDisplayController(pre => pre - 1)} variant='outlined'>
+            <Button
+              onClick={() => {
+                setPLOSelected([])
+                setDisplayController(pre => pre - 1)
+              }}
+              variant='outlined'
+            >
               Back
             </Button>
           )}
