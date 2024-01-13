@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 const StudentSystems = () => {
   const router = useRouter()
   return (
-    <Box sx={{ p: 12, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
+    <Box sx={{ p: 16, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
       <Grid container spacing={2} sx={{ pb: 58 }}>
         <Grid item xs={12}>
           <Typography variant='h5' sx={{ color: grey[800], fontWeight: 'bold' }}>

@@ -49,7 +49,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
 
-  const backgroundImageUrl = 'https://images.pexels.com/photos/3752081/pexels-photo-3752081.jpeg'
+  const backgroundImageUrl = 'https://images.pexels.com/photos/5255236/pexels-photo-5255236.jpeg'
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -252,9 +252,29 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
         >
           <Box
             sx={{
+              display: 'flex',
+              position: 'absolute',
+              top: '6%',
+              right: '4%'
+            }}
+          >
+            <img
+              src='/images/logos/logo-RMUTL.png'
+              alt='logo-RMUTL'
+              style={{
+                width: 45,
+                height: 'auto',
+                marginTop: -35,
+                marginRight: 4
+              }}
+            />
+            <Typography>RMUTL University</Typography>
+          </Box>
+
+          <Box
+            sx={{
               position: 'absolute',
               top: 0,
-
               width: '100%',
               height: '100%',
               backgroundColor: 'rgba(200, 200, 200, 0.5)'

@@ -456,9 +456,9 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   ))}
                 </Card>
               </Grid>
-              <Grid item xs={12} sx={{ mt: { xs: 0, lg: -22 } }}>
+              <Grid item xs={12}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+                  <Typography variant='h6' sx={{ fontWeight: 'bold', mt: 6 }}>
                     Project Recommended
                   </Typography>
                   <TablePagination
@@ -560,7 +560,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
             </Grid>
             {/* reform shortcut */}
             <Grid item xs={12} lg={3} sx={{ px: { xs: 0, sm: 3.5 }, mt: { xs: 6, lg: 0 } }}>
-              <Card sx={{ height: 500, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
+              <Card sx={{ height: 535, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
                 <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
                   Recommend Subjects By Job
                 </Typography>
@@ -610,19 +610,15 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
               </Card>
               <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
                 <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
-                  Reform Shortcut
+                  CE Reform Portal
                 </Typography>
               </Card>
               <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
                 <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
-                  Reform Shortcut
+                  Pre-Project/Project
                 </Typography>
               </Card>
-              <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
-                <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
-                  Reform Shortcut
-                </Typography>
-              </Card>
+
               <Typography variant='caption' sx={{ textAlign: 'justify' }}>
                 Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web
                 designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have

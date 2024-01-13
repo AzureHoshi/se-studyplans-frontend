@@ -333,7 +333,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   }, [curriculumTree])
 
   return (
-    <Box sx={{ p: 12, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
+    <Box sx={{ p: 16, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
       <Grid container spacing={2} sx={{ minWidth: 320 }}>
         <Hidden mdDown>
           {displayMode === 0 && (
@@ -579,7 +579,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
             </Grid>
             {/* treeview */}
             {subjectView === 'treeview' ? (
-              <Grid item xs={12} sx={{ m: 2 }}>
+              <Grid item xs={12}>
                 {expandedNodes && (
                   <TreeView
                     expanded={expandedNodes} // expand node by nodeId
