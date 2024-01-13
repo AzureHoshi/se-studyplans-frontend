@@ -14,7 +14,8 @@ import {
   TextField,
   Alert,
   Divider,
-  Autocomplete
+  Autocomplete,
+  DialogActions
 } from '@mui/material'
 import { useFetch } from 'src/hooks'
 import { Btn, DataGridTable } from 'src/components'
@@ -23,11 +24,13 @@ import { grey } from '@mui/material/colors'
 import { motion, AnimatePresence } from 'framer-motion'
 import Icon from '@mdi/react'
 import axios from 'axios'
+import { Iobroker } from 'mdi-material-ui'
 
 function JobSubjectRelated() {
   const URL_GET_JOBS = `${url.BASE_URL}/job-positions/`
   const URL_GET_SUBJECT_RELATED = `${url.BASE_URL}/subject-job-relateds/`
   const URL_GET_SUBJECTS = `${url.BASE_URL}/subjects-by-curriculum/` + 2 // only curriculum se 66
+  const URL_JOB_COMPETENCIES = `${url.BASE_URL}/job-competencies/`
 
   const {
     error: JobsError,
@@ -64,8 +67,85 @@ function JobSubjectRelated() {
   const [job, setJob] = useState([])
   const [newJobName, setNewJobName] = useState('')
   const [subjectSelected, setSubjectSelected] = useState([])
+  const [newCompetency, setNewCompetency] = useState('')
 
   const [openCompetencies, setOpenCompetencies] = useState(false)
+  const [openCompetenciesEdit, setOpenCompetenciesEdit] = useState(false)
+  const [competencySelected, setCompetencySelected] = useState([])
+
+  const handleOpenComEdit = comRow => {
+    setCompetencySelected(comRow)
+    setOpenCompetenciesEdit(true)
+  }
+
+  const handleCloseComEdit = () => {
+    setOpenCompetenciesEdit(false)
+    setTimeout(() => {
+      setCompetencySelected([])
+    }, 500)
+  }
+
+  const handleUpdateJobComDesc = () => {
+    if (!competencySelected?.job_com_description) return
+    axios
+      .put(URL_JOB_COMPETENCIES + competencySelected?.job_com_id, {
+        job_position_id: competencySelected?.job_position_id,
+        job_com_description: competencySelected?.job_com_description
+      })
+      .then(res => {
+        if (res.data) {
+          console.log(res.data)
+          const { job_competencies, ...rest } = job
+          const jobComUpdate = job_competencies?.map(job => {
+            if (job.job_com_id === res.data.data.job_com_id) return res.data.data
+            else return job
+          })
+          const stateUpdate = { ...rest, job_competencies: jobComUpdate }
+          // console.log('stateUpdate', stateUpdate)
+          setJob(stateUpdate)
+          setOpenCompetenciesEdit(false)
+        }
+      })
+  }
+
+  const handleRemoveJobCom = job_com_id => {
+    if (!job_com_id) return
+    axios.delete(URL_JOB_COMPETENCIES + job_com_id).then(res => {
+      if (res.data) {
+        console.log(res.data)
+        const { job_competencies, ...rest } = job
+        const jobComUpdate = job_competencies?.filter(job => job.job_com_id !== job_com_id)
+        const stateUpdate = { ...rest, job_competencies: jobComUpdate }
+        // console.log('stateUpdate', stateUpdate)
+        setJob(stateUpdate)
+        reFetchJobs()
+      }
+    })
+  }
+
+  const handleChangeNewCompetency = value => {
+    setNewCompetency(value)
+  }
+  const handleAddNewJobCompetency = () => {
+    if (!newCompetency) return
+    axios
+      .post(URL_JOB_COMPETENCIES, { job_position_id: job.job_position_id, job_com_description: newCompetency })
+      .then(res => {
+        if (res.data) {
+          console.log(res.data)
+          const { job_competencies, ...rest } = job
+          const updatedJobCompetencies = [...job_competencies, res.data.data]
+          const updatedObject = {
+            ...rest,
+            job_competencies: updatedJobCompetencies
+          }
+          setJob(updatedObject)
+          reFetchJobs()
+          setNewCompetency('')
+        }
+      })
+      .catch(err => console.log('err from add new job competency', err))
+  }
 
   const handleGetSubjectRelated = position => {
     if (!position) {
@@ -135,6 +215,7 @@ function JobSubjectRelated() {
         console.log(res.data)
         reFetchJobs()
         setOpenInsert(false)
+        setNewJobName('')
       })
       .catch(err => {
         console.log('err from submit new job', err)
@@ -150,8 +231,13 @@ function JobSubjectRelated() {
       .then(res => {
         console.log(res.data)
         reFetchSubjectRelated()
-        const updateState = [...res.data.data, ...subjectJobRelated]
-        setSubjectJobRelated(updateState)
+        if (subjectJobRelated?.length > 0) {
+          const updateState = [...res.data.data, ...subjectJobRelated]
+          setSubjectJobRelated(updateState)
+        } else {
+          const updateState = Object.values(res.data.data)
+          setSubjectJobRelated(updateState)
+        }
       })
       .catch(err => {
         console.log('err from add new subject related', err)
@@ -177,6 +263,7 @@ function JobSubjectRelated() {
   }
 
   const handleOpenJobCompetencies = jobRow => {
+    setJob(jobRow)
     setJobNameSelected(jobRow.job_position_name)
     setJobIdSelected(jobRow.job_position_id)
     setOpenCompetencies(true)
@@ -187,6 +274,12 @@ function JobSubjectRelated() {
       console.log('SubjectRelated', SubjectRelated)
     }
   }, [SubjectRelated])
+
+  useEffect(() => {
+    if (job) {
+      console.log('job', job)
+    }
+  }, [job])
 
   const columns = [
     {
@@ -381,30 +474,36 @@ function JobSubjectRelated() {
                   </Button>
                 </Grid>
                 <Box sx={{ ml: 2, maxHeight: 400, overflow: 'auto', width: '100%' }}>
-                  {subjectJobRelated?.map(subject => (
-                    <Grid container spacing={2} item xs={12} key={subject.subject_job_related_id}>
-                      <Grid item xs={12} md={2}>
-                        <Typography>{subject.subject?.subject_code}</Typography>
+                  {subjectJobRelated?.length > 0 ? (
+                    subjectJobRelated?.map(subject => (
+                      <Grid container spacing={2} item xs={12} key={subject.subject_job_related_id}>
+                        <Grid item xs={12} md={2}>
+                          <Typography>{subject.subject?.subject_code}</Typography>
+                        </Grid>
+                        <Grid item xs={12} md={8}>
+                          <Typography noWrap>{subject.subject?.subject_name_th}</Typography>
+                          <Typography noWrap>{subject.subject?.subject_name_en}</Typography>
+                        </Grid>
+                        <Grid item xs={12} md={2}>
+                          <Button
+                            onClick={() => handleDeleteSUbjectRelate(subject.subject_job_related_id)}
+                            variant='outlined'
+                            color={'error'}
+                            sx={{ width: '100%' }}
+                          >
+                            Delete
+                          </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Divider />
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} md={8}>
-                        <Typography noWrap>{subject.subject?.subject_name_th}</Typography>
-                        <Typography noWrap>{subject.subject?.subject_name_en}</Typography>
-                      </Grid>
-                      <Grid item xs={12} md={2}>
-                        <Button
-                          onClick={() => handleDeleteSUbjectRelate(subject.subject_job_related_id)}
-                          variant='outlined'
-                          color={'error'}
-                          sx={{ width: '100%' }}
-                        >
-                          Delete
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Divider />
-                      </Grid>
+                    ))
+                  ) : (
+                    <Grid item xs={12}>
+                      <Typography variant='body2'>ยังไม่มีรายวิชาที่เกี่ยวข้อง</Typography>
                     </Grid>
-                  ))}
+                  )}
                 </Box>
                 <Grid item xs={12}>
                   <Typography sx={{ mt: 6 }}>Add Subject Relate</Typography>
@@ -507,7 +606,7 @@ function JobSubjectRelated() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <Button onClick={handleSubmitNewJob} variant='contained' sx={{ width: '100%' }}>
-                    Submi
+                    Submit
                   </Button>
                 </Grid>
               </Grid>
@@ -562,24 +661,100 @@ function JobSubjectRelated() {
                 <Icon path={mdiClose} size={1} />
               </IconButton>
             </DialogTitle>
-            <DialogContent sx={{ pb: 12 }}>
+            <DialogContent sx={{ pb: 12, minHeight: 400 }}>
               <Grid container spacing={2}>
-                {/* <Grid item xs={12}>
-                  <Typography sx={{ mt: 6 }}>Job name</Typography>
-                </Grid> */}
-                {/* <Grid item xs={12} md={8} lg={10}>
+                <Grid item xs={12}>
+                  {job?.job_competencies?.map((com, index) => (
+                    <Box key={com.job_com_id}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', m: 2 }}>
+                        <Typography>{index + 1 + ') ' + com.job_com_description}</Typography>
+                        <Box sx={{ width: 180, display: 'flex', justifyContent: 'space-between' }}>
+                          <Button
+                            onClick={() => handleOpenComEdit(com)}
+                            size={'small'}
+                            variant='outlined'
+                            color='secondary'
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => handleRemoveJobCom(com.job_com_id)}
+                            size={'small'}
+                            variant='outlined'
+                            color={'error'}
+                          >
+                            Remove
+                          </Button>
+                        </Box>
+                      </Box>
+                      <Divider />
+                    </Box>
+                  ))}
+                </Grid>
+              </Grid>
+              <DialogActions sx={{ p: 0, m: 0, mt: 2.5 }}>
+                <TextField
+                  value={newCompetency || ''}
+                  onChange={e => handleChangeNewCompetency(e.target.value)}
+                  fullWidth
+                  size='small'
+                  label={'สมรรถนะ'}
+                />
+                <Button variant='outlined' onClick={handleAddNewJobCompetency}>
+                  เพิ่ม
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={openCompetenciesEdit}
+            onClose={() => {
+              handleCloseComEdit()
+            }}
+            maxWidth={'sm'}
+            fullWidth
+          >
+            <DialogContent sx={{ minHeight: 400 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant='body2'>Job Competency Edit Form ({job.job_position_name})</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  {/* <PloTextField label={'PLO Title :'} value={PLOSelected.plo_name || ''} /> */}
                   <TextField
-                    size={'small'}
-                    value={newJobName}
-                    onChange={e => setNewJobName(e.target.value)}
-                    sx={{ width: '100%', mb: 6 }}
+                    onChange={e => {
+                      const { job_com_description, ...rest } = competencySelected
+
+                      // Update job_com_description with the new value
+                      const updatedJobComDescription = e.target.value
+
+                      // Create a new object with the updated job_com_description
+                      const updatedCompetencySelected = {
+                        ...rest,
+                        job_com_description: updatedJobComDescription
+                      }
+
+                      // Update the state with the new object
+                      setCompetencySelected(updatedCompetencySelected)
+                    }}
+                    value={competencySelected?.job_com_description || ''}
+                    label={'Desciption'}
+                    fullWidth
+                    multiline
+                    rows={4}
                   />
                 </Grid>
-                <Grid item xs={12} md={4} lg={2}>
-                  <Button onClick={handleSubmitNewJob} variant='contained' sx={{ width: '100%' }}>
-                    Submit
+
+                <Grid item xs={12}>
+                  <Button onClick={handleUpdateJobComDesc} variant='contained' fullWidth>
+                    Update Description
                   </Button>
-                </Grid> */}
+                </Grid>
+                <Grid item xs={12}>
+                  <Button onClick={() => handleCloseComEdit()} variant='outlined' color={'secondary'} fullWidth>
+                    Close
+                  </Button>
+                </Grid>
               </Grid>
             </DialogContent>
           </Dialog>
