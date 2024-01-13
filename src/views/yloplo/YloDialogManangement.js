@@ -155,12 +155,14 @@ function YloDialogMangement({
   const handleRemovePLORelated = ylo_plo_id => {
     console.log('ylo_plo_id', ylo_plo_id)
     axios
-      .delete(URL_YLO_PLO_RELATED, { ylo_plo_id: ylo_plo_id })
+      .delete(`${URL_YLO_PLO_RELATED}?ylo_plo_id=${ylo_plo_id}`)
       .then(res => {
         if (res.data) {
           console.log(res.data)
           refetchYLOs()
-          handleUpdateYloSelect()
+          setTimeout(() => {
+            handleUpdateYloSelect(yloState)
+          }, 500)
         }
       })
       .catch(err => console.log('err from remove plo related', err))
@@ -403,7 +405,7 @@ function YloDialogMangement({
               disablePortal
               fullWidth
               freeSolo
-              options={PLOsData.filter(plo => !yloState?.plos?.find(y => y.plo_id === plo.plo_id))}
+              options={PLOsData.filter(plo => !yloPLO?.find(y => y.plo_id === plo.plo_id))}
               getOptionLabel={option => option.plo_name || ''}
               renderInput={params => <TextField {...params} label='+Add PLO Relation' />}
               onChange={(e, value) => {
@@ -455,7 +457,7 @@ function YloDialogMangement({
   useEffect(() => {
     if (yloState) {
       const filteredPlos = yloState?.plos?.filter(plo => plo.ylo_plos !== null)
-
+      console.log('yloState', yloState)
       // Create an object to store the first item for each unique plo_id
       const firstItems = {}
 
@@ -473,6 +475,10 @@ function YloDialogMangement({
       setYloPLO([])
     }
   }, [yloState])
+
+  useEffect(() => {
+    console.log('yloPLO', yloPLO)
+  }, [yloPLO])
 
   useEffect(() => {
     if (fakeLoading === true)
