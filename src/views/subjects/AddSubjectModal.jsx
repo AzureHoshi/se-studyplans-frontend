@@ -80,7 +80,7 @@ function AddSubjectModal({ open, handleClose, handleSubmit, curriculumId, subjec
         </Typography>
         <DialogContent sx={{ display: 'flex' }}>
           <Grid container spacing={6}>
-            <Grid item xs={12} sm={12} md={12} lg={6}>
+            {/* <Grid item xs={12} sm={12} md={12} lg={6}>
               <Selection
                 label={'Subject Group'}
                 width={'100%'}
@@ -95,7 +95,7 @@ function AddSubjectModal({ open, handleClose, handleSubmit, curriculumId, subjec
                   </MenuItem>
                 ))}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={12} md={12} lg={6}>
               <TextField
                 fullWidth
