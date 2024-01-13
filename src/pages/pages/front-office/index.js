@@ -29,7 +29,7 @@ const drawerWidth = 350
 
 const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ theme, open }) => ({
   flexGrow: 1,
-  padding: theme.spacing(3),
+  // padding: theme.spacing(3),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
@@ -49,15 +49,15 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
 
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const backgroundImageUrl = 'https://images.pexels.com/photos/3752081/pexels-photo-3752081.jpeg'
 
   return (
     <Box sx={{ display: 'flex' }}>
       <SwipeableDrawer onOpen={() => null} open={openSmallDrawer} onClose={() => setOpenSmallDrawer(false)}>
-        <Grid container sx={{ display: 'grid', justifyContent: 'center', p: 6, width: 300 }}>
+        <Grid container sx={{ display: 'grid', justifyContent: 'center', width: 300 }}>
           <Grid item xs={12} sx={{ mt: 16 }}>
             <img
-              src='/images/logos/studyplan-vertical.png'
+              src='/images/logos/logo.png'
               alt='logo'
               style={{ width: 100, height: 'auto', margin: 32, marginBottom: 56 }}
             />
@@ -238,18 +238,40 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
             </IconButton>
           </Box>
         </Hidden>
-        <Box sx={{ mt: { xs: 20, lg: 40 }, ml: 6 }}>
-          {pageState === 0 && (
-            <Roadmap
-              curriculumTree={curriculumTree}
-              subjectsSE66={subjectsSE66}
-              curriculumScopeSE66={curriculumScopeSE66}
-              studyPlanSE66={studyPlanSE66}
-            />
-          )}
-          {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
-          {pageState === 2 && <StudentSystems />}
-          {pageState === 3 && <Simulator />}
+        <Box
+          sx={{
+            backgroundImage: `url(${backgroundImageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            width: '100%', // Set the width to fill the container
+            height: '100vh', // Set the height to fill the viewport
+            position: 'relative',
+            p: 0,
+            m: 0
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(200, 200, 200, 0.5)'
+            }}
+          >
+            {pageState === 0 && (
+              <Roadmap
+                curriculumTree={curriculumTree}
+                subjectsSE66={subjectsSE66}
+                curriculumScopeSE66={curriculumScopeSE66}
+                studyPlanSE66={studyPlanSE66}
+              />
+            )}
+            {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
+            {pageState === 2 && <StudentSystems />}
+            {pageState === 3 && <Simulator />}
+          </Box>
         </Box>
       </Main>
     </Box>

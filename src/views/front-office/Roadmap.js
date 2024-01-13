@@ -333,7 +333,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
   }, [curriculumTree])
 
   return (
-    <Box sx={{ m: 8, mt: 0 }}>
+    <Box sx={{ p: 12, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
       <Grid container spacing={2} sx={{ minWidth: 320 }}>
         <Hidden mdDown>
           {displayMode === 0 && (
@@ -507,19 +507,20 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
         </Hidden>
         {/* show curriculum in treeview and gridview */}
         {displayMode === 1 && (
-          <Grid container item xs={12} sx={{ mt: -12 }}>
-            <Hidden mdDown>
-              <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3.5 }}>
-                <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
-                  RMUTL Software Engineering 2566
-                </Typography>
-              </Grid>
-            </Hidden>
+          <Grid container item xs={12} sx={{ mt: 0 }}>
             <Grid item xs={12} md={3}>
               <Button onClick={() => handleChangeDisplayMode(0)} variant={'contained'} sx={{ mb: 6 }}>
                 Back
               </Button>
             </Grid>
+            <Hidden mdDown>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
+                  RMUTL Software Engineering 2566
+                </Typography>
+              </Grid>
+            </Hidden>
+
             <Hidden mdUp>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3.5, px: 4 }}>
                 <Typography variant='h5' sx={{ fontFamily: 'Segoe UI' }}>
@@ -527,13 +528,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                 </Typography>
               </Grid>
             </Hidden>
-            <Grid
-              container
-              item
-              xs={12}
-              md={7}
-              sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 2, md: 0 } }}
-            >
+            <Grid container item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 2, md: 0 } }}>
               <Grid item xs={12} sm={6}>
                 <RadioGroup
                   name='radioOptions'
@@ -584,7 +579,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
             </Grid>
             {/* treeview */}
             {subjectView === 'treeview' ? (
-              <Grid item xs={12} md={10} sx={{ m: 2 }}>
+              <Grid item xs={12} sx={{ m: 2 }}>
                 {expandedNodes && (
                   <TreeView
                     expanded={expandedNodes} // expand node by nodeId
@@ -593,7 +588,6 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                     sx={{
                       flexGrow: 1,
                       overflowY: 'auto',
-                      maxWidth: 1200,
                       height: 600,
                       overflowY: 'auto',
                       overflowX: 'hidden'
@@ -984,7 +978,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                 ))}
               </Grid>
             </Grid>
-            <Grid container item xs={12} spacing={3}>
+            <Grid container item xs={12} spacing={3} sx={{ overflow: 'auto', maxHeight: 400 }}>
               {yearSemesterArray?.map(ys => (
                 <Grid item xs={12} md={6}>
                   <Card sx={{ p: 6, height: 350 }}>

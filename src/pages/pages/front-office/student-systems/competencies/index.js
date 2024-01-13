@@ -59,6 +59,8 @@ function StudentComcetencies() {
     }
   }, [])
 
+  console.log('planRecords', planRecords)
+
   return (
     <CustomLayout
       content={
@@ -84,7 +86,7 @@ function StudentComcetencies() {
                             <Grid
                               item
                               xs={12}
-                              md={6}
+                              md={4}
                               sx={{ display: { xs: 'flex', lg: 'grid' }, mb: { xs: 0, lg: 2 } }}
                             >
                               <Typography variant='caption'> {plan.subject?.subject_code}</Typography>
@@ -92,7 +94,7 @@ function StudentComcetencies() {
                                 {plan.subject?.subject_name_th}
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Grid item xs={12} md={8} sx={{ display: 'flex', flexDirection: 'column' }}>
                               <Typography variant='caption'> competencies</Typography>
                               {plan?.competencies.length > 0 ? (
                                 plan?.competencies?.map(c => (

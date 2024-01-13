@@ -51,7 +51,7 @@ const Recommendation = ({ jobRecommended }) => {
     }
   }, [jobRecommended])
   return (
-    <Box sx={{ m: 8 }}>
+    <Box sx={{ p: 12, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
       <Grid container spacing={4} sx={{ pb: { xs: 0, lg: 46 } }}>
         <Grid item xs={12} sm={8}>
           <Typography
