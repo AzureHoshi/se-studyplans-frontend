@@ -22,6 +22,7 @@ import { useFetch } from 'src/hooks'
 import Icon from '@mdi/react'
 import { mdiSitemapOutline } from '@mdi/js'
 import { CircleLoading } from 'src/components'
+import axios from 'axios'
 
 function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   const [displayController, setDisplayController] = useState(0)
@@ -32,6 +33,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   const [page, setPage] = useState(0)
   const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
   const URL_GET_SUBJECTS = `${url.BASE_URL}/subjects-by-curriculum/`
+  const URL_SUB_PLO_MAPPING = `${url.BASE_URL}/sub-plo-mappings/`
 
   const curriculumColumns = [
     { field: 'curriculum_year', headerName: 'Year', width: 100 },
@@ -86,6 +88,69 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
+  }
+
+  const handleMappingCheck = (isChecked, sub_plo_map_id, subject_id, sub_plo_id) => {
+    console.log('isChecked', isChecked)
+    console.log('sub_plo_map_id', sub_plo_map_id)
+    console.log('subject_id', subject_id)
+    console.log('sub_plo_id', sub_plo_id)
+    if (isChecked !== undefined && sub_plo_map_id !== undefined) {
+      axios
+        .delete(URL_SUB_PLO_MAPPING + sub_plo_map_id)
+        .then(res => {
+          if (res.data) {
+            // console.log(res.data)
+            // console.log('Subjects', Subjects)
+            const updatedSubjects = Subjects.map(subject => {
+              if (subject.subject_id === subject_id) {
+                // Find the subject to update
+                const updatedSubPloMappings = subject.sub_plo_mappings.filter(
+                  spm => spm.sub_plo_map_id !== sub_plo_map_id
+                )
+
+                // Create a new object with the updated sub_plo_mappings
+                return {
+                  ...subject,
+                  sub_plo_mappings: updatedSubPloMappings
+                }
+              }
+
+              return subject // Keep other subjects unchanged
+            })
+            setSubjects(updatedSubjects)
+          }
+        })
+        .catch(err => console.log('err from uncheck Sub PLO', err))
+    } else {
+      axios
+        .post(URL_SUB_PLO_MAPPING, { subject_id: subject_id, sub_plo_id: sub_plo_id })
+        .then(res => {
+          if (res.data) {
+            // console.log(res.data)
+            const updatedSubjects = Subjects.map(subject => {
+              if (subject.subject_id === subject_id) {
+                // Find the subject to update
+                const updatedSubPloMappings = [...subject.sub_plo_mappings, res.data.data]
+
+                // Create a new object with the updated sub_plo_mappings
+                return {
+                  ...subject,
+                  sub_plo_mappings: updatedSubPloMappings
+                }
+              }
+
+              return subject // Keep other subjects unchanged
+            })
+
+            setSubjects(updatedSubjects)
+            // reFetchPLOsData()
+            // reFetchYLOsData()
+            // setPLOCreateForm(initialPLOForm)
+          }
+        })
+        .catch(err => console.log('err from checked Sub PLO', err))
+    }
   }
 
   useEffect(() => {
@@ -249,7 +314,18 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
                     control={
                       <Checkbox
                         size='small'
-                        checked={s.sub_plo_mappings?.find(mapping => mapping.sub_plo_id === subPLO.sub_plo_id)}
+                        checked={
+                          s.sub_plo_mappings?.find(mapping => mapping.sub_plo_id === subPLO.sub_plo_id) ? true : false
+                        }
+                        onClick={() =>
+                          handleMappingCheck(
+                            s.sub_plo_mappings?.find(mapping => mapping.sub_plo_id === subPLO.sub_plo_id) && true,
+                            s.sub_plo_mappings?.find(mapping => mapping.sub_plo_id === subPLO.sub_plo_id)
+                              ?.sub_plo_map_id,
+                            s.subject_id,
+                            subPLO.sub_plo_id
+                          )
+                        }
                       />
                     }
                   />
