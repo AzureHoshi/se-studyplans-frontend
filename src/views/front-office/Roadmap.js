@@ -611,16 +611,10 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                 )}
               </Grid>
             ) : (
-              <Grid
-                container
-                item
-                xs={12}
-                md={10}
-                sx={{ m: { xs: 0, sm: 2 }, height: 600, maxWidth: { xs: 320, sm: 1200 } }}
-              >
+              <Grid container item xs={12} sx={{ m: { xs: 0, sm: 2 }, height: 500, pb: 6 }}>
                 {/* Filter */}
                 {/* gridview */}
-                <Grid item xs={12} sm={12} md={6} lg={4}>
+                <Grid item xs={12} sm={12} md={12} lg={4}>
                   {/* Pagination */}
                   <TablePagination
                     rowsPerPageOptions={[]}
@@ -662,13 +656,13 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                           (!categoriesSelected && !typesSelected && !groupsSelected)
                       ).length
                     }
-                    rowsPerPage={16}
+                    rowsPerPage={12}
                     page={page}
                     onPageChange={handleChangePage}
                   />
                 </Grid>
                 <Grid container item xs={12} sm={12} lg={8} spacing={2}>
-                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
                     <Selection
                       disabled={categoriesSubject[0] === undefined}
                       label={'Category'}
@@ -686,7 +680,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                       ))}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
                     <Selection
                       disabled={typesSubject[0] === undefined}
                       label={'Type'}
@@ -702,7 +696,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                       ))}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={4}>
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
                     <Selection
                       disabled={groupsSubject[0] === undefined}
                       label={'Group'}
@@ -720,8 +714,8 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Box sx={{ mt: 6, overflow: 'auto', minHeight: 600 }}>
-                    <Grid container spacing={6} sx={{ p: 2 }}>
+                  <Box sx={{ mt: 6 }}>
+                    <Grid container spacing={6} sx={{ p: 2, height: { xs: 360, lg: '100%' }, overflow: 'auto' }}>
                       {subjectsSE66
                         .sort((a, b) =>
                           a.subject_id === subjectSelected.subject_id
@@ -764,7 +758,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                               !typesSelected) ||
                             (!categoriesSelected && !typesSelected && !groupsSelected)
                         )
-                        .slice(page * 16, page * 16 + 16)
+                        .slice(page * 12, page * 12 + 12)
 
                         .map(value => (
                           <Grid item xs={12} sm={12} md={6} lg={4} key={value.subject_id}>
