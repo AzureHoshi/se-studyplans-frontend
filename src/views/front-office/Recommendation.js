@@ -3,18 +3,18 @@ import { grey } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const Recommendation = ({ jobRecommended }) => {
+const Recommendation = ({ jobRecommended, jobCompetencies }) => {
   const [jobPosition, setJobPosition] = useState([])
   const [currentIndex, setCurentIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [dummyDesc, setDummyDesc] = useState([
-    'A Software Engineer is a professional responsible for designing, developing, testing, and maintaining software systems. They play a crucial role in the software development life cycle, contributing to the creation of applications, tools, and systems that meet specific business or user needs.',
-    'A Developer/Programmer is a skilled professional responsible for creating, maintaining, and implementing software solutions. They are integral to the software development process, translating requirements into code and ensuring the functionality and performance of applications.',
-    'An IT Analyst, or Information Technology Analyst, is a professional responsible for evaluating and implementing information technology solutions to meet the business needs of an organization. They play a critical role in analyzing the current state of technology, identifying areas for improvement, and recommending and implementing solutions.',
-    'A System Analyst and Designer is a professional responsible for analyzing and designing information systems to meet the specific needs of an organization. This role involves understanding business processes, gathering requirements, and creating detailed system specifications. Additionally, System Analysts and Designers are involved in developing efficient and effective solutions to enhance organizational processes and workflows.',
-    'A Software Quality Assurance (SQA) Engineer is a professional responsible for ensuring that software products meet the established quality standards and requirements before they are released. SQA Engineers play a crucial role in the software development life cycle by implementing testing processes, identifying defects, and collaborating with development teams to deliver high-quality software.',
-    'A Software Architect is a highly skilled professional responsible for designing and overseeing the implementation of complex software solutions. They play a critical role in shaping the overall structure, functionality, and performance of software systems, ensuring they meet business requirements and align with the organization long-term goals.',
-    'Software Entrepreneurship involves the creation, development, and management of software-based products or services with the goal of establishing and growing a successful business. Entrepreneurs in this field navigate the dynamic landscape of technology, identifying market opportunities, and leveraging innovative solutions to address specific needs.'
+    'วิศวกรซอฟต์แวร์คือผู้เชี่ยวชาญที่รับผิดชอบในการออกแบบ พัฒนา ทดสอบ และดูแลรักษาระบบซอฟต์แวร์ พวกเขามีบทบาทสำคัญในวงจรชีวิตการพัฒนาซอฟต์แวร์ มContributing to the creation of applications, tools, and systems that meet specific business or user needs.',
+    'นักพัฒนา/โปรแกรมเมอร์เป็นผู้เชี่ยวชาญที่รับผิดชอบในการสร้าง บริการซอฟต์แวร์ พวกเขาเป็นส่วนสำคัญของกระบวนการพัฒนาซอฟต์แวร์ แปลความต้องการเป็นโค้ด และรักษาความสามารถและประสิทธิภาพของแอปพลิเคชัน',
+    'นักวิเคราะห์ IT หรือนักวิเคราะห์เทคโนโลยีสารสนเทศเป็นผู้เชี่ยวชาญที่รับผิดชอบในการประเมินและดำเนินการสร้างความสามารถทางเทคโนโลยีสารสนเทศเพื่อตอบสนองความต้องการทางธุรกิจขององค์กร พวกเขามีบทบาทสำคัญในการวิเคราะห์สถานะปัจจุบันของเทคโนโลยี การระบุพื้นที่ที่ต้องปรับปรุง และการแนะนำและการดำเนินการ',
+    'นักวิเคราะห์และออกแบบระบบเป็นผู้เชี่ยวชาญที่รับผิดชอบในการวิเคราะห์และออกแบบระบบสารสนเทศเพื่อตอบสนองความต้องการที่เฉพาะเจาะจงขององค์กร บทบาทนี้เน้นที่การเข้าใจกระบวนการธุรกิจ การรวบรวมความต้องการ และสร้างข้อมูลสเปคระบบอย่างละเอียด นอกจากนี้ นักวิเคราะห์และออกแบบระบบยังมีส่วนร่วมในการพัฒนาโครงการให้มีประสิทธิภาพและมีประสิทธิผลเพื่อเสริมสร้างกระบวนการและการทำงานขององค์กร',
+    'วิศวกรประกันคุณภาพซอฟต์แวร์ (SQA) เป็นผู้เชี่ยวชาญที่รับผิดชอบในการตรวจสอบว่าผลิตภัณฑ์ซอฟต์แวร์ตรงตามมาตรฐานและความต้องการที่กำหนดก่อนที่จะเผยแพร่ วิศวกร SQA เล่น perimental testing processes, identifying defects, and collaborating with development teams to deliver high-quality software.',
+    'นักสถาปนิกซอฟต์แวร์เป็นผู้เชี่ยวชาญที่มีความสามารถสูงรับผิดชอบในการออกแบบและดูแลการปฏิบัติของโซลูชั่นซอฟต์แวร์ที่ซับซ้อน พวกเขามีบทบาทสำคัญในการปั้นโครงสร้างทั้งหมด ฟังก์ชัน และประสิทธิภาพของระบบซอฟต์แวร์ เพื่อให้พวกเขาตรงตามความต้องการทางธุรกิจและสอดคล้องกับเป้าหมายขององค์กรในระยะยาว',
+    'การประกอบการซอฟต์แวร์เป็นกระบวนการสร้าง พัฒนา และจัดการผลิตภัณฑ์หรือบริการที่ใช้เทคโนโลยีซอฟต์แวร์เพื่อการก่อตั้งและการเจริญเติบโตของธุรกิจที่ประสบความสำเร็จ ผู้ประกอบการในวงการนี้นำทางที่พลวัตของเทคโนโลยี การระบุโอกาสทางตลาด และการใช้นวัตกรรมในการแก้ไขความต้องการที่เฉพาะเจาะจง'
   ])
 
   const handlePlusIndex = () => {
@@ -50,6 +50,14 @@ const Recommendation = ({ jobRecommended }) => {
       console.log(Object.values(uniqueJobPositions))
     }
   }, [jobRecommended])
+
+  // useEffect(() => {
+  //   console.log(
+  //     'jobCompetencies',
+  //     jobCompetencies?.map(d => d.job_competencies?.map(com => com.job_com_description))
+  //   )
+  // }, [jobCompetencies])
+
   return (
     <Box sx={{ p: 16, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
       <Grid container spacing={4} sx={{ pb: { xs: 0, lg: 46 } }}>
@@ -113,6 +121,20 @@ const Recommendation = ({ jobRecommended }) => {
           <Typography variant='caption'>
             <p style={{ textAlign: 'justify' }}>{jobPosition[currentIndex]?.desc}</p>
           </Typography>
+        </Grid>
+        <Grid container item xs={12}>
+          {jobCompetencies
+            ?.filter(job => job.job_position_id === jobPosition[currentIndex]?.job_position_id)
+            .map(d =>
+              d.job_competencies?.map(com => (
+                <Grid item xs={6} key={com.job_com_id}>
+                  <Typography variant='caption'>
+                    <li>{com.job_com_description}</li>
+                  </Typography>
+                </Grid>
+              ))
+            )}
+          {/* jobCompetencies?.map(d => d.job_competencies?.map(com => com.job_com_description) */}
         </Grid>
         <Grid container spacing={4} sx={{ pl: 3, pt: 3 }}>
           {jobRecommended

@@ -44,7 +44,14 @@ const Main = styled('main', { shouldForwardProp: prop => prop !== 'open' })(({ t
   })
 }))
 
-const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66 }) => {
+const FrontOffice = ({
+  jobRecommended,
+  curriculumTree,
+  subjectsSE66,
+  curriculumScopeSE66,
+  studyPlanSE66,
+  jobCompetencies
+}) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
@@ -288,7 +295,7 @@ const FrontOffice = ({ jobRecommended, curriculumTree, subjectsSE66, curriculumS
                 studyPlanSE66={studyPlanSE66}
               />
             )}
-            {pageState === 1 && <Recommendation jobRecommended={jobRecommended} />}
+            {pageState === 1 && <Recommendation jobRecommended={jobRecommended} jobCompetencies={jobCompetencies} />}
             {pageState === 2 && <StudentSystems />}
             {pageState === 3 && <Simulator />}
           </Box>
@@ -306,7 +313,8 @@ export async function getServerSideProps() {
     `/continue-subjects-curriculum/${userProfile.curriculum_id}`,
     `/subjects-by-curriculum/${userProfile.curriculum_id}`,
     `/curriculum-structures-v2/${userProfile.curriculum_id}`,
-    `/study-plan-records/${userProfile.curriculum_id}`
+    `/study-plan-records/${userProfile.curriculum_id}`,
+    `/job-positions`
   ]
 
   const apiData = []
@@ -335,22 +343,23 @@ export async function getServerSideProps() {
     }
   }
 
-  const [jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66] = apiData
+  const [jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66, jobCompetencies] = apiData
 
   const propsObject = {
     jobRecommended: jobRecommended !== undefined ? jobRecommended : null,
     curriculumTree: curriculumTree !== undefined ? curriculumTree : null,
     subjectsSE66: subjectsSE66 !== undefined ? subjectsSE66 : null,
     curriculumScopeSE66: curriculumScopeSE66 !== undefined ? curriculumScopeSE66 : null,
-    studyPlanSE66: studyPlanSE66 !== undefined ? studyPlanSE66 : null
+    studyPlanSE66: studyPlanSE66 !== undefined ? studyPlanSE66 : null,
+    jobCompetencies: jobCompetencies !== undefined ? jobCompetencies : null
   }
 
   // Your logic with the retrieved data
-  console.log('Data from endpoint jobRecommended:', jobRecommended)
-  console.log('Data from endpoint curriculumTree:', curriculumTree)
-  console.log('Data from endpoint subjectsSE66:', subjectsSE66)
-  console.log('Data from endpoint curriculumScopeSE66:', curriculumScopeSE66)
-  console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
+  // console.log('Data from endpoint jobRecommended:', jobRecommended)
+  // console.log('Data from endpoint curriculumTree:', curriculumTree)
+  // console.log('Data from endpoint subjectsSE66:', subjectsSE66)
+  // console.log('Data from endpoint curriculumScopeSE66:', curriculumScopeSE66)
+  // console.log('Data from endpoint studyPlanSE66:', studyPlanSE66)
 
   return {
     props: propsObject
