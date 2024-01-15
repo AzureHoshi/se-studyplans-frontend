@@ -29,10 +29,10 @@ const MasterData = () => {
       </Grid>
 
       {/* --------------------------------------Grid ใหญ่------------------------------------------ */}
-      <Grid container spacing={8} sx={{ justifyContent: 'center' }}>
+      <Grid container spacing={8} sx={{ justifyContent: 'center', px: { xs: 0, md: 24 } }}>
         {/* -------------------------------------- Grid ลูกที่ 1---------------------------------------------------- */}
 
-        <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
+        <Grid item xs={12} lg={4} sx={{ justifyContent: 'center' }}>
           <Visible>
             <OnHover>
               <CardMenu
@@ -46,7 +46,7 @@ const MasterData = () => {
 
         {/* -------------------------------------- Grid ลูกที่ 2---------------------------------------------------- */}
 
-        <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
+        <Grid item xs={12} lg={4} sx={{ justifyContent: 'center' }}>
           <Visible>
             <OnHover>
               <CardMenu
@@ -60,7 +60,7 @@ const MasterData = () => {
 
         {/* -------------------------------------- Grid ลูกที่ 3---------------------------------------------------- */}
 
-        <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
+        <Grid item xs={12} lg={4} sx={{ justifyContent: 'center' }}>
           <Visible>
             <OnHover>
               <CardMenu
@@ -74,7 +74,7 @@ const MasterData = () => {
 
         {/* -------------------------------------- Grid ลูกที่ 4---------------------------------------------------- */}
 
-        <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
+        {/* <Grid item xs={12} md={5} lg={4.2} sx={{ justifyContent: 'center' }}>
           <Visible>
             <OnHover>
               <CardMenu
@@ -84,7 +84,7 @@ const MasterData = () => {
               />
             </OnHover>
           </Visible>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   )
