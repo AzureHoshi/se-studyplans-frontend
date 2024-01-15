@@ -81,6 +81,8 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
     setSubjectView(e.target.value)
   }
 
+  console.log('showSubjectSelected', subjectSelected)
+
   const {
     error: SubjectsRelationsError,
     data: SubjectsRelations,
@@ -1070,7 +1072,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                 Previous Subject
               </Typography>
               {SubjectsRelationsLoading && 'Loading...'}
-              <Typography variant='body2' sx={{ fontWeight: 'bold' }} noWrap>
+              <Typography variant='body2' sx={{ fontWeight: 'bold', color: grey[700] }} noWrap>
                 {SubjectsRelations[0]?.parent
                   ? SubjectsRelations[0]?.parent?.subject_code + ' ' + SubjectsRelations[0]?.parent?.subject_name_en
                   : !SubjectsRelationsLoading && 'No Previous Subject'}
@@ -1112,12 +1114,13 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                     </Typography>
                   )}
             </Grid>
+
             <Grid item xs={12}>
               <Typography variant='body2' sx={{ color: 'gray', mt: 8 }}>
                 Subject Description
               </Typography>
               <Typography variant='body2' sx={{ color: grey[700] }} textAlign='justify'>
-                {subjectSelected.subject_description}
+                {subjectSelected?.subject_description}
               </Typography>
             </Grid>
             <Grid container item xs={12} spacing={2}>
