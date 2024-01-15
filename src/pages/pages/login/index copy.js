@@ -71,13 +71,6 @@ const LoginPage = () => {
     showPassword: false
   })
 
-  const [token, setToken] = useState('')
-
-  const [user, setUser] = useState({
-    email: '',
-    status: ''
-  })
-
   // ** Hook
   const theme = useTheme()
   const router = useRouter()
@@ -103,45 +96,7 @@ const LoginPage = () => {
         password: values.password
       })
 
-      console.log('login', response)
-      setToken(response.data.token.token)
-      // Handle the response as needed, e.g., redirect or update state
-    } catch (error) {
-      console.error(error)
-      // Handle the error, e.g., display an error message
-    }
-  }
-
-  const handleCheckLogin = async e => {
-    e.preventDefault()
-
-    try {
-      const response = await axios.get(`${url.BASE_URL}/check-login`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      console.log('check-login', response)
-      setUser(response.data.user)
-      // Handle the response as needed, e.g., redirect or update state
-    } catch (error) {
-      console.error(error)
-      // Handle the error, e.g., display an error message
-    }
-  }
-
-  const handleLogout = async e => {
-    e.preventDefault()
-
-    try {
-      const response = await axios.post(`${url.BASE_URL}/logout`, {
-        email: values.email,
-        password: values.password
-      })
-
-      console.log('logout', response)
-      setToken(response.data.token.token)
+      console.log(response)
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
@@ -314,20 +269,6 @@ const LoginPage = () => {
         </CardContent>
       </Card>
 
-      <Card sx={{ m: 5, p: 5 }}>
-        <CardContent sx={{ padding: theme => `${theme.spacing(2, 9)} !important` }}>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            Token: {token}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            login status: {user.status}
-          </Typography>
-
-          <Button onClick={handleCheckLogin}>check-login</Button>
-
-          <Button onClick={handleLogout}>logout</Button>
-        </CardContent>
-      </Card>
       <FooterIllustrationsV1 />
     </Box>
   )
