@@ -8,6 +8,9 @@ import { useRouter } from 'next/router'
 // ** Axios
 import axios from 'axios'
 
+// ** Cookies
+import Cookies from 'js-cookie'
+
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -63,6 +66,38 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
+const setCookie = (name, value, expires) => {
+  document.cookie = `${name}=${value}; expires=${expires}; path=/`
+}
+
+const deleteCookie = name => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+}
+
+const api = axios.create({
+  baseURL: url.BASE_URL,
+  withCredentials: true // Include credentials (cookies) with cross-origin requests
+})
+
+const isCookieExpired = cookieName => {
+  const cookie = Cookies.get(cookieName)
+
+  if (!cookie) {
+    // Cookie not found
+    console.log(`Cookie '${cookieName}' not found.`)
+    return true
+  }
+
+  const expirationDate = new Date(cookie.expires)
+  const currentDate = new Date()
+
+  // Log the expiration date for debugging purposes
+  console.log(`Cookie '${cookieName}' expiration date: ${expirationDate}`)
+
+  // Compare the expiration date with the current date
+  return expirationDate < currentDate
+}
+
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState({
@@ -71,11 +106,10 @@ const LoginPage = () => {
     showPassword: false
   })
 
-  const [token, setToken] = useState('')
-
   const [user, setUser] = useState({
     email: '',
-    status: ''
+    status: '',
+    token: ''
   })
 
   // ** Hook
@@ -98,13 +132,20 @@ const LoginPage = () => {
     e.preventDefault()
 
     try {
-      const response = await axios.post(`${url.BASE_URL}/login`, {
+      const response = await api.post('/login', {
         email: values.email,
         password: values.password
       })
 
-      console.log('login', response)
-      setToken(response.data.token.token)
+      const { token } = response.data
+
+      console.log('Login successful')
+      Cookies.set('token', token.token, { expires: new Date(token.expires_at) })
+      setUser(prevUser => ({
+        ...prevUser,
+        token: token.token
+      }))
+
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
@@ -114,16 +155,17 @@ const LoginPage = () => {
 
   const handleCheckLogin = async e => {
     e.preventDefault()
+    const token = Cookies.get('token')
 
     try {
-      const response = await axios.get(`${url.BASE_URL}/check-login`, {
+      const response = await api.get('/check-login', {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
       console.log('check-login', response)
-      setUser(response.data.user)
+
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
@@ -131,20 +173,29 @@ const LoginPage = () => {
     }
   }
 
-  const handleLogout = async e => {
-    e.preventDefault()
+  const handleLogout = async () => {
+    const token = Cookies.get('token')
 
     try {
-      const response = await axios.post(`${url.BASE_URL}/logout`, {
-        email: values.email,
-        password: values.password
-      })
+      const response = await api.post(
+        'logout',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
 
-      console.log('logout', response)
-      setToken(response.data.token.token)
+      console.log('Logout response', response)
+      Cookies.remove('token')
+      setUser(prevUser => ({
+        ...prevUser,
+        token: ''
+      }))
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
-      console.error(error)
+      console.error('Logout error', error)
       // Handle the error, e.g., display an error message
     }
   }
@@ -317,7 +368,7 @@ const LoginPage = () => {
       <Card sx={{ m: 5, p: 5 }}>
         <CardContent sx={{ padding: theme => `${theme.spacing(2, 9)} !important` }}>
           <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            Token: {token}
+            Token: {user.token}
           </Typography>
           <Typography variant='body2' sx={{ textAlign: 'center' }}>
             login status: {user.status}
