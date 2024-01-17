@@ -159,6 +159,7 @@ const LoginPage = () => {
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
+      setUser(userInitialState)
       // Handle the error, e.g., display an error message
     }
   }
@@ -179,6 +180,7 @@ const LoginPage = () => {
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
+      setUser(userInitialState)
       // Handle the error, e.g., display an error message
     }
   }
@@ -203,6 +205,7 @@ const LoginPage = () => {
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error('Logout error', error)
+      setUser(userInitialState)
       // Handle the error, e.g., display an error message
     }
   }
@@ -236,6 +239,7 @@ const LoginPage = () => {
       }))
     } catch (error) {
       console.error('Get user error', error)
+      setUser(userInitialState)
       // Handle the error, e.g., display an error message
     }
   }
