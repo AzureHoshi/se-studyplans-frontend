@@ -47,6 +47,7 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 // ** Urls
 import { url } from 'src/configs/urlConfig'
+import { handleCheckLogin } from 'src/authentication'
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -155,7 +156,7 @@ const LoginPage = () => {
         ...prevUser,
         token: token.token
       }))
-      router.push('/pages/front-office/student-systems/dashboard/')
+      router.push('/pages/front-office/student-systems/interest-survey/')
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
@@ -177,7 +178,7 @@ const LoginPage = () => {
       })
 
       console.log('check-login', response)
-      router.push('/pages/front-office/student-systems/dashboard/')
+      // router.push('/pages/front-office/student-systems/interest-survey/')
 
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
@@ -367,4 +368,23 @@ const LoginPage = () => {
 }
 LoginPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
+// ssr
+export async function getServerSideProps(context) {
+  const { req } = context
+
+  const checkIsLogin = await handleCheckLogin(req)
+  console.log('checkIsLogin', checkIsLogin)
+
+  if (checkIsLogin) {
+    return {
+      redirect: {
+        destination: '/pages/front-office/student-systems/dashboard/',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: {}
+  }
+}
 export default LoginPage

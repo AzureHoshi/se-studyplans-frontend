@@ -60,9 +60,9 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         collegian_code: String(collegianCode),
         feedback_record_answer: String(text)
       })
-      console.log('resFeedBack', resFeedBack)
+      // console.log('resFeedBack', resFeedBack)
     } catch (error) {
-      console.log('err from feedback', error)
+      // console.log('err from feedback', error)
       isError = true
     }
     if (!isError) {
@@ -149,7 +149,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
 
     return maxYearSemesterObjects
   }
-  console.log(findMaxYearAndSemester(StudyPlanByStdNo))
+  // console.log(findMaxYearAndSemester(StudyPlanByStdNo))
 
   function calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope) {
     if (totalCreditByScope === 0) {
@@ -193,7 +193,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
 
   useLayoutEffect(() => {
     if (jobRecommended && interRestResult) {
-      console.log('jobRecommended', jobRecommended)
+      // console.log('jobRecommended', jobRecommended)
       const uniqueJobPositions = jobRecommended?.reduce((result, currentItem, index) => {
         const { job_position_id, job_position } = currentItem
         if (!result[job_position_id]) {
@@ -226,15 +226,15 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
       setJobPosition(sortData)
       // const firstItem = Object.values(uniqueJobPositions).sort((a, b) => interRestResult.labels === a.job_position_name)
       setJobSelected(sortData[0])
-      console.log('interRestResult', interRestResult)
-      console.log(Object.values(uniqueJobPositions))
+      // console.log('interRestResult', interRestResult)
+      // console.log(Object.values(uniqueJobPositions))
     }
   }, [jobRecommended, interRestResult])
 
-  console.log('jobRecommended', jobRecommended)
+  // console.log('jobRecommended', jobRecommended)
 
   useEffect(() => {
-    console.log('InterestResult', InterestResult)
+    // console.log('InterestResult', InterestResult)
     const newObject = {
       labels: InterestResult?.labels,
       datasets: [
@@ -248,7 +248,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
       ]
     }
     setInterRestResult(newObject)
-    console.log('newObject', newObject)
+    // console.log('newObject', newObject)
   }, [InterestResult])
 
   useEffect(() => {
@@ -728,7 +728,7 @@ export async function getServerSideProps() {
       const response = await axios.get(url.BASE_URL + apiEndpoints[i])
       apiData[i] = i !== 0 ? response.data.data : response.data // Assuming data is stored in a property named "data" for consistency
 
-      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+      // console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)

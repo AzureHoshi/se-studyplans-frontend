@@ -23,7 +23,7 @@ import { url } from 'src/configs/urlConfig'
 import { useRouter } from 'next/router'
 import { userProfile } from 'src/dummy'
 
-const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisplay }) => {
+const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisplay, user }) => {
   const router = useRouter()
   const Questions = dataSurvey[0].interestQuestions
   const [isLoading, setIsLoading] = useState(false)
@@ -170,7 +170,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                     sx={{ fontWeight: 'bold', color: '#FFF', fontSize: { xs: 16, lg: 14 } }}
                     noWrap
                   >
-                    {''}Profile name
+                    {user?.col_first_name + ' ' + user?.col_last_name}
                   </Typography>
                 </CardContent>
               </Box>

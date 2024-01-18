@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 
 // ** MUI Components
 import { Box, Alert, AlertTitle, Stack, Snackbar, Card, Typography } from '@mui/material'
@@ -12,10 +12,14 @@ import InterestResult from 'src/views/InterestSurvey/InterestResult'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { userProfile } from 'src/dummy'
 import { url } from 'src/configs/urlConfig'
+import { handleCheckLogin, handleGetUser } from 'src/authentication'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 
-const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
+const InterestSurveyPage = ({ dataSurvey, collegianCode, user }) => {
   const [resultDisplay, setResultDisplay] = useState(null)
   const [alertAnswer, setAlertAnswer] = useState(false)
+  const router = useRouter()
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -25,12 +29,17 @@ const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
     setAlertAnswer(false)
   }
 
+  // useLayoutEffect(() => {
+  //   checkTokenAndRedirect(router)
+  // }, [])
+
   return (
     <Box sx={{ width: '100%' }}>
       {/* {resultDisplay ? (
         <InterestResult />
       ) : ( */}
       <InterestForm
+        user={user}
         dataSurvey={dataSurvey}
         collegianCode={collegianCode}
         setAlertAnswer={setAlertAnswer}
@@ -57,8 +66,25 @@ const InterestSurveyPage = ({ dataSurvey, collegianCode }) => {
 InterestSurveyPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
-export async function getServerSideProps() {
-  const res = await axios.get(url.BASE_URL + `/interest-surveys/${2}`)
+export async function getServerSideProps(context) {
+  const { req } = context
+
+  const checkIsLogin = await handleCheckLogin(req)
+  console.log('checkIsLogin', checkIsLogin)
+
+  if (!checkIsLogin) {
+    return {
+      redirect: {
+        destination: '/pages/login/', // if is not login return login path
+        permanent: false
+      }
+    }
+  }
+
+  const userByToken = await handleGetUser(req)
+  console.log('checkUser', userByToken)
+
+  const res = await axios.get(url.BASE_URL + `/interest-surveys/${userByToken?.curriculum_id}`)
 
   try {
     const checkAlreadyHaveSurvey = await axios.get(url.BASE_URL + `/interest-results/${userProfile.std_no}`)
@@ -83,7 +109,8 @@ export async function getServerSideProps() {
   return {
     props: {
       dataSurvey: res.data.data,
-      collegianCode: userProfile.std_no
+      collegianCode: userByToken?.col_code,
+      user: userByToken
     }
   }
 }
