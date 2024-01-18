@@ -8,9 +8,6 @@ import { useRouter } from 'next/router'
 // ** Axios
 import axios from 'axios'
 
-// ** Cookies
-import Cookies from 'js-cookie'
-
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -66,51 +63,6 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
-const setCookie = (name, value, expires) => {
-  document.cookie = `${name}=${value}; expires=${expires}; path=/`
-}
-
-const deleteCookie = name => {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
-}
-
-const api = axios.create({
-  baseURL: url.BASE_URL,
-  withCredentials: true // Include credentials (cookies) with cross-origin requests
-})
-
-const isCookieExpired = cookieName => {
-  const cookie = Cookies.get(cookieName)
-
-  if (!cookie) {
-    // Cookie not found
-    console.log(`Cookie '${cookieName}' not found.`)
-    return true
-  }
-
-  const expirationDate = new Date(cookie.expires)
-  const currentDate = new Date()
-
-  // Log the expiration date for debugging purposes
-  console.log(`Cookie '${cookieName}' expiration date: ${expirationDate}`)
-
-  // Compare the expiration date with the current date
-  return expirationDate < currentDate
-}
-
-const userInitialState = {
-  prefix: '',
-  first_name: '',
-  last_name: '',
-  CollegianCode: '',
-  email: '',
-  status: '',
-  curriculum: '',
-  section: '',
-  birthDate: '',
-  token: ''
-}
-
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState({
@@ -118,8 +70,6 @@ const LoginPage = () => {
     password: 'password',
     showPassword: false
   })
-
-  const [user, setUser] = useState(userInitialState)
 
   // ** Hook
   const theme = useTheme()
@@ -141,105 +91,15 @@ const LoginPage = () => {
     e.preventDefault()
 
     try {
-      const response = await api.post('/login', {
+      const response = await axios.post(`${url.BASE_URL}/login`, {
         email: values.email,
         password: values.password
       })
 
-      const { token } = response.data
-
-      console.log('Login successful')
-      Cookies.set('token', token.token, { expires: new Date(token.expires_at) })
-      setUser(userInitialState)
-      setUser(prevUser => ({
-        ...prevUser,
-        token: token.token
-      }))
-
+      console.log(response)
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
-      setUser(userInitialState)
-      // Handle the error, e.g., display an error message
-    }
-  }
-
-  const handleCheckLogin = async e => {
-    e.preventDefault()
-    const token = Cookies.get('token')
-
-    try {
-      const response = await api.get('/check-login', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      console.log('check-login', response)
-
-      // Handle the response as needed, e.g., redirect or update state
-    } catch (error) {
-      console.error(error)
-      setUser(userInitialState)
-      // Handle the error, e.g., display an error message
-    }
-  }
-
-  const handleLogout = async () => {
-    const token = Cookies.get('token')
-
-    try {
-      const response = await api.post(
-        'logout',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
-
-      console.log('Logout response', response)
-      Cookies.remove('token')
-      setUser(userInitialState)
-      // Handle the response as needed, e.g., redirect or update state
-    } catch (error) {
-      console.error('Logout error', error)
-      setUser(userInitialState)
-      // Handle the error, e.g., display an error message
-    }
-  }
-
-  const handleGetUser = async () => {
-    const token = Cookies.get('token')
-
-    try {
-      const response = await api.get('get-user-data', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      console.log('Get user response', response)
-      console.log('Get user response.data', response.data.data)
-      const dateOnly = response.data.data.col_birthday.split('T')[0]
-      const formattedDate = dateOnly.substring(0, 10)
-      console.log(formattedDate)
-      setUser(prevUser => ({
-        ...prevUser,
-        prefix: response.data.data.prefix,
-        first_name: response.data.data.col_first_name,
-        last_name: response.data.data.col_last_name,
-        CollegianCode: response.data.data.col_code,
-        email: response.data.data.col_email,
-        status: response.data.data.col_status,
-        curriculum: response.data.data.curriculum,
-        section: response.data.data.section,
-        birthDate: formattedDate
-      }))
-    } catch (error) {
-      console.error('Get user error', error)
-      setUser(userInitialState)
       // Handle the error, e.g., display an error message
     }
   }
@@ -409,40 +269,6 @@ const LoginPage = () => {
         </CardContent>
       </Card>
 
-      <Card sx={{ m: 5, p: 5 }}>
-        <CardContent sx={{ padding: theme => `${theme.spacing(2, 9)} !important` }}>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            Token: {user.token}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            login status: {user.status}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            name: {user.prefix} {user.first_name} {user.last_name}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            email: {user.email}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            CollegianCode: {user.CollegianCode}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            curriculum: {user.curriculum}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            section: {user.section}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            birthDate: {user.birthDate}
-          </Typography>
-
-          <Button onClick={handleCheckLogin}>check-login</Button>
-
-          <Button onClick={handleLogout}>logout</Button>
-
-          <Button onClick={handleGetUser}>get-user</Button>
-        </CardContent>
-      </Card>
       <FooterIllustrationsV1 />
     </Box>
   )
