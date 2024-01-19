@@ -195,7 +195,7 @@ const Subjects = () => {
               <Icon path={mdiPen} size={1} />
             </Button>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button
               color='secondary'
               variant='outlined'
@@ -206,7 +206,7 @@ const Subjects = () => {
             >
               สมรรถนะ
             </Button>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <Button
               color='secondary'
