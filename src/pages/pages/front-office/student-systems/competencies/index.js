@@ -253,5 +253,24 @@ function StudentComcetencies() {
   )
 }
 StudentComcetencies.getLayout = page => <BlankLayout>{page}</BlankLayout>
+// ssr
+export async function getServerSideProps(context) {
+  const { req } = context
 
+  const checkIsLogin = await handleCheckLogin(req)
+  console.log('checkIsLogin', checkIsLogin)
+
+  if (!checkIsLogin) {
+    return {
+      redirect: {
+        destination: '/pages/login/', // if is not login return login path
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
+}
 export default StudentComcetencies

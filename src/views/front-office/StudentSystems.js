@@ -22,7 +22,7 @@ const StudentSystems = () => {
         </Grid>
         <Grid item xs={12} sx={{ mt: 12 }}>
           <Button
-            onClick={() => router.push('front-office/student-systems')}
+            onClick={() => router.push('pages/login')}
             variant='contained'
             sx={{
               marginTop: '1rem',

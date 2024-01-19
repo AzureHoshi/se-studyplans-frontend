@@ -64,11 +64,12 @@ export const handleLogout = async () => {
 
     console.log('Logout response', response)
     Cookies.remove('token')
-    return '/pages/login/'
+    return true
 
     // Handle the response as needed, e.g., redirect or update state
   } catch (error) {
     console.error('Logout error', error)
+    return alert('Can not logout Err' + error)
     // Handle the error, e.g., display an error message
   }
 }

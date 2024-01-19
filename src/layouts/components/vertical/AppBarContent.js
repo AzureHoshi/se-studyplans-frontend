@@ -20,13 +20,15 @@ import { mdiExitToApp, mdiFlagCheckered, mdiFlagPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { userProfile } from 'src/dummy'
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { handleGetUser } from 'src/authentication'
+import { handleGetUser, handleLogout } from 'src/authentication'
 import { UserProvider, useUser } from 'src/hooks'
 import { useGlobalContext } from 'src/configs/context'
 import { CircleLoading } from 'src/components'
+import { useRouter } from 'next/router'
 
 const AppBarContent = props => {
   const { state, setUserData } = useGlobalContext()
+  const router = useRouter()
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility, hideTextSearch, hideUserAvatar, showStudentMenu } = props
   // ** Hook
@@ -36,6 +38,11 @@ const AppBarContent = props => {
     window.open('/pages/studyplansimulator/', '_blank')
     // router.push('/pages/studyplansimulator/')
   }
+  const LogoutFn = () => {
+    const checkLogout = handleLogout()
+    checkLogout && router.push('/pages/login')
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,6 +106,7 @@ const AppBarContent = props => {
       {showStudentMenu && (
         <Box sx={{ display: 'flex', alignItems: 'center', width: { xs: '100%', lg: 800 } }}>
           <Box
+            onClick={() => LogoutFn()}
             sx={{
               width: { xs: '40%', md: '20%' },
               height: 70,
@@ -106,7 +114,8 @@ const AppBarContent = props => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              ':hover': { background: grey[50] }
             }}
           >
             <Box sx={{ mr: 2, mt: 2 }}>
