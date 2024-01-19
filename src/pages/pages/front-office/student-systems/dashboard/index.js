@@ -32,10 +32,13 @@ import { userProfile } from 'src/dummy'
 import axios from 'axios'
 import router, { useRouter } from 'next/router'
 import { Selection } from 'src/components'
+import { handleCheckLogin, handleGetUser } from 'src/authentication'
+import { useGlobalContext } from 'src/configs/context'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, jobRecommended }) {
+  const { state } = useGlobalContext()
   const [openFeedBack, setOpenFeedBack] = useState(false)
   const [jobPosition, setJobPosition] = useState([])
   const [jobSelected, setJobSelected] = useState([])
@@ -60,7 +63,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         collegian_code: String(collegianCode),
         feedback_record_answer: String(text)
       })
-      // console.log('resFeedBack', resFeedBack)
+      console.log('resFeedBack', resFeedBack.data)
     } catch (error) {
       // console.log('err from feedback', error)
       isError = true
@@ -694,7 +697,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'center', m: 3.5, mt: 6 }}>
                     <Button
-                      onClick={() => handleSubmitFeedBack(feedback, userProfile.std_no)}
+                      onClick={() => handleSubmitFeedBack(feedback, state?.userData?.col_code)}
                       variant='contained'
                       fullWidth
                     >
@@ -713,11 +716,28 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
 StudentSystems.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { req } = context
+
+  const checkIsLogin = await handleCheckLogin(req)
+  console.log('checkIsLogin', checkIsLogin)
+
+  if (!checkIsLogin) {
+    return {
+      redirect: {
+        destination: '/pages/login/', // if is not login return login path
+        permanent: false
+      }
+    }
+  }
+
+  const userByToken = await handleGetUser(req)
+  console.log('checkUser', userByToken)
+
   const apiEndpoints = [
-    `/interest-results/${userProfile.std_no}`,
-    `/stu-acad-recs/${userProfile.std_no}`,
-    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
+    `/interest-results/${userByToken.col_code}`,
+    `/stu-acad-recs/${userByToken.col_code}`,
+    `/curriculum-structures-v2/${userByToken.curriculum_id}`,
     `/subject-job-relateds`
   ]
 

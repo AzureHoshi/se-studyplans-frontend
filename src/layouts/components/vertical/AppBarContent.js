@@ -19,11 +19,16 @@ import { Button, Hidden, Typography } from '@mui/material'
 import { mdiExitToApp, mdiFlagCheckered, mdiFlagPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { userProfile } from 'src/dummy'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { handleGetUser } from 'src/authentication'
+import { UserProvider, useUser } from 'src/hooks'
+import { useGlobalContext } from 'src/configs/context'
+import { CircleLoading } from 'src/components'
 
 const AppBarContent = props => {
+  const { state, setUserData } = useGlobalContext()
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility, hideTextSearch, hideUserAvatar, showStudentMenu } = props
-
   // ** Hook
   const hiddenSm = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
@@ -31,6 +36,45 @@ const AppBarContent = props => {
     window.open('/pages/studyplansimulator/', '_blank')
     // router.push('/pages/studyplansimulator/')
   }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userByToken = await handleGetUser(/* pass your req object here if needed */)
+        console.log('checkUser', userByToken)
+        setUserData(userByToken)
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  if (!state?.userData) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999 // Adjust the zIndex value as needed
+        }}
+      >
+        {/* You can customize the loading content */}
+        <div>
+          <CircleLoading />
+          <h1>Loading...</h1>
+          {/* Add additional loading content as needed */}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Box
       sx={{
@@ -116,7 +160,7 @@ const AppBarContent = props => {
                   mx: { xs: 'auto', md: 2 }
                 }}
               >
-                {userProfile.std_no}
+                {state?.userData?.col_code}
               </Typography>
               <Typography
                 variant='body2'
@@ -128,7 +172,7 @@ const AppBarContent = props => {
                   mx: { xs: 'auto', md: 0 }
                 }}
               >
-                {userProfile.first_name + ' ' + userProfile.last_name}
+                {state?.userData?.col_first_name + ' ' + state?.userData?.col_last_name}
               </Typography>
             </Box>
           </Box>

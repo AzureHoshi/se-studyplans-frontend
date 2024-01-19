@@ -16,16 +16,18 @@ import { grey } from '@mui/material/colors'
 import axios from 'axios'
 import { useLayoutEffect, useState } from 'react'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { useGlobalContext } from 'src/configs/context'
 import { url } from 'src/configs/urlConfig'
 import { userProfile } from 'src/dummy'
 import { CustomLayout } from 'src/views/custom-layout-student-systems'
 
 function StudentComcetencies() {
+  const { state } = useGlobalContext()
   const [planRecords, setPlanRecords] = useState([])
   const [openDesc, setOpenDesc] = useState(false)
 
   const [getSubPlo, setGetSubPlo] = useState([])
-  const URL_GET_PLAN_RECORDS = `${url.BASE_URL}/stu-acad-recs/${userProfile.std_no}`
+  const URL_GET_PLAN_RECORDS = `${url.BASE_URL}/stu-acad-recs/`
 
   const [dummy, setDummy] = useState([
     { year: 1, semester: 1 },
@@ -67,28 +69,30 @@ function StudentComcetencies() {
   }
 
   useLayoutEffect(() => {
-    try {
-      axios
-        .get(URL_GET_PLAN_RECORDS)
-        .then(response => {
-          // Handle successful response
-          console.log('records', response.data.data)
-          setPlanRecords(response.data.data)
-          const onlyYearArr = response.data.data.map(d => d.stu_acad_rec_year)
-          const addCurrentYear = handleCreateYearFromCurrentPlan(onlyYearArr, dummy)
-          setDummy(addCurrentYear)
-          console.log('addCurrentYear', addCurrentYear)
-        })
-        .catch(error => {
-          // Handle error from the axios request
-          console.error('Error fetching data:', error)
-        })
-    } catch (error) {
-      // Handle unexpected errors (e.g., syntax errors, etc.)
-      console.error('Unexpected error from plan records:', error)
-      setPlanRecords([])
+    if (state?.userData !== null) {
+      try {
+        axios
+          .get(URL_GET_PLAN_RECORDS + state?.userData?.col_code)
+          .then(response => {
+            // Handle successful response
+            console.log('records', response.data.data)
+            setPlanRecords(response.data.data)
+            const onlyYearArr = response.data.data.map(d => d.stu_acad_rec_year)
+            const addCurrentYear = handleCreateYearFromCurrentPlan(onlyYearArr, dummy)
+            setDummy(addCurrentYear)
+            console.log('addCurrentYear', addCurrentYear)
+          })
+          .catch(error => {
+            // Handle error from the axios request
+            console.error('Error fetching data:', error)
+          })
+      } catch (error) {
+        // Handle unexpected errors (e.g., syntax errors, etc.)
+        console.error('Unexpected error from plan records:', error)
+        setPlanRecords([])
+      }
     }
-  }, [])
+  }, [state])
 
   console.log('planRecords', planRecords)
 
@@ -138,27 +142,29 @@ function StudentComcetencies() {
                                 <Typography>-</Typography>
                               )}
                             </Grid> */}
-                            <Grid item xs={12} sm={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Hidden mdDown>
-                                <Typography variant='caption'> sub-plo</Typography>
-                              </Hidden>
-                              <Typography variant={'caption'} sx={{ cursor: 'pointer', fontWeight: 'bold' }}>
-                                [ {plan?.sub_plo_mappings?.map(mapSubPlo => mapSubPlo.sub_plo?.sub_plo_title + ',')}]
-                                <Typography
-                                  onClick={() => handleOpenSubPLODesc(plan)}
-                                  variant='caption'
-                                  sx={{
-                                    ml: 2,
-                                    '&:hover': {
-                                      cursor: 'pointer',
-                                      textDecoration: 'underline' // You can customize the styles as needed
-                                    }
-                                  }}
-                                >
-                                  คลิกแสดงคำอธิบาย
+                            {plan?.sub_plo_mappings?.length !== 0 && (
+                              <Grid item xs={12} sm={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Hidden mdDown>
+                                  <Typography variant='caption'> sub-plo</Typography>
+                                </Hidden>
+                                <Typography variant={'caption'} sx={{ cursor: 'pointer', fontWeight: 'bold' }}>
+                                  [ {plan?.sub_plo_mappings?.map(mapSubPlo => mapSubPlo.sub_plo?.sub_plo_title + ',')}]
+                                  <Typography
+                                    onClick={() => handleOpenSubPLODesc(plan)}
+                                    variant='caption'
+                                    sx={{
+                                      ml: 2,
+                                      '&:hover': {
+                                        cursor: 'pointer',
+                                        textDecoration: 'underline' // You can customize the styles as needed
+                                      }
+                                    }}
+                                  >
+                                    คลิกแสดงคำอธิบาย
+                                  </Typography>
                                 </Typography>
-                              </Typography>
-                            </Grid>
+                              </Grid>
+                            )}
                             <Grid item xs={12}>
                               {index + 1 !== dummy.length && <Divider sx={{ mt: 2 }} />}
                             </Grid>

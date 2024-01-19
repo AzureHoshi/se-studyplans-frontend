@@ -5,4 +5,4 @@ import useUpdate from './useUpdate'
 import useValidation from './useValidation'
 import useSearchText from './useSearchText'
 
-export { useDelete, useFetch, useSubmit, useUpdate, useValidation,useSearchText }
+export { useDelete, useFetch, useSubmit, useUpdate, useValidation, useSearchText }

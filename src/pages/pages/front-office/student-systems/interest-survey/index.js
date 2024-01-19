@@ -87,7 +87,7 @@ export async function getServerSideProps(context) {
   const res = await axios.get(url.BASE_URL + `/interest-surveys/${userByToken?.curriculum_id}`)
 
   try {
-    const checkAlreadyHaveSurvey = await axios.get(url.BASE_URL + `/interest-results/${userProfile.std_no}`)
+    const checkAlreadyHaveSurvey = await axios.get(url.BASE_URL + `/interest-results/${userByToken?.col_code}`)
     // Handle the response as needed
     console.log('Survey results:', checkAlreadyHaveSurvey.data)
     return {

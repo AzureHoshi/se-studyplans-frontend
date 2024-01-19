@@ -112,7 +112,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
       // setIsLoading(false)
       setTimeout(() => {
         axios
-          .get(url.BASE_URL + `/interest-results/${userProfile.std_no}`)
+          .get(url.BASE_URL + `/interest-results/${user?.col_code}`)
           .then(res => res.data && router.push('/pages/front-office/student-systems/dashboard/'))
           .catch(err => console.log('err from navigate to dashboard', err))
       }, 2000)

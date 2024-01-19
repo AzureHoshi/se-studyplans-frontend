@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -47,7 +47,8 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 // ** Urls
 import { url } from 'src/configs/urlConfig'
-import { handleCheckLogin } from 'src/authentication'
+import { handleCheckLogin, handleGetUser } from 'src/authentication'
+import { useGlobalContext } from 'src/configs/context'
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -121,6 +122,8 @@ const LoginPage = () => {
   })
 
   const [user, setUser] = useState(userInitialState)
+  const [LoginSuccess, setLoginSuccess] = useState(false)
+  const { state, setUserData } = useGlobalContext()
 
   // ** Hook
   const theme = useTheme()
@@ -156,7 +159,7 @@ const LoginPage = () => {
         ...prevUser,
         token: token.token
       }))
-      router.push('/pages/front-office/student-systems/interest-survey/')
+      setLoginSuccess(true)
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)
@@ -165,6 +168,33 @@ const LoginPage = () => {
       // Handle the error, e.g., display an error message
     }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!LoginSuccess) {
+        return
+      }
+
+      try {
+        const userByToken = await handleGetUser(/* pass your req object here if needed */)
+        console.log('checkUser', userByToken)
+        setUserData(userByToken)
+        router.push('/pages/front-office/student-systems/interest-survey/')
+        // Uncomment the following lines if you want to update the global user data
+        // if (userByToken) {
+        //   setUserData(userByToken);
+        // }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    fetchData()
+  }, [LoginSuccess])
+
+  // useEffect(() => {
+  //   console.log('State', state)
+  // }, [state])
 
   const handleCheckLogin = async e => {
     e.preventDefault()
@@ -213,39 +243,39 @@ const LoginPage = () => {
     }
   }
 
-  const handleGetUser = async () => {
-    const token = Cookies.get('token')
+  // const handleGetUser = async () => {
+  //   const token = Cookies.get('token')
 
-    try {
-      const response = await api.get('get-user-data', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+  //   try {
+  //     const response = await api.get('get-user-data', {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     })
 
-      console.log('Get user response', response)
-      console.log('Get user response.data', response.data.data)
-      const dateOnly = response.data.data.col_birthday.split('T')[0]
-      const formattedDate = dateOnly.substring(0, 10)
-      console.log(formattedDate)
-      setUser(prevUser => ({
-        ...prevUser,
-        prefix: response.data.data.prefix,
-        first_name: response.data.data.col_first_name,
-        last_name: response.data.data.col_last_name,
-        CollegianCode: response.data.data.col_code,
-        email: response.data.data.col_email,
-        status: response.data.data.col_status,
-        curriculum: response.data.data.curriculum,
-        section: response.data.data.section,
-        birthDate: formattedDate
-      }))
-    } catch (error) {
-      console.error('Get user error', error)
-      setUser(userInitialState)
-      // Handle the error, e.g., display an error message
-    }
-  }
+  //     console.log('Get user response', response)
+  //     console.log('Get user response.data', response.data.data)
+  //     const dateOnly = response.data.data.col_birthday.split('T')[0]
+  //     const formattedDate = dateOnly.substring(0, 10)
+  //     console.log(formattedDate)
+  //     setUser(prevUser => ({
+  //       ...prevUser,
+  //       prefix: response.data.data.prefix,
+  //       first_name: response.data.data.col_first_name,
+  //       last_name: response.data.data.col_last_name,
+  //       CollegianCode: response.data.data.col_code,
+  //       email: response.data.data.col_email,
+  //       status: response.data.data.col_status,
+  //       curriculum: response.data.data.curriculum,
+  //       section: response.data.data.section,
+  //       birthDate: formattedDate
+  //     }))
+  //   } catch (error) {
+  //     console.error('Get user error', error)
+  //     setUser(userInitialState)
+  //     // Handle the error, e.g., display an error message
+  //   }
+  // }
 
   return (
     <Box className='content-center'>

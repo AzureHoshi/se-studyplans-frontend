@@ -310,10 +310,10 @@ FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 export async function getServerSideProps() {
   const apiEndpoints = [
     `/subject-job-relateds`,
-    `/continue-subjects-curriculum/${userProfile.curriculum_id}`,
-    `/subjects-by-curriculum/${userProfile.curriculum_id}`,
-    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
-    `/study-plan-records/${userProfile.curriculum_id}`,
+    `/continue-subjects-curriculum/2`,
+    `/subjects-by-curriculum/2`,
+    `/curriculum-structures-v2/2`,
+    `/study-plan-records/2`,
     `/job-positions`
   ]
 

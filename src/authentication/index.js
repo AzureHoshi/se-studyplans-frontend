@@ -82,8 +82,8 @@ export const handleGetUser = async req => {
         Authorization: `Bearer ${token}`
       }
     })
-
-    return response.data.data
+    const userData = response.data.data
+    return userData
   } catch (error) {
     console.error('Get user error', error)
     return null

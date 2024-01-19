@@ -41,8 +41,11 @@ import { url } from 'src/configs/urlConfig'
 import { grey } from '@mui/material/colors'
 import { userProfile } from 'src/dummy'
 import { Selection } from 'src/components'
+import { useGlobalContext } from 'src/configs/context'
+import { handleCheckLogin, handleGetUser } from 'src/authentication'
 
 const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
+  const { state, setUserData } = useGlobalContext()
   const [switchContent, setSwitchContent] = useState(0) // for switch between search bar and display current term
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
   const [openAlertStatus, setOpenAlertStatus] = useState(false) // hide | show alert
@@ -182,7 +185,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const handleUndefined = totalCurrentSubjectCredit === undefined ? 0 : totalCurrentSubjectCredit
 
   useLayoutEffect(() => {
-    if (!userProfile) return
+    if (!state.userData) return
     if (StudyPlanByStdNo) {
       // create academic year item from year/semester rage from studyplan
       var storeLabel = termLabel
@@ -214,7 +217,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       const createTermLabel = storeLabel
         .filter(s => s.semester !== 3)
         .map(pre => {
-          const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+          const yearFromStdNo =
+            '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + (pre.year - 1)).toString()
           return {
             ...pre,
             label: String(pre.semester + '/' + yearFromStdNo)
@@ -250,7 +254,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       const createSummerLabel = storeSummerLabel
         .filter(s => s.semester === 3)
         .map(pre => {
-          const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+          const yearFromStdNo =
+            '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + (pre.year - 1)).toString()
           return {
             ...pre,
             label: String(pre.semester + '/' + yearFromStdNo)
@@ -268,7 +273,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       const createTermLabel = termLabel
         .filter(s => s.semester !== 3)
         .map(pre => {
-          const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+          const yearFromStdNo =
+            '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + (pre.year - 1)).toString()
           return {
             ...pre,
             label: String(pre.semester + '/' + yearFromStdNo)
@@ -278,7 +284,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       const createSummerLabel = summerLabel
         .filter(s => s.semester === 3)
         .map(pre => {
-          const yearFromStdNo = '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.year - 1)).toString()
+          const yearFromStdNo =
+            '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + (pre.year - 1)).toString()
           return {
             ...pre,
             label: String(pre.semester + '/' + yearFromStdNo)
@@ -289,7 +296,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       setTermLabel(createTermLabel)
       setCurrentTerm(createTermLabel[0].label)
     }
-  }, [userProfile, StudyPlanByStdNo])
+  }, [state, StudyPlanByStdNo])
 
   useLayoutEffect(() => {
     if (!StudyPlanByStdNo) {
@@ -338,7 +345,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
     const createTermLabelStd = StudyPlanByStdNo?.map(pre => {
       const yearFromStdNo =
-        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
+        '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + (pre.stu_acad_rec_year - 1)).toString()
       return {
         ...pre,
         subject_code: pre.subject.subject_code,
@@ -508,7 +515,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       // console.log('subjectSelected', subjectSelected)
 
       const newPostObject = {
-        collegian_code: String(userProfile.std_no),
+        collegian_code: String(state?.userData?.col_code),
         subject_id: String(subjectSelected.subject_id),
         stu_acad_rec_year: String(getTerm.year),
         stu_acad_rec_semester: String(getTerm.semester),
@@ -591,7 +598,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       }
 
       const newPostObject = {
-        collegian_code: String(userProfile.std_no),
+        collegian_code: String(state?.userData?.col_code),
         subject_id: String(subjectSelected.subject_id),
         stu_acad_rec_year: String(getTerm.year),
         stu_acad_rec_semester: String(getTerm.semester),
@@ -705,7 +712,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     if (!type) return
     if (type === 'normal') {
       let newYear =
-        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + termLabel[termLabel.length - 1].year).toString()
+        '25' + (parseInt(state?.userData?.col_code?.substring(0, 2)) + termLabel[termLabel.length - 1].year).toString()
       let newSemester = termLabel[termLabel.length - 1].semester === 2 ? 1 : 2
       let newTermLabel = String(newSemester + '/' + newYear)
       let result = window.confirm('ต้องสร้างปีการศึกษา ' + newTermLabel + ' เพิ่ม?')
@@ -729,7 +736,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       }
     } else if (type === 'summer') {
       let newYear =
-        '25' + (parseInt(userProfile.std_no.substring(0, 2)) + summerLabel[summerLabel.length - 1].year).toString()
+        '25' +
+        (parseInt(state?.userData?.col_code?.substring(0, 2)) + summerLabel[summerLabel.length - 1].year).toString()
 
       let newTermLabel = String(3 + '/' + newYear)
       let result = window.confirm('ต้องสร้างปีการศึกษา ' + newTermLabel + ' เพิ่ม?')
@@ -1176,12 +1184,29 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
 Studyplans.getLayout = page => <BlankLayout>{page}</BlankLayout>
 // ssr
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { req } = context
+
+  const checkIsLogin = await handleCheckLogin(req)
+  console.log('checkIsLogin', checkIsLogin)
+
+  if (!checkIsLogin) {
+    return {
+      redirect: {
+        destination: '/pages/login/', // if is not login return login path
+        permanent: false
+      }
+    }
+  }
+
+  const userByToken = await handleGetUser(req)
+  console.log('checkUser', userByToken)
+
   const apiEndpoints = [
-    `/subjects-by-curriculum/2`,
-    `/stu-acad-recs/${userProfile.std_no}`,
-    `/curriculum-structures-v2/${userProfile.curriculum_id}`,
-    `/interest-results/${userProfile.std_no}`
+    `/subjects-by-curriculum/${userByToken?.curriculum_id}`,
+    `/stu-acad-recs/${userByToken?.col_code}`,
+    `/curriculum-structures-v2/${userByToken?.curriculum_id}`,
+    `/interest-results/${userByToken?.col_code}`
   ]
 
   const apiData = []
