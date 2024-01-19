@@ -49,7 +49,7 @@ const AppBarContent = props => {
     fetchData()
   }, [])
 
-  if (!state?.userData) {
+  if (!state?.userData && showStudentMenu) {
     return (
       <div
         style={{
@@ -178,9 +178,9 @@ const AppBarContent = props => {
           </Box>
         </Box>
       )}
-      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* textsearch */}
-        {!hideTextSearch && (
+      {/* <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}> */}
+      {/* textsearch */}
+      {/* {!hideTextSearch && (
           <TextField
             size='small'
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
@@ -192,10 +192,10 @@ const AppBarContent = props => {
               )
             }}
           />
-        )}
-        {/* useravatar */}
-        {!hideUserAvatar && <UserDropdown />}
-      </Box>
+        )} */}
+      {/* useravatar */}
+      {/* {!hideUserAvatar && <UserDropdown />} */}
+      {/* </Box> */}
     </Box>
   )
 }
