@@ -25,18 +25,23 @@ export const isCookieExpired = () => {
   // Compare the expiration date with the current date
   return expirationDate < currentDate
 }
-
 export const handleCheckLogin = async req => {
-  //   e.preventDefault()
   if (req && !req?.headers?.cookie) return false
-  const token = req ? req?.headers?.cookie.replace('token=', '') : Cookies.get('token')
-  console.log('token', token)
+
+  const cookies = req ? req?.headers?.cookie : document.cookie
+  const tokenCookie = cookies.split(';').find(cookie => cookie.trim().startsWith('token='))
+
+  if (!tokenCookie) return false
+
+  const token = tokenCookie.replace('token=', '').trim()
+
   try {
     const response = await api.get('/check-login', {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
+
     console.log('check-login', response)
     return true
     // Handle the response as needed, e.g., redirect or update state
@@ -64,6 +69,7 @@ export const handleLogout = async () => {
 
     console.log('Logout response', response)
     Cookies.remove('token')
+    Cookies.remove('role')
     return true
 
     // Handle the response as needed, e.g., redirect or update state
@@ -76,13 +82,21 @@ export const handleLogout = async () => {
 
 export const handleGetUser = async req => {
   if (req && !req?.headers?.cookie) return false
-  const token = req ? req?.headers?.cookie?.replace('token=', '') : Cookies.get('token')
+
+  const cookies = req ? req?.headers?.cookie : document.cookie
+  const tokenCookie = cookies.split(';').find(cookie => cookie.trim().startsWith('token='))
+
+  if (!tokenCookie) return false
+
+  const token = tokenCookie.replace('token=', '').trim()
+
   try {
     const response = await api.get('get-user-data', {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
+
     const userData = response.data.data
     return userData
   } catch (error) {
@@ -90,6 +104,11 @@ export const handleGetUser = async req => {
     return null
     // Handle the error, e.g., display an error message
   }
+}
+
+export const handleGetRole = () => {
+  const role = Cookies.get('role')
+  return role
 }
 
 // export const checkTokenAndRedirect = router => {

@@ -150,10 +150,11 @@ const LoginPage = () => {
         password: values.password
       })
 
-      const { token } = response.data
+      const { token, role } = response.data
 
       console.log('Login successful')
       Cookies.set('token', token.token, { expires: new Date(token.expires_at) })
+      Cookies.set('role', role)
       setUser(userInitialState)
       setUser(prevUser => ({
         ...prevUser,

@@ -1,6 +1,6 @@
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -27,6 +27,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // ** Global css styles
 import '../../styles/globals.css'
 import { GlobalProvider } from 'src/configs/context'
+import { handleGetRole, handleGetUser } from 'src/authentication'
+import { useEffect } from 'react'
 
 const clientSideEmotionCache = createEmotionCache()
 

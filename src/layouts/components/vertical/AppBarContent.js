@@ -20,7 +20,7 @@ import { mdiExitToApp, mdiFlagCheckered, mdiFlagPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { userProfile } from 'src/dummy'
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { handleGetUser, handleLogout } from 'src/authentication'
+import { handleGetRole, handleGetUser, handleLogout } from 'src/authentication'
 import { UserProvider, useUser } from 'src/hooks'
 import { useGlobalContext } from 'src/configs/context'
 import { CircleLoading } from 'src/components'
@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 
 const AppBarContent = props => {
   const { state, setUserData } = useGlobalContext()
+  const userRole = handleGetRole()
   const router = useRouter()
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility, hideTextSearch, hideUserAvatar, showStudentMenu } = props
@@ -44,7 +45,7 @@ const AppBarContent = props => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const checkStudent = async () => {
       try {
         const userByToken = await handleGetUser(/* pass your req object here if needed */)
         console.log('checkUser', userByToken)
@@ -53,8 +54,15 @@ const AppBarContent = props => {
         console.error('Error fetching user data:', error)
       }
     }
-    fetchData()
-  }, [])
+    if (showStudentMenu) {
+      checkStudent()
+    } else {
+      console.log('userRole', userRole)
+      if (userRole == 0 || userRole === undefined) {
+        router.push('/pages/back-office')
+      }
+    }
+  }, [showStudentMenu, userRole])
 
   if (!state?.userData && showStudentMenu) {
     return (
