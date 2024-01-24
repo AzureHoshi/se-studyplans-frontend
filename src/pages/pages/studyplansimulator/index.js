@@ -20,9 +20,12 @@ import {
   Stack,
   Alert,
   AlertTitle,
-  Tooltip
+  Tooltip,
+  FormControl,
+  InputLabel,
+  Select
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { green, grey } from '@mui/material/colors'
 import { mdiClose, mdiTrashCan, mdiBookEducation, mdiAccount, mdiChevronLeft } from '@mdi/js'
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import Icon from '@mdi/react'
@@ -36,9 +39,12 @@ import axios from 'axios'
 // ? import for export csv
 import Papa from 'papaparse'
 import Curriculums from '../masterdata/curriculums'
+import { studyPlanForSimulator } from 'src/dummy'
+import { EmailBox } from 'mdi-material-ui'
 
 function StudyPlanSimulatorPage() {
   const [SubjectsTemp, setSubjectsTemp] = useState([])
+  const [exPlanSelected, setExPlanSelected] = useState(0)
 
   const [categoriesSubject, setCategoriesSubject] = useState([])
   const [typesSubject, setTypesSubject] = useState([])
@@ -95,7 +101,13 @@ function StudyPlanSimulatorPage() {
     reFetch: reFetchCurriculumStructures
   } = useFetch(URL_GET_CURRICULUM_STRUCTURES + 2)
 
-  console.log('CurriculumStructures', CurriculumStructures)
+  const [tempCurriculumStructures, setTempCurriculumStructures] = useState([])
+
+  useEffect(() => {
+    if (!CurriculumStructuresLoading) {
+      setTempCurriculumStructures(CurriculumStructures)
+    }
+  }, [CurriculumStructuresLoading])
   const {
     error: JobsError,
     data: Jobs,
@@ -259,6 +271,16 @@ function StudyPlanSimulatorPage() {
   //   console.log('groupsSelected', groupsSelected)
   // }, [groupsSelected])
 
+  useEffect(() => {
+    if (exPlanSelected === 0) {
+      return
+    }
+
+    initialSimsubjectsBFSelectExPlan()
+
+    handleSelectExPlan()
+  }, [exPlanSelected])
+
   const searchSubjectColumns = ['subject_code', 'subject_name_th', 'subject_name_en']
 
   const [page, setPage] = useState(0)
@@ -409,61 +431,7 @@ function StudyPlanSimulatorPage() {
         }
       }
     }
-    // else {
-    //   if (
-    //     !simSubjects.find(s => s.subject_id === findSubject?.subject_id) &&
-    //     findSubject?.subject_credit + totalCredit <= 25 &&
-    //   ) {
-    //     const newObject = {
-    //       term: value + 1,
-    //       subject_id: findSubject?.subject_id,
-    //       subject_code: findSubject?.subject_code,
-    //       subject_name_th: findSubject?.subject_name_th,
-    //       subject_name_en: findSubject?.subject_name_en,
-    //       subject_credit: findSubject?.subject_credit,
-    //       subject_structures: findSubject?.subject_structures
-    //     }
-    //     const results = [...simSubjects, newObject]
-    //     setSimSubjects(results)
-    //     // console.log('added sim subject', results)
-
-    //     // update count scope with parent
-    //     const fintoUpdateScope = CurriculumStructures?.filter(
-    //       scope => scope.subjectGroup?.subject_group_id === findSubject?.subject_structures[0]?.subject_group_id
-    //     ).map(pre => ({
-    //       ...pre,
-    //       countScope:
-    //         pre.countScope !== undefined && !isNaN(pre.countScope)
-    //           ? pre.countScope + findSubject?.subject_credit
-    //           : findSubject?.subject_credit
-    //     }))
-    //     if (fintoUpdateScope) {
-    //       const tempStructure = CurriculumStructures?.filter(
-    //         old => old.subjectGroup?.subject_group_id !== findSubject?.subject_structures[0]?.subject_group_id
-    //       )
-    //       const newUpdate = [fintoUpdateScope[0], ...tempStructure]
-    //       console.log('newUpdate', newUpdate)
-    //       setCurriculumStructures(
-    //         newUpdate.sort(
-    //           (a, b) =>
-    //             a.countScope - b.countScope &&
-    //             a.subjectCategory?.subject_category_id - b.subjectCategory?.subject_category_id
-    //         )
-    //       )
-    //     }
-    //     setSubjectSelected(findSubject)
-    //     setOpenSnack(true)
-    //   } else if (findSubject?.subject_credit + totalCredit >= 25) {
-    //     alert('this total credit is overflow (total credit must lest than 21 or equal)')
-    //   } else if (simSubjects.find(s => s.subject_id === findSubject?.subject_id)) {
-    //     alert('this subject already in simulator')
-    //   }
-    // }
   }
-
-  // useEffect(() => {
-  //   console.log('CurriculumStructures', CurriculumStructures)
-  // }, [CurriculumStructures])
 
   useEffect(() => {
     handleCheckLimitCredit(value + 1)
@@ -496,19 +464,6 @@ function StudyPlanSimulatorPage() {
     var checkButOk = true
     // Filter out the subject with the given subject_id
     if (hasChildren.length > 0) {
-      // hasChildren?.map(children => {
-      //   const foundChildren = simSubjects?.filter(sim => sim.subject_id === children.subject_id)
-      //   console.log('foundChildren', foundChildren)
-      //   if (foundChildren.length > 0) {
-      //     const childrenCode = foundChildren.map(child => child.subject_code).join(', ')
-      //     alert(
-      //       `ไม่สามารถลบวิชานี้ได้เนื่องจากมีวิชาต่อเนื่องในแผนการเรียน ลบวิชาต่อเนื่องที่เกี่ยวข้องก่อนที่จะลบวิชานี้ : ${childrenCode}`
-      //     )
-      //   } else {
-      //     console.log('this ok to delete')
-      //     checkButOk = true
-      //   }
-      // })
       hasChildren?.map(children => {
         for (const child of simSubjects) {
           if (child.subject_id === children.subject_id) {
@@ -530,15 +485,8 @@ function StudyPlanSimulatorPage() {
         }
       })
     }
-    // if (!checkButOk) {
-    //   console.log('this is okay to delete')
-    //   checkButOk = true
-    // }
-
     if (checkButOk) {
       const updatedSimSubjects = simSubjects.filter(s => s.subject_id !== subject?.subject_id)
-      // update count scope
-      // console.log('subject', subject)
       if (subject?.subject_structures[0]?.subjectGroup !== undefined) {
         const finetoUpdateScope = CurriculumStructures.filter(
           scope =>
@@ -598,11 +546,6 @@ function StudyPlanSimulatorPage() {
     }
   }
 
-  // useEffect(() => {
-  //   console.log(simSubjects)
-  //   // handleUpdateScope()
-  // }, [simSubjects])
-
   const [displaySubjects, setDisplaySubjects] = useState(true)
   const [displayScope, setDisplayCompetencies] = useState(false)
 
@@ -635,6 +578,158 @@ function StudyPlanSimulatorPage() {
 
   const handleSearchChange = text => {
     setSearchText(text)
+  }
+
+  const initialSimsubjectsBFSelectExPlan = clearFuntion => {
+    if (simSubjects?.length > 0) {
+      let result = window.confirm(
+        clearFuntion
+          ? 'ต้องการลบข้อมูลการจำลองทั้งหมด?'
+          : 'ต้องการแทนที่ข้อมูลการจำลองแผนทั้งหมดด้วยตัวอย่างแผนการเรียน?'
+      )
+      if (result) {
+        setTabs(['Term 1'])
+        setSimSubjects([])
+        setCurriculumStructures(tempCurriculumStructures)
+        // console.log('tempCurristruc', tempCurriculumStructures)
+        setValue(0)
+      } else {
+        return
+      }
+    } else {
+      return
+    }
+  }
+
+  const handleSelectExPlan = () => {
+    if (exPlanSelected === 0) {
+      return
+    }
+
+    const planByIndex = Object.values(studyPlanForSimulator)?.find((data, index) => index + 1 === exPlanSelected)
+
+    if (planByIndex !== undefined) {
+      // find maxTerm of planByIndex
+      const maxTerm = planByIndex?.plan_data?.reduce((max, current) => {
+        // If current term is greater than max, update max
+        return current.term > max ? current.term : max
+      }, 0)
+      const newTabs = []
+      for (let i = 0; i < maxTerm; i++) {
+        const newTabIndex = newTabs.length + 1
+        const newTabLabel = `Term ${newTabIndex}`
+        newTabs.push(newTabLabel)
+        handleCheckLimitCredit(newTabIndex)
+      }
+
+      setTabs([...newTabs])
+      setValue(tabs.length - 1) // Switch to the last newly added tab
+      setDisplaySubjects(true)
+      setDisplayCompetencies(false)
+      setSimSubjects(planByIndex?.plan_data)
+
+      // update scope
+
+      const newUpdates = []
+      planByIndex?.plan_data?.map(s => {
+        // console.log(s)
+        if (s?.subject_structures[0]?.subjectGroup !== undefined) {
+          const finetoUpdateScope = tempCurriculumStructures
+            .filter(
+              scope => scope.subjectGroup?.subject_group_id === s?.subject_structures[0]?.subjectGroup?.subject_group_id
+            )
+            .map(pre => ({
+              ...pre,
+              countScope:
+                pre.countScope !== undefined && !isNaN(pre.countScope)
+                  ? pre.countScope + s?.subject_credit
+                  : s?.subject_credit || 0
+            }))
+
+          if (finetoUpdateScope) {
+            const newUpdate = finetoUpdateScope[0]
+            // console.log('newUpdate1', newUpdate)
+            newUpdates.push(newUpdate)
+          }
+        } else {
+          const finetoUpdateScope = tempCurriculumStructures
+            .filter(scope => scope.subjectGroup?.subject_group_id === s?.subject_structures[0]?.subject_group_id)
+            .map(pre => ({
+              ...pre,
+              // countScope: pre.countScope !== s?.subject_credit ? pre.countScope - s?.subject_credit : s?.subject_credit
+              countScope: s?.subject_credit
+            }))
+          if (finetoUpdateScope) {
+            const newUpdate = finetoUpdateScope[0]
+            // console.log('newUpdate2', newUpdate)
+            newUpdates.push(newUpdate)
+          }
+        }
+      })
+      // console.log('newUpdates', newUpdates)
+      // console.log('All newUpdate', newUpdates)
+      // Create a map to store the sum of countScope for each curriculum_structures_v2_id in newUpdates
+      const sumMap = {}
+
+      // Count occurrences of each curriculum_structures_v2_id in newUpdates
+      const occurrencesMap = {}
+
+      // Sum countScope for each curriculum_structures_v2_id in newUpdates
+      newUpdates.forEach(update => {
+        const curriculumStructuresV2Id = parseInt(update.curriculum_structures_v2_id)
+        // console.log('update.countScope', update.countScope)
+        // Accumulate countScope for each unique curriculum_structures_v2_id
+        sumMap[curriculumStructuresV2Id] = (sumMap[curriculumStructuresV2Id] || 0) + update.countScope
+
+        // Count occurrences of each curriculum_structures_v2_id
+        occurrencesMap[curriculumStructuresV2Id] = (occurrencesMap[curriculumStructuresV2Id] || 0) + 1
+      })
+
+      // Create an array with unique curriculum_structures_v2_id and set countScope to corresponding sums or keep original countScope
+      const uniqueNewUpdates = Object.keys(sumMap).map(curriculumStructuresV2Id => {
+        const matchingCurriculumStructure = newUpdates.find(
+          structure => structure.curriculum_structures_v2_id === parseInt(curriculumStructuresV2Id)
+        )
+
+        if (matchingCurriculumStructure) {
+          return {
+            ...matchingCurriculumStructure,
+            countScope: sumMap[curriculumStructuresV2Id]
+          }
+        } else {
+          // Handle the case where there is no matching structure (optional)
+          console.warn(
+            `No matching CurriculumStructure found for curriculum_structures_v2_id ${curriculumStructuresV2Id}`
+          )
+          return null // or provide default values
+        }
+      })
+
+      // Log the updated newUpdates array
+      // console.log('Updated newUpdates array with unique curriculum_structures_v2_id:', uniqueNewUpdates)
+
+      // Update curriculumStructures state based on uniqueNewUpdates
+      const updatedCurriculumStructures = tempCurriculumStructures.map(item => {
+        const curriculumStructuresV2Id = item.curriculum_structures_v2_id
+        // console.log('curriculumStructuresV2Id', curriculumStructuresV2Id)
+
+        // Find the corresponding entry in uniqueNewUpdates
+        const uniqueUpdate = uniqueNewUpdates.find(
+          update => update.curriculum_structures_v2_id === curriculumStructuresV2Id
+        )
+        if (uniqueUpdate) {
+          console.log('uniq update', uniqueUpdate)
+        }
+        // Update countScope based on the difference
+        return {
+          ...item,
+          countScope: uniqueUpdate !== undefined ? uniqueUpdate.countScope : item.countScope
+        }
+      })
+      // console.log('updatedCurriculumStructures', updatedCurriculumStructures)
+
+      setCurriculumStructures(updatedCurriculumStructures)
+    }
   }
 
   const handleAddResultSubjectList = subject => {
@@ -1979,6 +2074,26 @@ function StudyPlanSimulatorPage() {
                       SE 2566
                     </Typography>
                   </Box>
+                  <Box sx={{ pt: 3.5, width: '100%', display: 'flex', flexDirection: 'row' }}>
+                    <Select
+                      fullWidth
+                      size='small'
+                      labelId='simple-dropdown-labels'
+                      id='simple-dropdown'
+                      value={exPlanSelected}
+                      onChange={e => setExPlanSelected(e.target.value)}
+                    >
+                      <MenuItem value={0}>เลือกตัวอย่างแผนการเรียน</MenuItem>
+                      {studyPlanForSimulator?.map((dummyPlan, index) => (
+                        <MenuItem key={index} value={index + 1}>
+                          {dummyPlan?.plan_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <Button sx={{ ml: 2 }} variant='outlined' onClick={() => initialSimsubjectsBFSelectExPlan(1)}>
+                      Clear
+                    </Button>
+                  </Box>
                   <Box>
                     <Box sx={{ overflowX: 'auto' }}>
                       <Tabs
@@ -2252,7 +2367,7 @@ function StudyPlanSimulatorPage() {
                                                   case1Result.countScope < case1Result?.credit_total
                                                     ? 'orange'
                                                     : case1Result.countScope === case1Result.credit_total
-                                                    ? 'lightgreen'
+                                                    ? green[400]
                                                     : case1Result.countScope > case1Result?.credit_total
                                                     ? 'red'
                                                     : null
