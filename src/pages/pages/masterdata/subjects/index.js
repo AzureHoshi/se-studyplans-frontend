@@ -177,12 +177,12 @@ const Subjects = () => {
       headerName: 'Credit',
       width: 130
     },
-    {
-      field: 'subject_groups',
-      headerName: 'Group',
-      width: 300,
-      valueGetter: params => params.row?.subject_groups?.subject_group_name
-    },
+    // {
+    //   field: 'subject_groups',
+    //   headerName: 'Group',
+    //   width: 300,
+    //   valueGetter: params => params.row?.subject_groups?.subject_group_name
+    // },
 
     {
       field: 'fn',
@@ -238,7 +238,7 @@ const Subjects = () => {
                 <Icon path={mdiFilter} size={1} />
               </Box>
             </Hidden>
-            <Selection
+            {/* <Selection
               ml={2}
               label={'SubjectGroup'}
               height={40}
@@ -251,7 +251,7 @@ const Subjects = () => {
                   {sjg.subject_group_name}
                 </MenuItem>
               ))}
-            />
+            /> */}
           </Box>
         </Grid>
         <Grid item xs={12} sm={4} md={4} lg={2}>

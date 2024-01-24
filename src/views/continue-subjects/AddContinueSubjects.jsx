@@ -115,19 +115,28 @@ function AddContinueSubjects({ open, handleClose, subject }) {
         .catch(err => console.log(err))
   }
 
-  const updateLocalChildren = newChildren => {
-    const ContinueTemp = ContinueSubjects
-    if (ContinueTemp[0]?.children?.length > 0) {
-      const updateChildren = Array(...ContinueTemp[0]?.children)?.concat(newChildren)
-      ContinueTemp[0]?.children = updateChildren
-      setContinueSubjects(ContinueTemp)
-      console.log('test update children 1', updateChildren)
-    } else {
-      reFetchContinueSubjects()
-      console.log('test update children 2', Array(ContinueTemp))
-    }
+  // const updateLocalChildren = newChildren => {
+  //   var ContinueTemp = ContinueSubjects
+  //   if (ContinueTemp && ContinueTemp[0]?.children?.length > 0) {
+  //     var updateChildren = Array(...ContinueTemp[0]?.children)?.concat(newChildren)
+  //     ContinueTemp[0]?.children = updateChildren
+  //     setContinueSubjects(ContinueTemp)
+  //     console.log('test update children 1', updateChildren)
+  //   } else {
+  //     reFetchContinueSubjects()
+  //     console.log('test update children 2', Array(ContinueTemp))
+  //   }
+  // }
+const updateLocalChildren = newChildren => {
+  if (ContinueSubjects && ContinueSubjects[0]?.children?.length > 0) {
+    const updatedChildren = ContinueSubjects[0].children.concat(newChildren);
+    setContinueSubjects([{ ...ContinueSubjects[0], children: updatedChildren }]);
+    console.log('test update children 1', updatedChildren);
+  } else {
+    reFetchContinueSubjects();
+    console.log('test update children 2', ContinueSubjects);
   }
-
+};
 
   const deleteChildren = children => {
     setIsDone(false)

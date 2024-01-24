@@ -90,7 +90,7 @@ function EditSubjectModal({ state, open, handleClose, curriculumId, subjectGroup
         </Box>
         <DialogContent sx={{ display: 'flex' }}>
           <Grid container spacing={6}>
-            <Grid item xs={12} sm={12} md={12} lg={6}>
+            {/* <Grid item xs={12} sm={12} md={12} lg={6}>
               <Selection
                 width={'100%'}
                 firstItemText={'Choose Subject Group*'}
@@ -102,7 +102,7 @@ function EditSubjectModal({ state, open, handleClose, curriculumId, subjectGroup
                   </MenuItem>
                 ))}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={12} md={12} lg={6}>
               <TextField
                 fullWidth
