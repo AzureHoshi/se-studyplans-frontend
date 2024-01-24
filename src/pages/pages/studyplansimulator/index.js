@@ -35,6 +35,7 @@ import axios from 'axios'
 
 // ? import for export csv
 import Papa from 'papaparse'
+import Curriculums from '../masterdata/curriculums'
 
 function StudyPlanSimulatorPage() {
   const [SubjectsTemp, setSubjectsTemp] = useState([])
@@ -54,6 +55,7 @@ function StudyPlanSimulatorPage() {
   const [openResult, setOpenResult] = useState(false)
 
   const [totalCredit, setTotalCredit] = useState(0)
+  const [totalCreditByScope, setTotalCreditByScope] = useState(0)
 
   const [dialogStatus, setDialogStatus] = useState(0) // if 0 show Details, 1 show alert when subject has parent
 
@@ -93,6 +95,7 @@ function StudyPlanSimulatorPage() {
     reFetch: reFetchCurriculumStructures
   } = useFetch(URL_GET_CURRICULUM_STRUCTURES + 2)
 
+  console.log('CurriculumStructures', CurriculumStructures)
   const {
     error: JobsError,
     data: Jobs,
@@ -465,6 +468,17 @@ function StudyPlanSimulatorPage() {
   useEffect(() => {
     handleCheckLimitCredit(value + 1)
   }, [simSubjects])
+
+  useEffect(() => {
+    if (CurriculumStructures.length > 0) {
+      console.log(Object.values(CurriculumStructures))
+      const getTotalCredit = CurriculumStructures.reduce((sum, currentValue) => {
+        // Adding the 'value' property of each object to the accumulator
+        return sum + currentValue.credit_total
+      }, 0)
+      setTotalCreditByScope(getTotalCredit)
+    }
+  }, [CurriculumStructures])
 
   const handleRemoveSimSubject = async subject => {
     console.log('subject', subject)
@@ -2107,7 +2121,14 @@ function StudyPlanSimulatorPage() {
                             <Grid item xs={12}>
                               <Box sx={{ width: '100%', textAlign: 'end' }}>
                                 <Typography sx={{ mr: { xs: 6, sm: 6, lg: 3 } }} variant='body2'>
-                                  Credit
+                                  {simSubjects.reduce((accumulator, currentValue) => {
+                                    // Adding the 'value' property of each object to the accumulator
+                                    return accumulator + currentValue.subject_credit
+                                  }, 0) +
+                                    '/' +
+                                    totalCreditByScope +
+                                    ' '}
+                                  Total Credit
                                 </Typography>
                               </Box>
                               <Box sx={{ width: '100%', px: 4 }}>
