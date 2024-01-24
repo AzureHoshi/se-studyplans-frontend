@@ -894,35 +894,38 @@ function StudyPlanSimulatorPage() {
 
   const handleExportCSV = () => {
     console.log('simSubjects', simSubjects)
+    if (simSubjects?.length !== 0) {
+      const filteredData = simSubjects.map(item => ({
+        term: item.term,
+        subject_code: item.subject_code,
+        subject_name_th: item.subject_name_th,
+        subject_name_en: item.subject_name_en,
+        subject_credit: item.subject_credit
+      }))
 
-    const filteredData = simSubjects.map(item => ({
-      term: item.term,
-      subject_code: item.subject_code,
-      subject_name_th: item.subject_name_th,
-      subject_name_en: item.subject_name_en,
-      subject_credit: item.subject_credit
-    }))
+      const csvData = Papa.unparse(filteredData, {
+        header: true // แสดงหัวคอลัมน์
+      })
 
-    const csvData = Papa.unparse(filteredData, {
-      header: true // แสดงหัวคอลัมน์
-    })
+      // สร้างลิงก์สำหรับดาวน์โหลดไฟล์ CSV
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8-sig;' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = 'exported_data.csv'
 
-    // สร้างลิงก์สำหรับดาวน์โหลดไฟล์ CSV
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8-sig;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = 'exported_data.csv'
+      console.log('link', link)
 
-    console.log('link', link)
+      // เพิ่มลิงก์ลงใน DOM
+      document.body.appendChild(link)
 
-    // เพิ่มลิงก์ลงใน DOM
-    document.body.appendChild(link)
+      // คลิกลิงก์เพื่อเริ่มดาวน์โหลด
+      link.click()
 
-    // คลิกลิงก์เพื่อเริ่มดาวน์โหลด
-    link.click()
-
-    // ลบลิงก์ที่เพิ่มลงใน DOM เพื่อทำความสะอาดหลังจากดาวน์โหลดเสร็จสิ้น.
-    document.body.removeChild(link)
+      // ลบลิงก์ที่เพิ่มลงใน DOM เพื่อทำความสะอาดหลังจากดาวน์โหลดเสร็จสิ้น.
+      document.body.removeChild(link)
+    } else {
+      alert('กรุณาจำลองแผนการเรียนก่อน Export ไฟล์ CSV')
+    }
   }
 
   const SelectResultTypeDisplay = (
@@ -2195,7 +2198,21 @@ function StudyPlanSimulatorPage() {
                                             <Typography variant='body2'>
                                               {case1Result.subjectGroup?.subject_group_name}
                                             </Typography>
-                                            <Typography variant='body2' display='inline'>
+                                            <Typography
+                                              variant='body2'
+                                              display='inline'
+                                              sx={{
+                                                color:
+                                                  case1Result.countScope !== 0 &&
+                                                  case1Result.countScope < case1Result?.credit_total
+                                                    ? 'orange'
+                                                    : case1Result.countScope === case1Result.credit_total
+                                                    ? 'lightgreen'
+                                                    : case1Result.countScope > case1Result?.credit_total
+                                                    ? 'red'
+                                                    : null
+                                              }}
+                                            >
                                               {case1Result.countScope > case1Result.credit_total && (
                                                 <Typography
                                                   variant='body2'
@@ -2294,9 +2311,9 @@ function StudyPlanSimulatorPage() {
               >
                 Open test
               </Button> */}
-                  <Button variant='contained' sx={{ width: '100%' }} onClick={handleOpenResult}>
+                  {/* <Button variant='contained' sx={{ width: '100%' }} onClick={handleOpenResult}>
                     Simulation Results
-                  </Button>
+                  </Button> */}
                   <Button variant='contained' sx={{ width: '100%', my: 2 }} onClick={handleExportCSV}>
                     Export CSV
                   </Button>
