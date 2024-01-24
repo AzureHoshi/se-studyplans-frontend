@@ -492,25 +492,48 @@ function StudyPlanSimulatorPage() {
       .catch(err => console.log('err from handle delete', err))
 
     console.log('hasChildren', hasChildren)
-    var checkButOk = false
+    var checkButOk = true
     // Filter out the subject with the given subject_id
     if (hasChildren.length > 0) {
+      // hasChildren?.map(children => {
+      //   const foundChildren = simSubjects?.filter(sim => sim.subject_id === children.subject_id)
+      //   console.log('foundChildren', foundChildren)
+      //   if (foundChildren.length > 0) {
+      //     const childrenCode = foundChildren.map(child => child.subject_code).join(', ')
+      //     alert(
+      //       `ไม่สามารถลบวิชานี้ได้เนื่องจากมีวิชาต่อเนื่องในแผนการเรียน ลบวิชาต่อเนื่องที่เกี่ยวข้องก่อนที่จะลบวิชานี้ : ${childrenCode}`
+      //     )
+      //   } else {
+      //     console.log('this ok to delete')
+      //     checkButOk = true
+      //   }
+      // })
       hasChildren?.map(children => {
-        const foundChildren = simSubjects?.filter(sim => sim.subject_id === children.subject_id)
-        console.log('foundChildren', foundChildren)
-        if (foundChildren.length > 0) {
-          const childrenCode = foundChildren.map(child => child.subject_code).join(', ')
-          alert(
-            `ไม่สามารถลบวิชานี้ได้เนื่องจากมีวิชาต่อเนื่องในแผนการเรียน ลบวิชาต่อเนื่องที่เกี่ยวข้องก่อนที่จะลบวิชานี้ : ${childrenCode}`
-          )
-        } else {
-          console.log('this ok to delete')
-          checkButOk = true
+        for (const child of simSubjects) {
+          if (child.subject_id === children.subject_id) {
+            const foundChildren = simSubjects.filter(sim => sim.subject_id === children.subject_id)
+
+            if (foundChildren.length > 0) {
+              const childrenCode = foundChildren.map(child => child.subject_code).join(', ')
+              alert(
+                `ไม่สามารถลบวิชานี้ได้เนื่องจากมีวิชาต่อเนื่องในแผนการเรียน ลบวิชาต่อเนื่องที่เกี่ยวข้องก่อนที่จะลบวิชานี้ : ${childrenCode}`
+              )
+
+              // Set checkButOk to false since a match was found
+              checkButOk = false
+            }
+
+            // Break out of the loop when the condition is true
+            break
+          }
         }
       })
-    } else {
-      checkButOk = true
     }
+    // if (!checkButOk) {
+    //   console.log('this is okay to delete')
+    //   checkButOk = true
+    // }
+
     if (checkButOk) {
       const updatedSimSubjects = simSubjects.filter(s => s.subject_id !== subject?.subject_id)
       // update count scope
