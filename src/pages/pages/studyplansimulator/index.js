@@ -33,6 +33,9 @@ import { url } from 'src/configs/urlConfig'
 import { useFetch, useSearchText as UseSearchText } from 'src/hooks'
 import axios from 'axios'
 
+// ? import for export csv
+import Papa from 'papaparse'
+
 function StudyPlanSimulatorPage() {
   const [SubjectsTemp, setSubjectsTemp] = useState([])
 
@@ -887,6 +890,39 @@ function StudyPlanSimulatorPage() {
       const newValue = Math.min(value, renamedTabs.length - 1)
       setValue(newValue)
     }
+  }
+
+  const handleExportCSV = () => {
+    console.log('simSubjects', simSubjects)
+
+    const filteredData = simSubjects.map(item => ({
+      term: item.term,
+      subject_code: item.subject_code,
+      subject_name_th: item.subject_name_th,
+      subject_name_en: item.subject_name_en,
+      subject_credit: item.subject_credit
+    }))
+
+    const csvData = Papa.unparse(filteredData, {
+      header: true // แสดงหัวคอลัมน์
+    })
+
+    // สร้างลิงก์สำหรับดาวน์โหลดไฟล์ CSV
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8-sig;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = 'exported_data.csv'
+
+    console.log('link', link)
+
+    // เพิ่มลิงก์ลงใน DOM
+    document.body.appendChild(link)
+
+    // คลิกลิงก์เพื่อเริ่มดาวน์โหลด
+    link.click()
+
+    // ลบลิงก์ที่เพิ่มลงใน DOM เพื่อทำความสะอาดหลังจากดาวน์โหลดเสร็จสิ้น.
+    document.body.removeChild(link)
   }
 
   const SelectResultTypeDisplay = (
@@ -2260,6 +2296,9 @@ function StudyPlanSimulatorPage() {
               </Button> */}
                   <Button variant='contained' sx={{ width: '100%' }} onClick={handleOpenResult}>
                     Simulation Results
+                  </Button>
+                  <Button variant='contained' sx={{ width: '100%', my: 2 }} onClick={handleExportCSV}>
+                    Export CSV
                   </Button>
                 </Box>
               </Grid>
