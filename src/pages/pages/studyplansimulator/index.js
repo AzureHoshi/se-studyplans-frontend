@@ -467,6 +467,7 @@ function StudyPlanSimulatorPage() {
 
   useEffect(() => {
     handleCheckLimitCredit(value + 1)
+    console.log('simSubjects', simSubjects)
   }, [simSubjects])
 
   useEffect(() => {
