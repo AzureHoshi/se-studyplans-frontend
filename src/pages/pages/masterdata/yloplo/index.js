@@ -1,4 +1,15 @@
-import { Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  Select,
+  Typography
+} from '@mui/material'
 import { useState } from 'react'
 import { mdiHeadCogOutline, mdiCog } from '@mdi/js'
 import Icon from '@mdi/react'
@@ -14,10 +25,20 @@ function YLOPLOManagement() {
   const [openPloManagement, setOpenPloMangement] = useState(false)
   const [openYloManagement, setOpenYloMangement] = useState(false)
   const [openSubPloMapping, setOpenSubPloMapping] = useState(false)
+  const [curriculumSelected, setCurriculumSelected] = useState(2)
   const [yloDisplayType, setYloDisplayType] = useState(0)
   const [YloSelected, setYloSelected] = useState([])
+  const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
   const URL_GET_YLOs = `${url.BASE_URL}/ylos/`
   const URL_GET_PLOs = `${url.BASE_URL}/plos/`
+
+  const {
+    error: CurriculumError,
+    data: Curriculums,
+    setData: setCurriculums,
+    loading: CurriculumLoading,
+    reFetch: reFetchCurriculums
+  } = useFetch(URL_GET_CURRICULUM)
 
   const {
     error: YLOsDataError,
@@ -131,6 +152,20 @@ function YLOPLOManagement() {
       <Typography variant='body2' sx={{ ml: 1.5 }}>
         ผลลัพธ์การเรียนรู้ที่คาดหวังรายชั้นปี
       </Typography>
+      <Select
+        sx={{ width: 600 }}
+        size='small'
+        labelId='simple-dropdown-labels'
+        id='simple-dropdown'
+        value={curriculumSelected || 2}
+        // onChange={e => handleChangeCurricuclum(e.target.value)}
+      >
+        {Curriculums?.map((cur, index) => (
+          <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
+            {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
+          </MenuItem>
+        ))}
+      </Select>
       <Grid container spacing={6} sx={{ mt: 5 }}>
         <Grid item xs={6} sm={6} lg={3}>
           <Button variant='contained' onClick={() => handleOpenYlo(0)} sx={{ minWidth: 200 }} fullWidth>

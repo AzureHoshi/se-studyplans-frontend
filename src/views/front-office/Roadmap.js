@@ -441,17 +441,17 @@ const Roadmap = ({
                 <Button
                   onClick={() => handleChangeDisplayMode(1)}
                   variant='contained'
-                  sx={{ width: 180, marginTop: '1rem', backgroundColor: '#000000' }}
+                  sx={{ width: 240, marginTop: '1rem', backgroundColor: '#000000' }}
                 >
-                  Subjects
+                  Subjects(รายวิชา)
                 </Button>
                 <Button
                   onClick={() => handleChangeDisplayMode(2)}
                   variant='contained'
                   color='primary'
-                  sx={{ width: 180, marginTop: '1rem', marginLeft: '1rem', backgroundColor: '#000000' }}
+                  sx={{ width: 240, marginTop: '1rem', marginLeft: '1rem', backgroundColor: '#000000' }}
                 >
-                  Study Plan
+                  Study Plan(แผนการเรียน)
                 </Button>
               </Grid>
             </Grid>

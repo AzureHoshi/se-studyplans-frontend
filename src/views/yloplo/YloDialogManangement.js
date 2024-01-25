@@ -279,6 +279,23 @@ function YloDialogMangement({
             }}
           />
         </Grid>
+        <Grid item xs={9}>
+          <TextField
+            disabled
+            // value={yloYear}
+            // onChange={e => setYloYear(e.target.value)}
+            fullWidth
+            // type='number'
+            size={'small'}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Typography variant='body2'>Curriculum</Typography>
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
 
         {Object.values(descriptionArray)?.map((d, index) => (
           <Grid key={index} item xs={12}>
@@ -318,7 +335,7 @@ function YloDialogMangement({
     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' } }}>
       <Box sx={{ width: { xs: '100%', lg: '60%' }, p: 2 }}>
         <Typography variant='body2' sx={{ mb: 4 }}>
-          YLO
+          YLO (Curriculum ....)
         </Typography>
         <Box sx={{ my: 2 }}>
           <TextField
