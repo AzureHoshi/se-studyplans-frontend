@@ -26,7 +26,9 @@ function YloDialogMangement({
   displayType,
   refetchYLOs,
   PLOsData,
-  handleUpdateYloSelect
+  handleUpdateYloSelect,
+  curriculumSelected,
+  Curriculums
 }) {
   const initialDesc = [{ id: 0, ylo_description: '' }]
   const [displayController, setDisplayController] = useState(displayType)
@@ -95,17 +97,22 @@ function YloDialogMangement({
   const handleCreateYLO = () => {
     const checkDesc = descriptionArray?.find(d => d.ylo_description !== '')
     console.log('checkDesc', checkDesc)
+    console.log('checkCurrId', curriculumSelected)
     if (checkDesc && yloYear) {
       const removeEmptyStringArray = descriptionArray
         ?.filter(d => d.ylo_description !== '')
         .map(onlyString => onlyString.ylo_description)
       console.log('removeEmptyStringArray', removeEmptyStringArray)
       axios
-        .post(URL_YLO, { ylo_year: yloYear, ylo_description: removeEmptyStringArray })
+        .post(URL_YLO, {
+          curriculum_id: curriculumSelected,
+          ylo_year: yloYear,
+          ylo_description: removeEmptyStringArray
+        })
         .then(res => {
           if (res.data) {
             console.log(res.data)
-            refetchYLOs
+            refetchYLOs()
             handleClose()
           }
         })
@@ -282,7 +289,11 @@ function YloDialogMangement({
         <Grid item xs={9}>
           <TextField
             disabled
-            // value={yloYear}
+            value={
+              Curriculums?.find(c => c.curriculum_id === curriculumSelected)?.curriculum_name_th +
+              ' ' +
+              Curriculums?.find(c => c.curriculum_id === curriculumSelected)?.curriculum_year
+            }
             // onChange={e => setYloYear(e.target.value)}
             fullWidth
             // type='number'

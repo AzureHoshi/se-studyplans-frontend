@@ -56,6 +56,9 @@ function YLOPLOManagement() {
     reFetch: reFetchPLOsData
   } = useFetch(URL_GET_PLOs)
 
+  const handleChangeCurriculum = currId => {
+    setCurriculumSelected(currId)
+  }
   const handleOpenYlo = (type, ylo) => {
     if (ylo) setYloSelected(ylo)
     else setYloSelected([])
@@ -158,7 +161,7 @@ function YLOPLOManagement() {
         labelId='simple-dropdown-labels'
         id='simple-dropdown'
         value={curriculumSelected || 2}
-        // onChange={e => handleChangeCurricuclum(e.target.value)}
+        onChange={e => handleChangeCurriculum(e.target.value)}
       >
         {Curriculums?.map((cur, index) => (
           <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
@@ -207,6 +210,8 @@ function YLOPLOManagement() {
         refetchYLOs={reFetchYLOsData}
         PLOsData={PLOsData}
         handleUpdateYloSelect={handleUpdateYloSelect}
+        curriculumSelected={curriculumSelected}
+        Curriculums={Curriculums}
       />
       <PloDialogMangement
         PLOsData={PLOsData}
