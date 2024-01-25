@@ -24,6 +24,8 @@ import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
 import { userProfile } from 'src/dummy'
 import Simulator from 'src/views/front-office/Simulator'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 
 const drawerWidth = 350
 
@@ -50,13 +52,20 @@ const FrontOffice = ({
   subjectsSE66,
   curriculumScopeSE66,
   studyPlanSE66,
-  jobCompetencies
+  jobCompetencies,
+  allCurriculum
 }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
   const [pageState, setPageState] = useState(0)
+  const router = useRouter()
 
   const backgroundImageUrl = 'https://images.pexels.com/photos/5255236/pexels-photo-5255236.jpeg'
+
+  const handleChangeCurricuclum = curriculum_id => {
+    Cookies.set('curr', curriculum_id)
+    router.replace('/')
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -293,6 +302,8 @@ const FrontOffice = ({
                 subjectsSE66={subjectsSE66}
                 curriculumScopeSE66={curriculumScopeSE66}
                 studyPlanSE66={studyPlanSE66}
+                allCurriculum={allCurriculum}
+                handleChangeCurricuclum={handleChangeCurricuclum}
               />
             )}
             {pageState === 1 && <Recommendation jobRecommended={jobRecommended} jobCompetencies={jobCompetencies} />}
@@ -307,15 +318,34 @@ const FrontOffice = ({
 FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
-export async function getServerSideProps() {
-  const apiEndpoints = [
-    `/subject-job-relateds`,
-    `/continue-subjects-curriculum/2`,
-    `/subjects-by-curriculum/2`,
-    `/curriculum-structures-v2/2`,
-    `/study-plan-records/2`,
-    `/job-positions`
-  ]
+export async function getServerSideProps(context) {
+  const { req } = context
+  const cookies = req?.headers?.cookie
+  const defaultCurri = 2
+  var apiEndpoints
+  if (cookies) {
+    const currByDropdown = cookies.split(';').find(cookie => cookie.trim().startsWith('curr='))
+    const currId = parseInt(currByDropdown.split('=')[1], 10)
+    apiEndpoints = [
+      `/subject-job-relateds`,
+      `/continue-subjects-curriculum/` + currId,
+      `/subjects-by-curriculum/` + currId,
+      `/curriculum-structures-v2/` + currId,
+      `/study-plan-records/` + currId,
+      `/job-positions`,
+      '/curriculums'
+    ]
+  } else {
+    apiEndpoints = [
+      `/subject-job-relateds`,
+      `/continue-subjects-curriculum/` + defaultCurri,
+      `/subjects-by-curriculum/` + defaultCurri,
+      `/curriculum-structures-v2/` + defaultCurri,
+      `/study-plan-records/` + defaultCurri,
+      `/job-positions`,
+      '/curriculums'
+    ]
+  }
 
   const apiData = []
 
@@ -328,22 +358,21 @@ export async function getServerSideProps() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
-
-        // if (i === 0) {
-        //   return {
-        //     redirect: {
-        //       destination: '/pages/front-office/student-systems/interest-survey/',
-        //       permanent: false
-        //     }
-        //   }
-        // }
       } else {
         console.error(`Error fetching data for ${apiEndpoints[i]}:`, error.message)
       }
     }
   }
 
-  const [jobRecommended, curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66, jobCompetencies] = apiData
+  const [
+    jobRecommended,
+    curriculumTree,
+    subjectsSE66,
+    curriculumScopeSE66,
+    studyPlanSE66,
+    jobCompetencies,
+    allCurriculum
+  ] = apiData
 
   const propsObject = {
     jobRecommended: jobRecommended !== undefined ? jobRecommended : null,
@@ -351,7 +380,8 @@ export async function getServerSideProps() {
     subjectsSE66: subjectsSE66 !== undefined ? subjectsSE66 : null,
     curriculumScopeSE66: curriculumScopeSE66 !== undefined ? curriculumScopeSE66 : null,
     studyPlanSE66: studyPlanSE66 !== undefined ? studyPlanSE66 : null,
-    jobCompetencies: jobCompetencies !== undefined ? jobCompetencies : null
+    jobCompetencies: jobCompetencies !== undefined ? jobCompetencies : null,
+    allCurriculum: allCurriculum !== undefined ? allCurriculum : null
   }
 
   // Your logic with the retrieved data

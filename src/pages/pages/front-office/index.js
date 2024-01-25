@@ -24,6 +24,7 @@ import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
 import { userProfile } from 'src/dummy'
 import Simulator from 'src/views/front-office/Simulator'
+import Cookies from 'js-cookie'
 
 const drawerWidth = 350
 
@@ -307,7 +308,9 @@ const FrontOffice = ({
 FrontOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 // ssr
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  // Cookies.set('role', role)
+
   const apiEndpoints = [
     `/subject-job-relateds`,
     `/continue-subjects-curriculum/2`,

@@ -13,6 +13,7 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
+  Select,
   TablePagination,
   TextField,
   Typography,
@@ -22,6 +23,7 @@ import { grey } from '@mui/material/colors'
 
 import { styled } from '@mui/material/styles'
 import { TreeItem, TreeView, treeItemClasses } from '@mui/x-tree-view'
+import Cookies from 'js-cookie'
 import { ChevronDown, ChevronRight } from 'mdi-material-ui'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { CircleLoading, Selection } from 'src/components'
@@ -36,7 +38,14 @@ const HeadTypography = styled(Typography)(({ theme }) => ({
   fontSize: 14
 }))
 
-const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanSE66 }) => {
+const Roadmap = ({
+  curriculumTree,
+  subjectsSE66,
+  curriculumScopeSE66,
+  studyPlanSE66,
+  allCurriculum,
+  handleChangeCurricuclum
+}) => {
   const [displayMode, setDisplayMode] = useState(0) // 0 : roadmap detail, 1: Subjects ,2: Study Plan
   const [expandedNodes, setExpandedNodes] = useState([])
   const [anchorEl, setAnchorEl] = useState(null)
@@ -340,7 +349,7 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
         <Hidden mdDown>
           {displayMode === 0 && (
             <Grid container item xs={12}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', pb: 6 }}>
                 <Typography
                   variant='h5'
                   sx={{
@@ -351,8 +360,22 @@ const Roadmap = ({ curriculumTree, subjectsSE66, curriculumScopeSE66, studyPlanS
                     fontSize: { xs: 28, md: 24 }
                   }}
                 >
-                  Curriculum: Software Engineering 2566
+                  Software Engineering RMUTL
                 </Typography>
+                <Select
+                  sx={{ maxWidth: 700 }}
+                  size='small'
+                  labelId='simple-dropdown-labels'
+                  id='simple-dropdown'
+                  value={Cookies.get('curr') || 2}
+                  onChange={e => handleChangeCurricuclum(e.target.value)}
+                >
+                  {allCurriculum?.map((cur, index) => (
+                    <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
+                      {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
+                    </MenuItem>
+                  ))}
+                </Select>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Hidden mdDown>
