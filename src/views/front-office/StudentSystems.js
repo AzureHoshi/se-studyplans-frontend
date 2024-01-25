@@ -14,10 +14,12 @@ const StudentSystems = () => {
         </Grid>
         <Grid item xs={12} sx={{ mt: 6 }}>
           <Typography variant='caption' sx={{ color: '#909094' }}>
-            Building a recommendation system for software engineering involves leveraging data to suggest relevant
-            resources, tools, or technologies to users based on their preferences, skills, and the needs of their
-            projects. Here's a high-level overview of how you could design such a system. Building an effective
-            recommendation system requires ongoing refinement based on user feedback and changing industry trends.
+            ระบบที่ถูกพัฒนาขึ้นเพื่อช่วยให้นักศึกษาสามารถอัพเดทแผนการเรียนปัจจุบันของตนได้อย่างสะดวก
+            ระบบนี้ได้รับการออกแบบเพื่อให้นักศึกษาสามารถมองเห็นความก้าวหน้าของแผนการเรียนปัจจุบันของตนในรูปแบบของเปอร์เซ็นต์
+            ทำให้นักศึกษาสามารถติดตามและปรับปรุงแผนการเรียนของตนได้อย่างมีประสิทธิภาพ นอกจากนี้
+            ระบบยังมีความสามารถในการเปรียบเทียบโครงสร้างหลักสูตร
+            ทำให้นักศึกษาสามารถศึกษาและวิเคราะห์โครงสร้างหลักสูตรต่าง ๆ และนำไปใช้ในการออกแบบแผนการเรียนของตนเองในอนาคต
+            การเปรียบเทียบนี้ช่วยให้นักศึกษาเข้าใจต่อโครงสร้างหลักสูตรและช่วยในการตัดสินใจในการวางแผนการเรียนที่เหมาะสมกับเป้าหมายและความสนใจของตนเองอย่างมีความเข้าใจทั้งด้านวิชาการและอาชีพของตนในอนาคต
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ mt: 12 }}>
@@ -32,7 +34,7 @@ const StudentSystems = () => {
               fontFamily: 'Segoe UI'
             }}
           >
-            Login
+            เข้าสู่ระบบ
           </Button>
         </Grid>
       </Grid>

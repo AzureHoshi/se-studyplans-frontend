@@ -176,7 +176,7 @@ const Recommendation = ({ jobRecommended, jobCompetencies }) => {
                 )
             )}
         </Grid>
-        <Grid item xs={12} sx={{ mt: { xs: 2, sm: 0 } }}>
+        {/* <Grid item xs={12} sx={{ mt: { xs: 2, sm: 0 } }}>
           <Button
             variant='contained'
             sx={{
@@ -189,7 +189,7 @@ const Recommendation = ({ jobRecommended, jobCompetencies }) => {
           >
             More Details
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   )

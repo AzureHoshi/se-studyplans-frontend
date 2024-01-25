@@ -17,9 +17,11 @@ const Simulator = () => {
         </Grid>
         <Grid item xs={12} sx={{ mt: 6 }}>
           <Typography variant='caption' sx={{ color: '#909094' }}>
-            A Study Plan Simulator is a software tool designed to assist students in creating, managing, and optimizing
-            their academic study plans. It aims to provide a user-friendly interface that allows students to plan their
-            coursework
+            ระบบจำลองแผนการเรียนถูกออกแบบมาเพื่อเพิ่มความสะดวกให้กับนักศึกษาในการเข้าถึงข้อมูลหลักสูตร
+            โดยระบบนี้สามารถอ้างอิงข้อมูลจากรายวิชาทั้งหมดในหลักสูตร
+            และให้มีตัวอย่างแผนการเรียนที่นักศึกษาสามารถนำมาปรับใช้ในการวางแผนการลงเรียนของตนเองได้โดยง่าย
+            ทำให้นักศึกษาสามารถวางแผนการเรียนที่ตรงกับความต้องการของตนเองได้อย่างมีประสิทธิภาพ สามารถExport
+            ข้อมูลการจำลองแผนการเรียนเป็นไฟล์ CSV ซึ่งเป็นวิธีที่ทันสมัยและทำให้นักศึกษาสามารถนำข้อมูลไปใช้ต่อได้ง่าย
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ mt: 12 }}>
@@ -34,7 +36,7 @@ const Simulator = () => {
               fontFamily: 'Segoe UI'
             }}
           >
-            Go to Simulator System
+            ไปยังระบบจำลองแผนการเรียน
           </Button>
         </Grid>
       </Grid>
