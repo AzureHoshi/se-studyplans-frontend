@@ -44,7 +44,8 @@ const Roadmap = ({
   curriculumScopeSE66,
   studyPlanSE66,
   allCurriculum,
-  handleChangeCurricuclum
+  handleChangeCurricuclum,
+  YLOs
 }) => {
   const [displayMode, setDisplayMode] = useState(0) // 0 : roadmap detail, 1: Subjects ,2: Study Plan
   const [expandedNodes, setExpandedNodes] = useState([])
@@ -344,120 +345,171 @@ const Roadmap = ({
   }, [curriculumTree])
 
   return (
-    <Box sx={{ p: 16, mt: 24, mx: { xs: 4, md: 12 }, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 6 }}>
+    <Box
+      sx={{
+        p: 16,
+        mt: 24,
+        mx: { xs: 4, md: 12 },
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 6
+      }}
+    >
       <Grid container spacing={2} sx={{ minWidth: 320 }}>
-        <Hidden mdDown>
-          {displayMode === 0 && (
-            <Grid container item xs={12}>
-              <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', pb: 6 }}>
-                <Typography
-                  variant='h5'
-                  sx={{
-                    fontWeight: 'bold',
-                    color: grey[800],
-                    fontFamily: 'Segoe UI',
-                    mb: 2.5,
-                    fontSize: { xs: 28, md: 24 }
-                  }}
-                >
-                  Software Engineering RMUTL
-                </Typography>
-                <Select
-                  sx={{ maxWidth: 700 }}
-                  size='small'
-                  labelId='simple-dropdown-labels'
-                  id='simple-dropdown'
-                  value={Cookies.get('curr') || 2}
-                  onChange={e => handleChangeCurricuclum(e.target.value)}
-                >
-                  {allCurriculum?.map((cur, index) => (
-                    <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
-                      {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
-                  <HeadTypography>Introduction to Software Engineering:</HeadTypography>
+        {/* <Hidden mdDown> */}
+        {displayMode === 0 && (
+          <Grid container item xs={12}>
+            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', pb: 6 }}>
+              <Typography
+                variant='h5'
+                sx={{
+                  fontWeight: 'bold',
+                  color: grey[800],
+                  fontFamily: 'Segoe UI',
+                  mb: 2.5,
+                  fontSize: { xs: 18, md: 24 }
+                }}
+              >
+                Software Engineering RMUTL
+              </Typography>
+              <Select
+                sx={{ maxWidth: 700 }}
+                size='small'
+                labelId='simple-dropdown-labels'
+                id='simple-dropdown'
+                value={Cookies.get('curr') || 2}
+                onChange={e => handleChangeCurricuclum(e.target.value)}
+              >
+                {allCurriculum?.map((cur, index) => (
+                  <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
+                    {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={4}>
+              {/* <Hidden mdDown> */}
+              <HeadTypography>บทนำ</HeadTypography>
 
-                  <Typography variant='caption' sx={{ color: '#909094' }}>
-                    <ul style={{ marginLeft: -12 }}>
-                      <li>Basic programming concepts (variables, loops, conditionals)</li>
-                      <li>Data structures (arrays, linked lists)</li>
-                      <li>Algorithms</li>
-                    </ul>
-                  </Typography>
-                </Hidden>
+              <Typography variant='caption' sx={{ color: '#909094' }}>
+                <ul style={{ marginLeft: -12 }}>
+                  <li>แนวคิดพื้นฐานของโปรแกรม (ตัวแปร, ลูป, เงื่อนไข)</li>
+                  <li>โครงสร้างข้อมูล (อาร์เรย์, ลิงก์ลิสต์)</li>
+                  <li>อัลกอริทึม</li>
+                </ul>
+              </Typography>
+              {/* </Hidden> */}
+            </Grid>
+
+            <Grid item xs={12} sm={6} lg={4}>
+              <HeadTypography>ฐานข้อมูล:</HeadTypography>
+              <Typography variant='caption' sx={{ color: '#909094' }}>
+                <ul style={{ marginLeft: -12 }}>
+                  <li>ฐานข้อมูลสัมพันธ์ (SQL)</li>
+                  <li>ฐานข้อมูล NoSQL</li>
+                  <li>การออกแบบและปรับโครงสร้างของฐานข้อมูล</li>
+                </ul>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={4}>
+              {/* <Hidden mdDown> */}
+              <HeadTypography>โปรแกรมเชิงวัตถุ (OOP):</HeadTypography>
+              <Typography variant='caption' sx={{ color: '#909094' }}>
+                <ul style={{ marginLeft: -12 }}>
+                  <li>หลักการของ OOP (การซ่อนข้อมูล, การสืบทอด, พอลีมอร์ฟิซม)</li>
+                  <li>แพทเทิร์นการออกแบบ</li>
+                </ul>
+              </Typography>
+              {/* </Hidden> */}
+            </Grid>
+            <Grid item xs={12} sm={6} lg={4}>
+              <HeadTypography>การพัฒนาเว็บ:</HeadTypography>
+              <Typography variant='caption' sx={{ color: '#909094' }}>
+                <ul style={{ marginLeft: -12 }}>
+                  <li>HTML, CSS, JavaScript</li>
+                  <li>เฟรมเวิร์กด้านหน้า (React, Angular, Vue.js)</li>
+                  <li>เฟรมเวิร์กด้านหลัง (Node.js, Django, Flask)</li>
+                </ul>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={4}>
+              <Hidden smDown>
+                <HeadTypography>โครงสร้างข้อมูล:</HeadTypography>
+                <Typography variant='caption' sx={{ color: '#909094' }}>
+                  <ul style={{ marginLeft: -12 }}>
+                    <li>โครงสร้างข้อมูลขั้นสูง (ต้นไม้, กราฟ, ตารางแฮช)</li>
+                    <li>การวิเคราะห์และความซับซ้อนของอัลกอริทึม</li>
+                    <li>เฟรมเวิร์กด้านหลัง (Node.js, Django, Flask)</li>
+                  </ul>
+                </Typography>
+              </Hidden>
+            </Grid>
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <Grid item xs={12}>
+                <HeadTypography>Year Learning Outcomes, (YLOs)</HeadTypography>
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
-                  <HeadTypography>Databases:</HeadTypography>
-                  <Typography variant='caption' sx={{ color: '#909094' }}>
-                    <ul style={{ marginLeft: -12 }}>
-                      <li>Relational databases (SQL)</li>
-                      <li>NoSQL databases</li>
-                      <li>Database design and normalization</li>
-                    </ul>
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
-                  <HeadTypography>Object-Oriented Programming (OOP):</HeadTypography>
-                  <Typography variant='caption' sx={{ color: '#909094' }}>
-                    <ul style={{ marginLeft: -12 }}>
-                      <li>Principles of OOP (encapsulation, inheritance, polymorphism)</li>
-                      <li>Design patterns</li>
-                    </ul>
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
-                  <HeadTypography>Web Development:</HeadTypography>
-                  <Typography variant='caption' sx={{ color: '#909094' }}>
-                    <ul style={{ marginLeft: -12 }}>
-                      <li>HTML, CSS, JavaScript</li>
-                      <li>Front-end frameworks (React, Angular, Vue.js)</li>
-                      <li>Back-end frameworks (Node.js, Django, Flask)</li>
-                    </ul>
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Hidden mdDown>
-                  <HeadTypography>Data Structures:</HeadTypography>
-                  <Typography variant='caption' sx={{ color: '#909094' }}>
-                    <ul style={{ marginLeft: -12 }}>
-                      <li>Advanced data structures (trees, graphs, hash tables)</li>
-                      <li>Algorithmic analysis and complexity</li>
-                      <li>Back-end frameworks (Node.js, Django, Flask)</li>
-                    </ul>
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Grid item xs={12} sx={{ mt: 6 }}>
+              <Typography variant='caption' sx={{ color: '#909094' }}>
+                <Grid container spacing={2}>
+                  {YLOs?.map(ylo => (
+                    <Grid
+                      key={ylo.ylo_id}
+                      item
+                      xs={12}
+                      sm={6}
+                      lg={3}
+                      sx={{
+                        borderRadius: 2
+                      }}
+                    >
+                      <ul style={{ minHeight: 240, background: 'white', paddingTop: 6, paddingRight: 24 }}>
+                        <p>YLO{ylo.ylo_year}</p>
+
+                        {ylo?.ylo_description.map(desc => (
+                          <li key={desc.tlo_des_id} style={{ maxWidth: 300, textAlign: 'justify', paddingLeft: 6 }}>
+                            {desc.ylo_description.replace(/-/g, '')}
+                          </li>
+                        ))}
+                      </ul>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 6, display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+              <Box>
                 <Button
                   onClick={() => handleChangeDisplayMode(1)}
                   variant='contained'
-                  sx={{ width: 240, marginTop: '1rem', backgroundColor: '#000000' }}
+                  sx={{
+                    marginTop: '1rem',
+                    marginRight: '1rem',
+                    backgroundColor: '#000000',
+                    width: { xs: '100%', sm: 240 },
+                    minWidth: 200
+                  }}
                 >
-                  Subjects(รายวิชา)
+                  รายวิชา
                 </Button>
+              </Box>
+              <Box>
                 <Button
                   onClick={() => handleChangeDisplayMode(2)}
                   variant='contained'
                   color='primary'
-                  sx={{ width: 240, marginTop: '1rem', marginLeft: '1rem', backgroundColor: '#000000' }}
+                  sx={{
+                    width: { xs: '100%', sm: 240 },
+                    minWidth: 200,
+                    marginTop: '1rem',
+                    backgroundColor: '#000000'
+                  }}
                 >
-                  Study Plan(แผนการเรียน)
+                  แผนการเรียน
                 </Button>
-              </Grid>
+              </Box>
             </Grid>
-          )}
-        </Hidden>
-        <Hidden mdUp>
+          </Grid>
+        )}
+        {/* </Hidden> */}
+        {/* <Hidden mdUp>
           {displayMode === 0 && (
             <Grid container sx={{ minHeight: { xs: 800, sm: 550 }, maxWidth: 700 }}>
               <Grid item xs={12}>
@@ -529,7 +581,7 @@ const Roadmap = ({
               </Grid>
             </Grid>
           )}
-        </Hidden>
+        </Hidden> */}
         {/* show curriculum in treeview and gridview */}
         {displayMode === 1 && (
           <Grid container item xs={12} sx={{ mt: 0 }}>
@@ -855,7 +907,15 @@ const Roadmap = ({
               </Grid>
               <Box sx={{ textAlign: 'end', pr: 10, mt: { xs: 0, lg: -12 } }}>
                 <Typography variant='h6' sx={{ fontFamily: 'Segoe UI', mb: 6 }}>
-                  แผนแนะนำ มคอ.2 Software Engineering 66
+                  {/* แผนแนะนำ มคอ.2 Software Engineering 66 */}
+                  {Cookies.get('curr') !== undefined
+                    ? allCurriculum?.find(curr => curr.curriculum_id === parseInt(Cookies.get('curr')))
+                        ?.curriculum_name_en +
+                      ' ' +
+                      allCurriculum?.find(curr => curr.curriculum_id === parseInt(Cookies.get('curr')))?.curriculum_year
+                    : allCurriculum?.find(curr => curr.curriculum_id === 2)?.curriculum_name_en +
+                      ' ' +
+                      allCurriculum?.find(curr => curr.curriculum_id === 2)?.curriculum_year}
                 </Typography>
               </Box>
               <Grid container sx={{ width: '100%', px: 4 }}>

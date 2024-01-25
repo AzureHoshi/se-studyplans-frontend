@@ -53,7 +53,8 @@ const FrontOffice = ({
   curriculumScopeSE66,
   studyPlanSE66,
   jobCompetencies,
-  allCurriculum
+  allCurriculum,
+  YLOs
 }) => {
   const [open, setOpen] = useState(true) // for large screen drawer
   const [openSmallDrawer, setOpenSmallDrawer] = useState(false) // for small screen drawer
@@ -254,6 +255,7 @@ const FrontOffice = ({
             </IconButton>
           </Box>
         </Hidden>
+
         <Box
           sx={{
             backgroundImage: `url(${backgroundImageUrl})`,
@@ -293,7 +295,8 @@ const FrontOffice = ({
               top: 0,
               width: '100%',
               height: '100%',
-              backgroundColor: 'rgba(200, 200, 200, 0.5)'
+              backgroundColor: 'rgba(200, 200, 200, 0.5)',
+              overflow: pageState === 0 ? 'auto' : null
             }}
           >
             {pageState === 0 && (
@@ -304,6 +307,7 @@ const FrontOffice = ({
                 studyPlanSE66={studyPlanSE66}
                 allCurriculum={allCurriculum}
                 handleChangeCurricuclum={handleChangeCurricuclum}
+                YLOs={YLOs}
               />
             )}
             {pageState === 1 && <Recommendation jobRecommended={jobRecommended} jobCompetencies={jobCompetencies} />}
@@ -323,9 +327,9 @@ export async function getServerSideProps(context) {
   const cookies = req?.headers?.cookie
   const defaultCurri = 2
   var apiEndpoints
-  if (cookies) {
+  if (cookies.split(';').find(cookie => cookie.trim().startsWith('curr='))) {
     const currByDropdown = cookies.split(';').find(cookie => cookie.trim().startsWith('curr='))
-    const currId = parseInt(currByDropdown.split('=')[1], 10)
+    const currId = parseInt(String(currByDropdown).split('=')[1], 10)
     apiEndpoints = [
       `/subject-job-relateds`,
       `/continue-subjects-curriculum/` + currId,
@@ -333,7 +337,8 @@ export async function getServerSideProps(context) {
       `/curriculum-structures-v2/` + currId,
       `/study-plan-records/` + currId,
       `/job-positions`,
-      '/curriculums'
+      '/curriculums',
+      '/ylos/' + currId
     ]
   } else {
     apiEndpoints = [
@@ -343,7 +348,8 @@ export async function getServerSideProps(context) {
       `/curriculum-structures-v2/` + defaultCurri,
       `/study-plan-records/` + defaultCurri,
       `/job-positions`,
-      '/curriculums'
+      '/curriculums',
+      '/ylos/' + defaultCurri
     ]
   }
 
@@ -371,7 +377,8 @@ export async function getServerSideProps(context) {
     curriculumScopeSE66,
     studyPlanSE66,
     jobCompetencies,
-    allCurriculum
+    allCurriculum,
+    YLOs
   ] = apiData
 
   const propsObject = {
@@ -381,7 +388,8 @@ export async function getServerSideProps(context) {
     curriculumScopeSE66: curriculumScopeSE66 !== undefined ? curriculumScopeSE66 : null,
     studyPlanSE66: studyPlanSE66 !== undefined ? studyPlanSE66 : null,
     jobCompetencies: jobCompetencies !== undefined ? jobCompetencies : null,
-    allCurriculum: allCurriculum !== undefined ? allCurriculum : null
+    allCurriculum: allCurriculum !== undefined ? allCurriculum : null,
+    YLOs: YLOs !== undefined ? YLOs : null
   }
 
   // Your logic with the retrieved data

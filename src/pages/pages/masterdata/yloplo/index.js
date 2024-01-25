@@ -46,7 +46,7 @@ function YLOPLOManagement() {
     setData: setYLOsData,
     loading: YLOsDataLoading,
     reFetch: reFetchYLOsData
-  } = useFetch(URL_GET_YLOs)
+  } = useFetch(URL_GET_YLOs + curriculumSelected)
 
   const {
     error: PLOsDataError,
