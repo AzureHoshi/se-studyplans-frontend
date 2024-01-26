@@ -40,7 +40,7 @@ function AddSubjectTypesModal({ Categories, open, handleClose, handleSubmit }) {
   }, [categorySelection])
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

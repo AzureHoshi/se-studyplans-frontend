@@ -91,7 +91,7 @@ const Roadmap = ({
     setSubjectView(e.target.value)
   }
 
-  console.log('showSubjectSelected', subjectSelected)
+  // console.log('showSubjectSelected', subjectSelected)
 
   const {
     error: SubjectsRelationsError,

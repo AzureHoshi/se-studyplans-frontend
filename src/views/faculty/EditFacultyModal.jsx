@@ -40,13 +40,13 @@ function EditFacultyModal({ state, open, handleClose, handleUpdate, openConfirmD
         faculty_name_en: faculty_name_en
       }
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

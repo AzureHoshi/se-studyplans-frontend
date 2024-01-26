@@ -40,7 +40,7 @@ function AddSubjectGroupsModal({ Categories, open, handleClose, handleSubmit }) 
   }, [typeSelection])
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

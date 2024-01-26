@@ -38,9 +38,9 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
 
   const handleInputChange = (event, index, type, answerId) => {
     if (type === 1) {
-      console.log('index: ', index)
-      console.log('answerId: ', answerId)
-      console.log('value: ', event.target.value)
+      // console.log('index: ', index)
+      // console.log('answerId: ', answerId)
+      // console.log('value: ', event.target.value)
 
       // const answerId = answerId[0].interest_answer_id
       const value = parseInt(event.target.value, 10)
@@ -89,7 +89,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
         interest_results: answers
       }
 
-      console.log('payload', payload)
+      // console.log('payload', payload)
 
       try {
         // ทำการ POST ไปยัง API
@@ -99,14 +99,14 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
           }
         })
 
-        console.log('res from sendding survay', res)
+        // console.log('res from sendding survay', res)
         // setTimeout(() => {
         //   router.push('/pages/front-office/student-systems/dashboard/')
         // }, 2000)
 
         // setResultDisplay(true)
       } catch (err) {
-        console.log(err)
+        // console.log(err)
         setResultDisplay(false)
       }
       // setIsLoading(false)
@@ -117,12 +117,12 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
           .catch(err => console.log('err from navigate to dashboard', err))
       }, 2000)
 
-      console.log(answers)
+      // console.log(answers)
     }
   }
 
   useEffect(() => {
-    console.log('answers: ', answers)
+    // console.log('answers: ', answers)
   }, [answers])
 
   if (isLoading) {

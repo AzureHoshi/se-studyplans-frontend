@@ -63,13 +63,13 @@ function EditSubjectModal({ state, open, handleClose, curriculumId, subjectGroup
 
       setSubjectGroupSelection(subject_group_id)
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

@@ -76,12 +76,12 @@ function StudentComcetencies() {
           .get(URL_GET_PLAN_RECORDS + state?.userData?.col_code)
           .then(response => {
             // Handle successful response
-            console.log('records', response.data.data)
+            // console.log('records', response.data.data)
             setPlanRecords(response.data.data)
             const onlyYearArr = response.data.data.map(d => d.stu_acad_rec_year)
             const addCurrentYear = handleCreateYearFromCurrentPlan(onlyYearArr, dummy)
             setDummy(addCurrentYear)
-            console.log('addCurrentYear', addCurrentYear)
+            // console.log('addCurrentYear', addCurrentYear)
           })
           .catch(error => {
             // Handle error from the axios request
@@ -95,7 +95,7 @@ function StudentComcetencies() {
     }
   }, [state])
 
-  console.log('planRecords', planRecords)
+  // console.log('planRecords', planRecords)
 
   return (
     <CustomLayout
@@ -259,7 +259,7 @@ export async function getServerSideProps(context) {
   const { req } = context
 
   const checkIsLogin = await handleCheckLogin(req)
-  console.log('checkIsLogin', checkIsLogin)
+  // console.log('checkIsLogin', checkIsLogin)
 
   if (!checkIsLogin) {
     return {

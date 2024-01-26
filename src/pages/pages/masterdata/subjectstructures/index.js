@@ -147,16 +147,14 @@ function Subjectstructures() {
           }
         })
         .catch(err => console.log('error from check duplicate:', err))
-
     } else {
       alert('Please Select Subject and Category')
     }
   }
 
   const handleUpdate = () => {
-
     if (state.subject_id !== '' && state.subject_category_id !== '') {
-      console.log(state)
+      // console.log(state)
 
       axios
         .put(URL_GET_SUBJECT_STRUCTURES + subjectStructureId, state)
@@ -168,7 +166,6 @@ function Subjectstructures() {
           }
         })
         .catch(err => console.log('error from update subject structure: ', err))
-
     } else {
       alert('Please Select Subject and Category')
     }
@@ -178,7 +175,6 @@ function Subjectstructures() {
     let result = window.confirm('Confirm to Delete?')
 
     if (result) {
-
       axios
         .delete(URL_GET_SUBJECT_STRUCTURES + id)
         .then(res => {
@@ -186,7 +182,7 @@ function Subjectstructures() {
             setState(initialState)
             setOpen(false)
             reFetchSubjectStructures()
-            console.log(res.data)
+            // console.log(res.data)
           }
         })
         .catch(err => console.log('error from delete subject structure', err))
@@ -207,7 +203,7 @@ function Subjectstructures() {
 
   useEffect(() => {
     if (state) {
-      console.log(state)
+      // console.log(state)
     }
   }, [state])
 
@@ -404,7 +400,6 @@ function Subjectstructures() {
                   disablePortal
                   fullWidth
                   freeSolo
-                  
                   // options={Jobs?.filter(sj => sj.subject_id !== subject.subject_id)}
                   options={Types || []}
                   getOptionLabel={option => option?.subject_type_name || ''}
@@ -428,11 +423,10 @@ function Subjectstructures() {
                   fullWidth
                   freeSolo
                   options={
-
                     // only uniqe subject group name
                     Groups.filter((obj, index, arr) => {
                       const firstIndex = arr.findIndex(item => item.subject_group_name === obj.subject_group_name)
-                     
+
                       return index === firstIndex
                     }) || []
                   }

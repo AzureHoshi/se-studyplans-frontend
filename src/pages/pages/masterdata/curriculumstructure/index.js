@@ -127,7 +127,7 @@ function Curriculumstructure() {
   }
 
   const findCategory = () => {
-    console.log('CurriculumStructures', CurriculumStructures)
+    // console.log('CurriculumStructures', CurriculumStructures)
 
     const categoryByStructer = Object.values(CurriculumStructures)?.filter(
       categoryDuplicate =>
@@ -135,7 +135,7 @@ function Curriculumstructure() {
         categoryDuplicate.subject_type_id === null &&
         categoryDuplicate.subject_group_id === null
     )
-    console.log('findCategory', findCategory)
+    // console.log('findCategory', findCategory)
 
     if (categoryByStructer?.length > 0) {
       const unDuplicateCagetory = Object.values(UniqueCategories)?.filter(
@@ -147,7 +147,7 @@ function Curriculumstructure() {
 
   const handleSubmit = () => {
     if (state.credit_total !== undefined && state.subject_category_id !== 0 && state.subject_category_id !== null) {
-      console.log(state)
+      // console.log(state)
       axios
         .get(URL_GET_CURRICULUM_STRUCTURES + curriculumSelected)
         .then(res => {
@@ -179,7 +179,7 @@ function Curriculumstructure() {
 
   const handleUpdate = () => {
     if (state.credit_total !== undefined && state.subject_category_id !== 0 && state.subject_category_id !== null) {
-      console.log(state)
+      // console.log(state)
       axios.get(URL_GET_CURRICULUM_STRUCTURES + curriculumSelected).then(res => {
         if (res.data) {
           const duplicate = Object.values(res.data.data)?.find(
@@ -216,7 +216,7 @@ function Curriculumstructure() {
             setState(initialState)
             setOpen(false)
             reFetchCurriculumStructures()
-            console.log(res.data)
+            // console.log(res.data)
           }
         })
         .catch(err => console.log('error from delete curriculum structure', err))
@@ -331,8 +331,8 @@ function Curriculumstructure() {
     'subject_type_name'
   )
 
-  console.log('UniqueCategories', UniqueCategories)
-  console.log('UniqueTypeByCategory', UniqueTypes)
+  // console.log('UniqueCategories', UniqueCategories)
+  // console.log('UniqueTypeByCategory', UniqueTypes)
 
   useEffect(() => {
     if (Curriculums.length > 0) {
@@ -348,16 +348,16 @@ function Curriculumstructure() {
   }, [Curriculums])
   useEffect(() => {
     if (state) {
-      console.log(state)
+      // console.log(state)
     }
   }, [state])
 
-  console.log(CurriculumStructures)
+  // console.log(CurriculumStructures)
 
   useEffect(() => {
     if (CurriculumStructures) {
       const groupedData = groupByKeys(CurriculumStructures)
-      console.log('groupedData: ', groupedData)
+      // console.log('groupedData: ', groupedData)
 
       // console.log(Object(JSON.stringify(groupedData, null, 2)))
 

@@ -38,13 +38,13 @@ function EditSubjectCategoriesModal({ state, open, handleClose, handleUpdate, op
         subject_category_name: subject_category_name
       }
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

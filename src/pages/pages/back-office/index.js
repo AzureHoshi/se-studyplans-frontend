@@ -92,7 +92,7 @@ const BackOffice = () => {
 
       if (role !== 1) return alert('Can not login with student role')
 
-      console.log('Login successful')
+      // console.log('Login successful')
       Cookies.set('token', token.token, { expires: new Date(token.expires_at) })
       Cookies.set('role', role)
       setUser(userInitialState)

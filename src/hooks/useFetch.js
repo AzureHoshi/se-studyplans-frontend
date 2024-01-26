@@ -22,7 +22,7 @@ export default function useFetch(url, header) {
         .catch(err => {
           setLoading(false)
           setError('An error occurred. Awkward..')
-          console.log(err)
+          // console.log(err)
         })
     } else {
       axios
@@ -35,7 +35,7 @@ export default function useFetch(url, header) {
         .catch(err => {
           setLoading(false)
           setError('An error occurred. Awkward.. :', err)
-          console.log(error)
+          // console.log(error)
         })
     }
   }, [url])
@@ -54,7 +54,7 @@ export default function useFetch(url, header) {
         .catch(err => {
           setLoading(false)
           setError('An error occurred. Awkward..')
-          console.log(err)
+          // console.log(err)
         })
     } else {
       setLoading(true)
@@ -68,7 +68,7 @@ export default function useFetch(url, header) {
         .catch(err => {
           setLoading(false)
           setError('An error occurred. Awkward.. :', err)
-          console.log(error)
+          // console.log(error)
         })
     }
   }

@@ -49,7 +49,7 @@ function AddSubjectModal({ open, handleClose, handleSubmit, curriculumId, subjec
     if (isEmpty) {
       alert('Please Fill All TextFields')
     } else {
-      console.log('state', object)
+      // console.log('state', object)
     }
 
     return isEmpty
@@ -69,7 +69,7 @@ function AddSubjectModal({ open, handleClose, handleSubmit, curriculumId, subjec
   }, [state.subject_group_id])
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

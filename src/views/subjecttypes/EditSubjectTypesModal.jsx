@@ -44,13 +44,13 @@ function EditSubjectTypesModal({ state, open, handleClose, handleUpdate, openCon
         subject_type_name: subject_type_name
       }
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

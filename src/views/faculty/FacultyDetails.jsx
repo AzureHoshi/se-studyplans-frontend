@@ -48,7 +48,7 @@ function FacultyDetailsModal({ facultyId, state, open, handleClose }) {
 
   useEffect(() => {
     if (Curriculums) {
-      console.log(Curriculums)
+      // console.log(Curriculums)
     }
   }, [Curriculums])
 

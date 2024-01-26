@@ -48,7 +48,7 @@ const AppBarContent = props => {
     const checkStudent = async () => {
       try {
         const userByToken = await handleGetUser(/* pass your req object here if needed */)
-        console.log('checkUser', userByToken)
+        // console.log('checkUser', userByToken)
         setUserData(userByToken)
       } catch (error) {
         console.error('Error fetching user data:', error)
@@ -57,7 +57,7 @@ const AppBarContent = props => {
     if (showStudentMenu) {
       checkStudent()
     } else {
-      console.log('userRole', userRole)
+      // console.log('userRole', userRole)
       if (userRole == 0 || userRole === undefined) {
         router.push('/pages/back-office')
       }

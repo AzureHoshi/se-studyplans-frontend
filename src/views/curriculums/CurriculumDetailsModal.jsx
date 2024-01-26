@@ -38,7 +38,7 @@ function CurriculumDetailsModal({ curriculumId, state, open, handleClose, rows_d
     } else {
       setCurriculumId(0)
     }
-  }, [open,curriculumId])
+  }, [open, curriculumId])
 
   useEffect(() => {
     if (SubjectsLoading) {
@@ -55,7 +55,7 @@ function CurriculumDetailsModal({ curriculumId, state, open, handleClose, rows_d
 
   useEffect(() => {
     if (Subjects) {
-      console.log(Subjects)
+      // console.log(Subjects)
     }
   }, [Subjects])
 

@@ -171,10 +171,10 @@ function AddStudyPlanRecordsModal({
       .post(URL_GET_STUDY_PLAN_RECORDS, state)
       .then(res => {
         if (res.data.status === 201) {
-          console.log(res.data.message)
+          // console.log(res.data.message)
 
           const updateRecords = allRecord !== undefined ? allRecord?.concat(res.data.data) : Array(res.data.data)
-          console.log('updateRecords ', updateRecords)
+          // console.log('updateRecords ', updateRecords)
           setAllRecord(updateRecords) // update all record
           filterSubjects(updateRecords) // update subjects for autocomplete
           setClearAutoComplete(!clearAutoComplete) // clear autocomplete
@@ -217,7 +217,7 @@ function AddStudyPlanRecordsModal({
       // case insert by subjects
       if (state.subject_id === null || state.subject_id === 0) return alert('Please select subject')
       else {
-        console.log('insert with subject ', state)
+        // console.log('insert with subject ', state)
         postNewRecord()
         setState(refSubjectState)
       }
@@ -226,7 +226,7 @@ function AddStudyPlanRecordsModal({
         return alert('Please Fill Subject Name ')
       else {
         // case insert new text without reference by subject
-        console.log('insert without subject ', state)
+        // console.log('insert without subject ', state)
         postNewRecord()
         setState(noRefState)
       }
@@ -239,7 +239,7 @@ function AddStudyPlanRecordsModal({
         .delete(URL_GET_STUDY_PLAN_RECORDS + record.study_plan_record_id)
         .then(res => {
           if (res.data.status === 200) {
-            console.log(res.data.message)
+            // console.log(res.data.message)
             const updateRecords = Object.values(allRecord)?.filter(
               r => r.study_plan_record_id !== record.study_plan_record_id
             )
@@ -263,14 +263,14 @@ function AddStudyPlanRecordsModal({
               study_plan_total_credit: planRow.study_plan_total_credit
             }
 
-            console.log('updatelocal credit: ', updateState)
+            // console.log('updatelocal credit: ', updateState)
             axios.put(URL_GET_STUDY_PLANS + studyPlan.study_plan_id, updateState).then(res => {
               if (res.data.status === 200) {
-                console.log(res.data.message)
+                // console.log(res.data.message)
                 planRow.updated_at = res.data.data.updated_at
                 planTemp[0] = planRow
                 setPlans(planTemp)
-                console.log('planTemp', planTemp)
+                // console.log('planTemp', planTemp)
               }
             })
             // console.log('updateTotalCredit = ', updateCredit)
@@ -287,7 +287,7 @@ function AddStudyPlanRecordsModal({
   }, [open])
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

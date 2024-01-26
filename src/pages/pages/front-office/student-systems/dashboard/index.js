@@ -63,7 +63,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         collegian_code: String(collegianCode),
         feedback_record_answer: String(text)
       })
-      console.log('resFeedBack', resFeedBack.data)
+      // console.log('resFeedBack', resFeedBack.data)
     } catch (error) {
       // console.log('err from feedback', error)
       isError = true
@@ -720,7 +720,7 @@ export async function getServerSideProps(context) {
   const { req } = context
 
   const checkIsLogin = await handleCheckLogin(req)
-  console.log('checkIsLogin', checkIsLogin)
+  // console.log('checkIsLogin', checkIsLogin)
 
   if (!checkIsLogin) {
     return {
@@ -732,7 +732,7 @@ export async function getServerSideProps(context) {
   }
 
   const userByToken = await handleGetUser(req)
-  console.log('checkUser', userByToken)
+  // console.log('checkUser', userByToken)
 
   const apiEndpoints = [
     `/interest-results/${userByToken.col_code}`,

@@ -100,7 +100,7 @@ const Studyplans = () => {
 
   useEffect(() => {
     if (Plans.length > 0) {
-      console.log(Plans)
+      // console.log(Plans)
       setPlanSelected(String(Plans[0]?.study_plan_id))
     } else {
       setPlanSelected(0)

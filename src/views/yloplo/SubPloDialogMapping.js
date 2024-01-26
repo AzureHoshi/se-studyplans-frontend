@@ -79,7 +79,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   } = useFetch(URL_GET_SUBJECTS + curriculumSelected.curriculum_id)
 
   const handleCurriculumSelect = row => {
-    console.log(row)
+    // console.log(row)
     setCurriculumSelected(row)
     setTimeout(() => {
       setDisplayController(1)
@@ -91,10 +91,10 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
   }
 
   const handleMappingCheck = (isChecked, sub_plo_map_id, subject_id, sub_plo_id) => {
-    console.log('isChecked', isChecked)
-    console.log('sub_plo_map_id', sub_plo_map_id)
-    console.log('subject_id', subject_id)
-    console.log('sub_plo_id', sub_plo_id)
+    // console.log('isChecked', isChecked)
+    // console.log('sub_plo_map_id', sub_plo_map_id)
+    // console.log('subject_id', subject_id)
+    // console.log('sub_plo_id', sub_plo_id)
     if (isChecked !== undefined && sub_plo_map_id !== undefined) {
       axios
         .delete(URL_SUB_PLO_MAPPING + sub_plo_map_id)
@@ -190,7 +190,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
         })
       })
       setAllSubPLOs(newObjectArray)
-      console.log('newObjectArray', newObjectArray)
+      // console.log('newObjectArray', newObjectArray)
     }
   }, [PLOsData])
 
