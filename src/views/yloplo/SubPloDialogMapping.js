@@ -359,24 +359,11 @@ function SubPloDialogMapping({ PLOsData, open, handleClose, curriculumId }) {
             'Sub PLO Mapping' +
               ' หลักสูตร' +
               ' (' +
-              curriculumSelected?.curriculum_name_th +
+              Curriculums?.find(c => c.curriculum_id === curriculumId)?.curriculum_name_th +
               ') ' +
-              curriculumSelected?.curriculum_year}
+              Curriculums?.find(c => c.curriculum_id === curriculumId)?.curriculum_year}
         </DialogTitle>
-        {/* {displayController === 0 && <DialogContent sx={{ height: 600 }}> {DisplaySelecteCurriculums}</DialogContent>} */}
-        {/* {displayController !== 0 && (fakeLoading || SubjectsLoading) ? (
-          <DialogContent
-            sx={{
-              minHeight: 600
-            }}
-          >
-            <Box sx={{ m: 60, overflow: 'hidden' }}>
-              <CircleLoading />
-            </Box>
-          </DialogContent>
-        ) : (
-          displayController === 1 && <DialogContent> {DisplaySubPloSubjectMapping}</DialogContent>
-        )} */}
+
         {displayController === 1 && <DialogContent> {DisplaySubPloSubjectMapping}</DialogContent>}
         <DialogActions sx={{}}>
           {/* {displayController > 0 && (
