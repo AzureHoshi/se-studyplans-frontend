@@ -347,9 +347,11 @@ function YloDialogMangement({
       <Box sx={{ width: { xs: '100%', lg: '60%' }, p: 2 }}>
         <Typography variant='body2' sx={{ mb: 4 }}>
           YLO (
-          {Curriculums?.find(c => c.curriculum_id === curriculumSelected).curriculum_name_th +
-            ' ' +
-            Curriculums?.find(c => c.curriculum_id === curriculumSelected).curriculum_year}
+          {Curriculums &&
+            curriculumSelected &&
+            Curriculums?.find(c => c.curriculum_id === curriculumSelected)?.curriculum_name_th +
+              ' ' +
+              Curriculums?.find(c => c.curriculum_id === curriculumSelected)?.curriculum_year}
           )
         </Typography>
         <Box sx={{ my: 2 }}>
