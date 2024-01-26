@@ -178,7 +178,7 @@ function YLOPLOManagement() {
         <Grid item xs={6} sm={6} lg={3}>
           <Button onClick={() => setOpenPloMangement(true)} variant={'outlined'} sx={{ minWidth: 200 }} fullWidth>
             <Icon path={mdiCog} size={1} style={{ marginRight: 6 }} />
-            PLO Mangement
+            PLO Management
           </Button>
         </Grid>
         <Grid item xs={6} sm={6} lg={3}>
