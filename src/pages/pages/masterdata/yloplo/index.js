@@ -196,7 +196,6 @@ function YLOPLOManagement() {
               rows={YLOsData}
               columns={columns}
               uniqueKey={'ylo_id'}
-
               // isLoading={StudentGroupsLoading === null ? true : StudentGroupsLoading}
             />
           )}
@@ -224,6 +223,7 @@ function YLOPLOManagement() {
         PLOsData={PLOsData}
         open={openSubPloMapping}
         handleClose={() => setOpenSubPloMapping(false)}
+        curriculumId={curriculumSelected}
       />
     </Box>
   )

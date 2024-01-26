@@ -24,8 +24,8 @@ import { mdiSitemapOutline } from '@mdi/js'
 import { CircleLoading } from 'src/components'
 import axios from 'axios'
 
-function SubPloDialogMapping({ PLOsData, open, handleClose }) {
-  const [displayController, setDisplayController] = useState(0)
+function SubPloDialogMapping({ PLOsData, open, handleClose, curriculumId }) {
+  const [displayController, setDisplayController] = useState(1)
   const [fakeLoading, setFakeLoading] = useState(false)
   const [curriculumSelected, setCurriculumSelected] = useState([])
   const [AllSubPLOs, setAllSubPLOs] = useState([])
@@ -76,7 +76,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
     setData: setSubjects,
     loading: SubjectsLoading,
     reFetch: reFetchSubjects
-  } = useFetch(URL_GET_SUBJECTS + curriculumSelected.curriculum_id)
+  } = useFetch(URL_GET_SUBJECTS + curriculumId)
 
   const handleCurriculumSelect = row => {
     console.log(row)
@@ -354,7 +354,7 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
     >
       <Hidden lgDown>
         <DialogTitle sx={{ background: grey[100], mb: 3 }}>
-          {displayController === 0 && 'Sub PLO Mapping'}
+          {/* {displayController === 0 && 'Sub PLO Mapping'} */}
           {displayController === 1 &&
             'Sub PLO Mapping' +
               ' หลักสูตร' +
@@ -363,8 +363,8 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
               ') ' +
               curriculumSelected?.curriculum_year}
         </DialogTitle>
-        {displayController === 0 && <DialogContent sx={{ height: 600 }}> {DisplaySelecteCurriculums}</DialogContent>}
-        {displayController !== 0 && (fakeLoading || SubjectsLoading) ? (
+        {/* {displayController === 0 && <DialogContent sx={{ height: 600 }}> {DisplaySelecteCurriculums}</DialogContent>} */}
+        {/* {displayController !== 0 && (fakeLoading || SubjectsLoading) ? (
           <DialogContent
             sx={{
               minHeight: 600
@@ -376,14 +376,14 @@ function SubPloDialogMapping({ PLOsData, open, handleClose }) {
           </DialogContent>
         ) : (
           displayController === 1 && <DialogContent> {DisplaySubPloSubjectMapping}</DialogContent>
-        )}
-
+        )} */}
+        {displayController === 1 && <DialogContent> {DisplaySubPloSubjectMapping}</DialogContent>}
         <DialogActions sx={{}}>
-          {displayController > 0 && (
+          {/* {displayController > 0 && (
             <Button onClick={() => setDisplayController(pre => pre - 1)} variant='outlined'>
               Back
             </Button>
-          )}
+          )} */}
           <Button
             onClick={() => {
               handleClose()
