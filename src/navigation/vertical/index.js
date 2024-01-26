@@ -22,61 +22,62 @@ export const masterNavigation = () => {
       sectionTitle: 'MasterData'
     },
     {
-      title: 'Curriculums',
-      icon: BookOutline,
-      path: '/pages/masterdata/curriculums'
-    },
-    {
-      title: 'Curriculum Tree',
-      icon: FileTreeOutline,
-      path: '/pages/masterdata/curriculumtree'
-      // openInNewTab: true
-    },
-    {
-      title: 'Curriculum Structures',
-      icon: BookCogOutline,
-      path: '/pages/masterdata/curriculumstructure'
-      // openInNewTab: true
-    },
-    {
-      title: 'Subject Structures',
-      icon: FileCogOutline,
-      path: '/pages/masterdata/subjectstructures'
-      // openInNewTab: true
-    },
-    {
-      title: 'Faculty',
+      title: '1).Faculty',
       icon: Domain,
       path: '/pages/masterdata/faculty'
       // openInNewTab: true
     },
-
     {
-      title: 'Subject Categories',
-      icon: ViewGridOutline,
-      path: '/pages/masterdata/subjectcategories'
-      // openInNewTab: true
-    },
-    {
-      title: 'Subject Types',
-      icon: ViewGrid,
-      path: '/pages/masterdata/subjecttypes'
-      // openInNewTab: true
-    },
-    {
-      title: 'Subject Groups',
-      icon: DotsGrid,
-      path: '/pages/masterdata/subjectgroups'
-      // openInNewTab: true
-    },
-    {
-      title: 'Student Groups',
+      title: '2).Student Groups',
       icon: AccountGroupOutline,
       path: '/pages/masterdata/studentgroups'
       // openInNewTab: true
     },
     {
-      title: 'YLOs PLOs',
+      title: '3).Curriculums',
+      icon: BookOutline,
+      path: '/pages/masterdata/curriculums'
+    },
+    {
+      title: '4).Subject Categories',
+      icon: ViewGridOutline,
+      path: '/pages/masterdata/subjectcategories'
+      // openInNewTab: true
+    },
+    {
+      title: '5).Subject Types',
+      icon: ViewGrid,
+      path: '/pages/masterdata/subjecttypes'
+      // openInNewTab: true
+    },
+    {
+      title: '6).Subject Groups',
+      icon: DotsGrid,
+      path: '/pages/masterdata/subjectgroups'
+      // openInNewTab: true
+    },
+
+    {
+      title: '7).Curriculum Tree',
+      icon: FileTreeOutline,
+      path: '/pages/masterdata/curriculumtree'
+      // openInNewTab: true
+    },
+    {
+      title: '8).Curriculum Structures',
+      icon: BookCogOutline,
+      path: '/pages/masterdata/curriculumstructure'
+      // openInNewTab: true
+    },
+    {
+      title: '9).Subject Structures',
+      icon: FileCogOutline,
+      path: '/pages/masterdata/subjectstructures'
+      // openInNewTab: true
+    },
+
+    {
+      title: '10).YLOs PLOs',
       icon: FileCompare,
       path: '/pages/masterdata/yloplo'
       // openInNewTab: true

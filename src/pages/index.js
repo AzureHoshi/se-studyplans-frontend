@@ -327,7 +327,7 @@ export async function getServerSideProps(context) {
   const cookies = req?.headers?.cookie
   const defaultCurri = 2
   var apiEndpoints
-  if (cookies.split(';').find(cookie => cookie.trim().startsWith('curr='))) {
+  if (cookies !== undefined && cookies?.split(';').find(cookie => cookie.trim().startsWith('curr='))) {
     const currByDropdown = cookies.split(';').find(cookie => cookie.trim().startsWith('curr='))
     const currId = parseInt(String(currByDropdown).split('=')[1], 10)
     apiEndpoints = [
