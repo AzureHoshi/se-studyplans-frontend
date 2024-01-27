@@ -1,3 +1,5 @@
+import { mdiArrowTopRight } from '@mdi/js'
+import Icon from '@mdi/react'
 import {
   Autocomplete,
   Box,
@@ -23,6 +25,7 @@ import { grey } from '@mui/material/colors'
 
 import { styled } from '@mui/material/styles'
 import { TreeItem, TreeView, treeItemClasses } from '@mui/x-tree-view'
+import axios from 'axios'
 import Cookies from 'js-cookie'
 import { ChevronDown, ChevronRight } from 'mdi-material-ui'
 import { useEffect, useLayoutEffect, useState } from 'react'
@@ -57,6 +60,7 @@ const Roadmap = ({
   const URL_GET_SUBJECTS_RELATIONS = `${url.BASE_URL}/continue-subjects-subject/`
 
   const [subjectView, setSubjectView] = useState('treeview') // show treeview as default
+  const [projectRecommended, setProjectRecommended] = useState([])
 
   // for gridview
   const [SubjectsTemp, setSubjectsTemp] = useState([])
@@ -319,6 +323,22 @@ const Roadmap = ({
       return
     }
   }, [subjectsSE66, SubjectsTemp])
+
+  useEffect(() => {
+    if (openDetails) {
+      axios
+        .get(url.COLLAB_URL.project + `/get_project_potential?subject_id=` + subjectSelected.subject_id)
+        // .then(response => console.log('test', response.data))
+        .then(response => {
+          setProjectRecommended(response.data?.result)
+          console.log(response.data?.result)
+        })
+
+        .catch(err => {
+          console.log('An error occurred. Awkward.. : ', err)
+        })
+    }
+  }, [openDetails])
 
   useEffect(() => {
     if (displayMode === 0) {
@@ -1106,6 +1126,7 @@ const Roadmap = ({
         onClose={() => {
           setOpenDetails(false)
           setSubjectSelected([])
+          setProjectRecommended([])
         }}
         fullWidth
         maxWidth={'md'}
@@ -1125,6 +1146,7 @@ const Roadmap = ({
             onClick={() => {
               setOpenDetails(false)
               setSubjectSelected([])
+              setProjectRecommended([])
             }}
             sx={{ fontFamily: 'Segoe UI', color: 'white', fontWeight: 'bold', letterSpacing: 1, opacity: 0.8 }}
           >
@@ -1201,48 +1223,94 @@ const Roadmap = ({
               </Typography>
             </Grid>
             <Grid container item xs={12} spacing={2}>
-              <Grid item xs={12} sx={{ mb: 2 }}>
-                <Typography variant='body2' sx={{ color: 'gray', mt: 8 }}>
-                  Project Related
-                </Typography>
-              </Grid>
-              {[1, 2, 3, 4].map((item, index) => (
-                <Grid key={item} item xs={12} sm={6} lg={4}>
-                  <Card sx={{ height: 65, background: 'white' }}>
-                    <Box
-                      sx={{
-                        height: 30,
-                        background: 'lightgray',
-                        display: 'flex',
-                        justifyContent: 'end'
-                      }}
-                    >
-                      <Button
-                        sx={{
-                          color: 'white',
-                          m: 1,
-                          mx: -2
-                        }}
-                      >
-                        ...
-                      </Button>
-                    </Box>
-                    <Box
-                      sx={{
-                        height: 35,
-                        ml: 1.5,
-                        p: 1,
-                        display: 'flex',
-                        direction: 'column'
-                      }}
-                    >
-                      <Typography variant='body2' noWrap>
-                        Application something
-                      </Typography>
-                    </Box>
-                  </Card>
+              {projectRecommended?.length > 0 && (
+                <Grid item xs={12} sx={{ mb: 2 }}>
+                  <Typography variant='body2' sx={{ color: 'gray', mt: 8 }}>
+                    Project Related
+                  </Typography>
                 </Grid>
-              ))}
+              )}
+              <Grid container item xs={12} sx={{ mt: 2 }} spacing={6}>
+                {projectRecommended &&
+                  projectRecommended.length > 0 &&
+                  projectRecommended?.slice(page * 6, page * 6 + 6).map(project => (
+                    <Grid key={project?.project_id} item xs={12} md={6} lg={6}>
+                      <Card sx={{ height: 200, background: 'white' }}>
+                        <Box
+                          sx={{
+                            height: 30,
+                            background: 'lightgray',
+                            width: '100%',
+                            textAlign: 'end',
+                            pr: 2.5
+                          }}
+                        >
+                          <Typography
+                            variant='caption'
+                            sx={{
+                              minWidth: 80,
+                              color: 'gray',
+                              display: 'inline' // Ensure inline display
+                            }}
+                          >
+                            {new Date(project?.created_date_time).toLocaleDateString()}
+                          </Typography>
+                        </Box>
+                        <Box
+                          // onClick={() => handleOpenDetails(value)}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column'
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              backgroundColor: grey[200],
+                              p: 2
+                            }}
+                          >
+                            <Typography
+                              variant='body2'
+                              sx={{
+                                maxWidth: 300,
+                                ml: 1,
+                                fontWeight: 'bold',
+                                color: 'gray',
+                                display: 'inline' // Ensure inline display
+                              }}
+                              noWrap
+                            >
+                              {project?.project_code} {`ประเภท: ` + project?.type_name}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ m: 2, ml: 1.5, p: 1, display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant='caption' sx={{ display: 'inline', fontWeight: 'bold', height: 40 }}>
+                              <Typography variant='caption' sx={{ display: 'inline' }}>
+                                {project?.project_name_th}
+                              </Typography>
+                            </Typography>
+                          </Box>
+                          <Box sx={{ width: '100%', textAlign: 'end', pr: 4 }}>
+                            <Button
+                              // onClick={() => handleGetProjectId(project?.project_id)}
+                              variant={'contained'}
+                              sx={{
+                                mx: 'auto',
+                                mt: 2,
+                                mr: 2,
+                                backgroundColor: 'primary'
+                              }}
+                            >
+                              <Icon path={mdiArrowTopRight} size={0.7} />
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  ))}
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

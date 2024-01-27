@@ -542,7 +542,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                                 variant='body2'
                                 sx={{
                                   maxWidth: 300,
-                                  ml: 1.5,
+                                  ml: 1,
                                   fontWeight: 'bold',
                                   color: 'gray',
                                   display: 'inline' // Ensure inline display

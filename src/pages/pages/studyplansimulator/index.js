@@ -2519,6 +2519,7 @@ function StudyPlanSimulatorPage() {
             onClose={() => {
               setOpenDetails(false)
               setSubjectSelected([])
+              setProjectRecommended([])
               setDialogStatus(0)
               setJobSelected(0)
             }}
@@ -2541,9 +2542,10 @@ function StudyPlanSimulatorPage() {
                   <Button
                     onClick={() => {
                       setOpenDetails(false)
-                      setTimeout(() => {
-                        setSubjectSelected([])
-                      }, 200)
+                      setSubjectSelected([])
+                      setProjectRecommended([])
+                      setDialogStatus(0)
+                      setJobSelected(0)
                     }}
                     sx={{ fontFamily: 'Segoe UI', color: 'white', fontWeight: 'bold', letterSpacing: 1, opacity: 0.8 }}
                   >
@@ -2719,7 +2721,7 @@ function StudyPlanSimulatorPage() {
                                       variant='body2'
                                       sx={{
                                         maxWidth: 300,
-                                        ml: 1.5,
+                                        ml: 1,
                                         fontWeight: 'bold',
                                         color: 'gray',
                                         display: 'inline' // Ensure inline display
