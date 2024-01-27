@@ -1,9 +1,15 @@
 import React from 'react'
-import { useFetch as UseFetch, useSubmit as UseSubmit, useUpdate as UseUpdate, useDelete as UseDelete ,useSearchText as UseSearchText} from 'src/hooks'
+import {
+  useFetch as UseFetch,
+  useSubmit as UseSubmit,
+  useUpdate as UseUpdate,
+  useDelete as UseDelete,
+  useSearchText as UseSearchText
+} from 'src/hooks'
 import { useMemo, useState } from 'react'
 
 import { Btn, CircleLoading, ConfirmModal, DataGridTable, TextSearch } from 'src/components'
-import { Box, Grid, Typography, Button } from '@mui/material'
+import { Box, Grid, Typography, Button, Select, MenuItem } from '@mui/material'
 import Icon from '@mdi/react'
 
 import { mdiPen, mdiAlertRhombus } from '@mdi/js/'
@@ -15,15 +21,21 @@ import { url } from 'src/configs/urlConfig'
 const Studentgroups = () => {
   const [open, setOpen] = useState(false)
   const [editState, setEditState] = useState([])
+  const [curriculumIdSelected, setcurriculumIdSelected] = useState(2)
 
   const URL_GET_STUDENT_GROUPS = `${url.BASE_URL}/collegian-groups`
 
   const URL_INSERT = `${url.BASE_URL}/collegian-groups/`
   const URL_UPDATE = `${url.BASE_URL}/collegian-groups/${editState.collegian_group_id}`
   const URL_DELETE = `${url.BASE_URL}/collegian-groups/${editState.collegian_group_id}`
+  const URL_GET_CURRICULUM = `${url.BASE_URL}/curriculums/`
 
   const handleClickOpen = () => {
     setOpen(true)
+  }
+
+  const handleChangeCurriculum = currId => {
+    setcurriculumIdSelected(currId)
   }
 
   const handleClose = setInitialState => {
@@ -63,6 +75,16 @@ const Studentgroups = () => {
     reFetch: reFetchSTUDENT_GROUPS
   } = UseFetch(URL_GET_STUDENT_GROUPS)
 
+  // console.log('stdgrtoup', STUDENT_GROUPS)
+
+  const {
+    error: CurriculumError,
+    data: Curriculums,
+    setData: setCurriculums,
+    loading: CurriculumLoading,
+    reFetch: reFetchCurriculums
+  } = UseFetch(URL_GET_CURRICULUM)
+
   const columnsStudentGroups = [
     'collegian_group_name_th',
     'collegian_group_name_en',
@@ -86,6 +108,9 @@ const Studentgroups = () => {
   }, [StudentGroupsLoading])
 
   const handleSubmit = submitState => {
+    if (submitState.curriculum_id === 0) {
+      return alert('Please Select Curriculum')
+    }
     UseSubmit(URL_INSERT, submitState, () => setOpen(false), reFetchSTUDENT_GROUPS)
   }
 
@@ -119,6 +144,7 @@ const Studentgroups = () => {
     { field: 'collegian_group_name_en', headerName: 'Group Name EN', width: 200 },
     { field: 'collegian_group_short_name_th', headerName: 'Group Short Name TH', width: 200 },
     { field: 'collegian_group_short_name_en', headerName: 'Group Short Name EN', width: 200 },
+    { field: 'collegian_group_short_name_en', headerName: 'Group Short Name EN', width: 200 },
     {
       field: 'fn',
       headerName: '',
@@ -141,7 +167,20 @@ const Studentgroups = () => {
       <Box display={'flex'} flexDirection={'row'}>
         <Typography variant='h6'>Student Groups</Typography>
       </Box>
-
+      <Select
+        sx={{ width: 600 }}
+        size='small'
+        labelId='simple-dropdown-labels'
+        id='simple-dropdown'
+        value={curriculumIdSelected || 2}
+        onChange={e => handleChangeCurriculum(e.target.value)}
+      >
+        {Curriculums?.sort((a, b) => b.curriculum_id - a.curriculum_id).map((cur, index) => (
+          <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
+            {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
+          </MenuItem>
+        ))}
+      </Select>
       <Grid container spacing={6} sx={{ mt: 5 }}>
         <Grid item xs={12} sm={4} md={4} lg={3}>
           <Box display={'flex'} flexDirection={'row'}>
@@ -155,7 +194,7 @@ const Studentgroups = () => {
       <Grid container>
         <Grid item xs={12} sm={12} lg={12} mt={6}>
           <DataGridTable
-            rows={STUDENT_GROUPS}
+            rows={STUDENT_GROUPS?.filter(sg => sg.curriculum_id === curriculumIdSelected)}
             columns={columns}
             uniqueKey={'collegian_group_id'}
             isLoading={StudentGroupsLoading === null ? true : StudentGroupsLoading}
@@ -163,7 +202,14 @@ const Studentgroups = () => {
         </Grid>
       </Grid>
       <Grid container>
-        <AddStudentGroupsModal open={open} handleClose={handleClose} handleSubmit={handleSubmit} />
+        <AddStudentGroupsModal
+          open={open}
+          handleClose={handleClose}
+          handleSubmit={handleSubmit}
+          Curriculums={Curriculums}
+          curriculumIdSelected={curriculumIdSelected}
+          setcurriculumIdSelected={setcurriculumIdSelected}
+        />
       </Grid>
 
       <Grid container>
@@ -173,6 +219,8 @@ const Studentgroups = () => {
           handleClose={handleCloseEdit}
           handleUpdate={handleUpdate}
           openConfirmDelete={handleOpenConfirmDelete}
+          Curriculums={Curriculums}
+          setcurriculumIdSelected={setcurriculumIdSelected}
         />
       </Grid>
 
@@ -185,6 +233,7 @@ const Studentgroups = () => {
           open={openConfirmDelete}
           handleClose={handleCloseConfirmDelete}
           handleSubmit={handleDelete}
+          Curriculums={Curriculums}
         />
       </Grid>
     </Box>

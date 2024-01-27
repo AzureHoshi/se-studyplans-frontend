@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { Dialog, Typography, DialogContent, Grid, TextField, DialogActions, Button, Box } from '@mui/material'
+import {
+  Dialog,
+  Typography,
+  DialogContent,
+  Grid,
+  TextField,
+  DialogActions,
+  Button,
+  Box,
+  Select,
+  MenuItem
+} from '@mui/material'
 
 import Icon from '@mdi/react'
 import { mdiDelete } from '@mdi/js'
 import { handleChangeEN, handleChangeTH } from 'src/hooks/useValidation'
 
-function EditStudentGroupModal({ state, open, handleClose, handleUpdate, openConfirmDelete }) {
+function EditStudentGroupModal({
+  state,
+  open,
+  handleClose,
+  handleUpdate,
+  openConfirmDelete,
+  Curriculums,
+  setcurriculumIdSelected
+}) {
   const initialsState = {
     collegian_group_name_th: '',
     collegian_group_name_en: '',
     collegian_group_short_name_th: '',
-    collegian_group_short_name_en: ''
+    collegian_group_short_name_en: '',
+    curriculum_id: 0
   }
 
   const [updateState, setUpdateState] = useState([])
@@ -39,14 +59,16 @@ function EditStudentGroupModal({ state, open, handleClose, handleUpdate, openCon
         collegian_group_name_th,
         collegian_group_name_en,
         collegian_group_short_name_th,
-        collegian_group_short_name_en
+        collegian_group_short_name_en,
+        curriculum_id
       } = state
 
       const newObj = {
         collegian_group_name_th: collegian_group_name_th,
         collegian_group_name_en: collegian_group_name_en,
         collegian_group_short_name_th: collegian_group_short_name_th,
-        collegian_group_short_name_en: collegian_group_short_name_en
+        collegian_group_short_name_en: collegian_group_short_name_en,
+        curriculum_id: curriculum_id
       }
 
       // console.log('newObj :', newObj)
@@ -115,6 +137,25 @@ function EditStudentGroupModal({ state, open, handleClose, handleUpdate, openCon
                 onChange={e => handleChangeEN(e, setUpdateState)}
                 value={updateState.collegian_group_short_name_en || ''}
               />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={6}>
+              <Select
+                fullWidth
+                labelId='simple-dropdown-labels'
+                id='simple-dropdown'
+                value={updateState.curriculum_id || 0}
+                onChange={e => {
+                  setcurriculumIdSelected(e.target.value)
+                  setUpdateState(pre => ({ ...pre, curriculum_id: e.target.value }))
+                }}
+              >
+                <MenuItem value={0}>Select Curriculum*</MenuItem>
+                {Curriculums?.sort((a, b) => b.curriculum_id - a.curriculum_id).map((cur, index) => (
+                  <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
+                    {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
           </Grid>
         </DialogContent>

@@ -163,7 +163,7 @@ function YLOPLOManagement() {
         value={curriculumSelected || 2}
         onChange={e => handleChangeCurriculum(e.target.value)}
       >
-        {Curriculums?.map((cur, index) => (
+        {Curriculums?.sort((a, b) => b.curriculum_id - a.curriculum_id).map((cur, index) => (
           <MenuItem key={cur?.curriculum_id} value={cur?.curriculum_id}>
             {cur?.curriculum_name_th + '(' + cur?.curriculum_year + ')'}
           </MenuItem>
