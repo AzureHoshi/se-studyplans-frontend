@@ -59,6 +59,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   const [page, setPage] = useState(0)
   const [projectId, setProjectId] = useState(0)
   const [openProjectDetails, setOpenProjectDetails] = useState(false)
+  const [rowPerpage, setRowPerPage] = useState(6)
   const router = useRouter()
 
   const handleGetProjectId = proId => {
@@ -258,6 +259,27 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   }, [jobRecommended, interRestResult])
 
   // console.log('jobRecommended', jobRecommended)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 960) {
+        // You can adjust the breakpoint (960) for your specific use case
+        setRowPerPage(2)
+      } else {
+        setRowPerPage(6)
+      }
+    }
+
+    // Initial call to set the initial rowPerPage value
+    handleResize()
+
+    // Attach the event listener for window resize
+    window.addEventListener('resize', handleResize)
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [window.innerWidth])
 
   useEffect(() => {
     // console.log('InterestResult', InterestResult)
@@ -492,15 +514,15 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     component='div'
                     size='small'
                     count={projectRecommended?.length || 0}
-                    rowsPerPage={6}
+                    rowsPerPage={rowPerpage}
                     page={page}
                     onPageChange={handleChangePage}
                   />
                 </Box>
-                <Grid container item xs={12} sx={{ mt: 2 }} spacing={6}>
+                <Grid container item xs={12} sx={{ mt: 2, height: 500 }} spacing={6}>
                   {projectRecommended &&
                     projectRecommended.length > 0 &&
-                    projectRecommended?.slice(page * 6, page * 6 + 6).map(project => (
+                    projectRecommended?.slice(page * rowPerpage, page * rowPerpage + rowPerpage).map(project => (
                       <Grid key={project?.project_id} item xs={12} md={6} lg={4}>
                         <Card sx={{ height: 200, background: 'white' }}>
                           <Box
