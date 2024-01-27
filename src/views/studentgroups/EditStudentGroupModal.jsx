@@ -49,13 +49,13 @@ function EditStudentGroupModal({ state, open, handleClose, handleUpdate, openCon
         collegian_group_short_name_en: collegian_group_short_name_en
       }
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

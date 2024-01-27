@@ -75,7 +75,7 @@ function YLOPLOManagement() {
           if (res.data) {
             const resultData = res.data.data
             const YLOById = resultData?.find(y => y.ylo_id === ylo.ylo_id)
-            console.log('YLOById', YLOById)
+            // console.log('YLOById', YLOById)
             setYloSelected(YLOById)
           }
         })

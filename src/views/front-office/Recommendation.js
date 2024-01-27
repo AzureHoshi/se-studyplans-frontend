@@ -37,7 +37,7 @@ const Recommendation = ({ jobRecommended, jobCompetencies }) => {
 
   useEffect(() => {
     if (jobRecommended) {
-      console.log('jobRecommended', jobRecommended)
+      // console.log('jobRecommended', jobRecommended)
       const uniqueJobPositions = jobRecommended.reduce((result, currentItem) => {
         const { job_position_id, job_position } = currentItem
         if (!result[job_position_id]) {
@@ -47,7 +47,7 @@ const Recommendation = ({ jobRecommended, jobCompetencies }) => {
       }, {})
       const addJobDesc = Object.values(uniqueJobPositions)?.map((j, index) => ({ ...j, desc: dummyDesc[index] }))
       setJobPosition(addJobDesc)
-      console.log(Object.values(uniqueJobPositions))
+      // console.log(Object.values(uniqueJobPositions))
     }
   }, [jobRecommended])
 

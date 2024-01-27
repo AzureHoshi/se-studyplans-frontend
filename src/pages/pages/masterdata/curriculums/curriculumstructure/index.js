@@ -62,7 +62,7 @@ function Curriculumstructure() {
     if (Structure !== state.subjectGroups) {
       setState(() => ({ subjectGroups: Structure }))
     }
-  }, [Structure,state.subjectGroups])
+  }, [Structure, state.subjectGroups])
 
   const handleAddSubjectGroups = () => {
     if (row !== undefined) {
@@ -142,7 +142,7 @@ function Curriculumstructure() {
         checkIsDeleted.map(de =>
           axios.delete(URL_GET_STRUCTURE + de.curriculum_structure_id).then(res => {
             if (res.data.status === 200) {
-              console.log(res.data.message)
+              // console.log(res.data.message)
               setStructure(state.subjectGroups)
             }
           })
@@ -171,7 +171,7 @@ function Curriculumstructure() {
       const newValues = state.subjectGroups.filter(function (obj) {
         return Structure.indexOf(obj) == -1
       })
-      console.log('newValues ', newValues)
+      // console.log('newValues ', newValues)
       if (newValues) {
         newValues.map(newValue =>
           axios
@@ -187,7 +187,7 @@ function Curriculumstructure() {
                 )
 
                 findCS.curriculum_structure_id = res.data.data.curriculum_structure_id
-                
+
                 const updateMainState = state.subjectGroups.filter(
                   ums => ums.subject_group_id !== findCS.subject_group_id
                 )
@@ -241,7 +241,7 @@ function Curriculumstructure() {
       }
       setSubjectCategory(uniqueSubjectCategory)
     }
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   const CurriculumDetails = () => (

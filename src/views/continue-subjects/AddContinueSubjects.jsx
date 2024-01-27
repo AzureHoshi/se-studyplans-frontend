@@ -7,7 +7,6 @@ import {
   DialogActions,
   Box,
   Button,
-
   Autocomplete
 } from '@mui/material'
 import axios from 'axios'
@@ -17,7 +16,6 @@ import { useState } from 'react'
 import { CircleLoading, DataGridTable } from 'src/components'
 import { url } from 'src/configs/urlConfig'
 import { useFetch } from 'src/hooks'
-
 
 function AddContinueSubjects({ open, handleClose, subject }) {
   const URL_GET_CONTINUE_SUBJECT_BY_SUBJECT_ID = `${url.BASE_URL}/continue-subjects-subject/`
@@ -39,8 +37,6 @@ function AddContinueSubjects({ open, handleClose, subject }) {
     loading: SubjectLoading,
     reFetch: reFetchSubjects
   } = useFetch(URL_GET_SUBJECTS + subject?.curriculum_id)
-
-
 
   const [clearAutoComplete, setClearAutoComplete] = useState(false)
 
@@ -88,7 +84,7 @@ function AddContinueSubjects({ open, handleClose, subject }) {
               variant='outlined'
               sx={{ width: 180 }}
               onClick={() => {
-              deleteChildren(params?.row)
+                deleteChildren(params?.row)
               }}
             >
               Remove
@@ -127,24 +123,26 @@ function AddContinueSubjects({ open, handleClose, subject }) {
   //     console.log('test update children 2', Array(ContinueTemp))
   //   }
   // }
-const updateLocalChildren = newChildren => {
-  if (ContinueSubjects && ContinueSubjects[0]?.children?.length > 0) {
-    const updatedChildren = ContinueSubjects[0].children.concat(newChildren);
-    setContinueSubjects([{ ...ContinueSubjects[0], children: updatedChildren }]);
-    console.log('test update children 1', updatedChildren);
-  } else {
-    reFetchContinueSubjects();
-    console.log('test update children 2', ContinueSubjects);
+  const updateLocalChildren = newChildren => {
+    if (ContinueSubjects && ContinueSubjects[0]?.children?.length > 0) {
+      const updatedChildren = ContinueSubjects[0].children.concat(newChildren)
+      setContinueSubjects([{ ...ContinueSubjects[0], children: updatedChildren }])
+      // console.log('test update children 1', updatedChildren)
+    } else {
+      reFetchContinueSubjects()
+      // console.log('test update children 2', ContinueSubjects)
+    }
   }
-};
 
   const deleteChildren = children => {
     setIsDone(false)
     // console.log(children);
-    if(children){
-      axios.delete(URL_ADD_CONTINUE_SUBJECT+children?.continue_subject_id).then((res) =>
-        res.data && reFetchContinueSubjects() 
-      ).catch(err => console.log('error from delete children ',err)).finally(()=>setIsDone(true))
+    if (children) {
+      axios
+        .delete(URL_ADD_CONTINUE_SUBJECT + children?.continue_subject_id)
+        .then(res => res.data && reFetchContinueSubjects())
+        .catch(err => console.log('error from delete children ', err))
+        .finally(() => setIsDone(true))
     }
   }
 
@@ -183,7 +181,7 @@ const updateLocalChildren = newChildren => {
               .then(res => {
                 if (res.data.status === 201) {
                   // alert('create root node ' + res.data.data.subject_id)
-                  console.log('create root node ' + res.data.data.subject_id)
+                  // console.log('create root node ' + res.data.data.subject_id)
                 }
               })
               .catch(err => console.log('error from create root note', err))
@@ -193,7 +191,7 @@ const updateLocalChildren = newChildren => {
               .then(res => {
                 if (res.data.status === 201) {
                   // alert('insert children ' + res.data.data.subject_id)
-                  console.log('insert children ' + res.data.data.subject_id)
+                  // console.log('insert children ' + res.data.data.subject_id)
                   setIsDone(true)
                   setClearAutoComplete(!clearAutoComplete)
                   // create new continue subject from res
@@ -215,9 +213,9 @@ const updateLocalChildren = newChildren => {
     ContinueSubjects && console.log(ContinueSubjects)
   }, [ContinueSubjects])
 
-  useEffect(()=>{
-    if(open) reFetchContinueSubjects()
-  },[open])
+  useEffect(() => {
+    if (open) reFetchContinueSubjects()
+  }, [open])
 
   if (ContinueSubjectsError && SubjectError) {
     return <Box>Error Fetching...</Box>
@@ -234,15 +232,18 @@ const updateLocalChildren = newChildren => {
           <React.Fragment>
             <DialogContent>
               {/* // for wait fetching data  */}
-             <Dialog  open={!isDone && isDone !== null ? !isDone : false} PaperProps={{
-              style: {
-                backgroundColor:'transparent',
-                boxShadow:'none',
-              }
-             }}>
-            <DialogContent sx={{overflow:'hidden'}}>
-                <CircleLoading/>
-              </DialogContent>
+              <Dialog
+                open={!isDone && isDone !== null ? !isDone : false}
+                PaperProps={{
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none'
+                  }
+                }}
+              >
+                <DialogContent sx={{ overflow: 'hidden' }}>
+                  <CircleLoading />
+                </DialogContent>
               </Dialog>
               <Grid container>
                 <Grid item xs={12}>
@@ -265,32 +266,42 @@ const updateLocalChildren = newChildren => {
                         </React.Fragment>
                       )}
 
-                        {ContinueSubjects[0] === undefined && (
+                  {ContinueSubjects[0] === undefined && (
                     <Box display={'flex'} flexDirection={'row'}>
-                      <Button         
-                      onClick={()=>{
-                        setIsDone(false)
-                        axios
-                        .post(URL_ADD_CONTINUE_SUBJECT, { parent_id: null, subject_id: subject?.subject_id })
-                        .then(res => {
-                          if(res.data){console.log(res.data)
-                           reFetchContinueSubjects();
-                          }}).catch(err => console.log('err from create root node',err)).finally(()=>setIsDone(true))
-                      }}variant='contained'>
-                      Create root node
+                      <Button
+                        onClick={() => {
+                          setIsDone(false)
+                          axios
+                            .post(URL_ADD_CONTINUE_SUBJECT, { parent_id: null, subject_id: subject?.subject_id })
+                            .then(res => {
+                              if (res.data) {
+                                // console.log(res.data)
+                                reFetchContinueSubjects()
+                              }
+                            })
+                            .catch(err => console.log('err from create root node', err))
+                            .finally(() => setIsDone(true))
+                        }}
+                        variant='contained'
+                      >
+                        Create root node
                       </Button>
                     </Box>
                   )}
                   {ContinueSubjects[0]?.parent_id === null && (
                     <Box display={'flex'} flexDirection={'row'}>
-                      <Typography sx={{ color: 'gray' ,mt:1.5}}>วิชานี้เป็น Root node </Typography>
-                      <Button onClick={()=>{
-                        if(ContinueSubjects[0]?.children.length > 0){
-                          alert('root node have children, remove all children before cancel')
-                        }else{
-                          deleteChildren(ContinueSubjects[0])
-                        }
-                        }}>ยกเลิก</Button>
+                      <Typography sx={{ color: 'gray', mt: 1.5 }}>วิชานี้เป็น Root node </Typography>
+                      <Button
+                        onClick={() => {
+                          if (ContinueSubjects[0]?.children.length > 0) {
+                            alert('root node have children, remove all children before cancel')
+                          } else {
+                            deleteChildren(ContinueSubjects[0])
+                          }
+                        }}
+                      >
+                        ยกเลิก
+                      </Button>
                     </Box>
                   )}
                 </Grid>
@@ -318,7 +329,7 @@ const updateLocalChildren = newChildren => {
                           key={clearAutoComplete} // if toggle will clear value of autocomplete
                           disablePortal
                           fullWidth
-                          options={Subjects?.filter(sj=>sj.subject_id !== subject.subject_id)}
+                          options={Subjects?.filter(sj => sj.subject_id !== subject.subject_id)}
                           getOptionLabel={option => option.subject_code + ' ' + option.subject_name_th}
                           renderInput={params => <TextField {...params} label='Code, Subject name ' />}
                           onChange={(e, value) => {
@@ -331,8 +342,8 @@ const updateLocalChildren = newChildren => {
                           disabled={!isDone && isDone !== null ? true : false}
                           variant='contained'
                           sx={{ height: '100%', width: '100%' }}
-                          onClick={() =>
-                            checkSubject(subjectSelected?.subject_id, () => addNewChildren(subjectSelected))
+                          onClick={
+                            () => checkSubject(subjectSelected?.subject_id, () => addNewChildren(subjectSelected))
                             // addNewChildren(subjectSelected)
                           }
                         >
@@ -350,7 +361,7 @@ const updateLocalChildren = newChildren => {
                           key={clearAutoComplete} // if toggle will clear value of autocomplete
                           disablePortal
                           fullWidth
-                          options={Subjects?.filter(sj=>sj.subject_id !== subject.subject_id)}
+                          options={Subjects?.filter(sj => sj.subject_id !== subject.subject_id)}
                           getOptionLabel={option => option.subject_code + ' ' + option.subject_name_th}
                           renderInput={params => <TextField {...params} label='Code, Subject name ' />}
                           onChange={(e, value) => {
@@ -374,7 +385,6 @@ const updateLocalChildren = newChildren => {
                   )}
                 </Grid>
               </Grid>
-              
             </DialogContent>
           </React.Fragment>
         )}
@@ -384,9 +394,7 @@ const updateLocalChildren = newChildren => {
         <Button onClick={handleClose} color='secondary'>
           Cancel
         </Button>
-
       </DialogActions>
-     
     </Dialog>
   )
 }

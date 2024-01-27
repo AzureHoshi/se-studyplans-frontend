@@ -263,8 +263,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         })
 
       // Access the updated storeLabel
-      console.log('storeLabel', storeLabel)
-      console.log('createSummerLabel', createSummerLabel)
+      // console.log('storeLabel', storeLabel)
+      // console.log('createSummerLabel', createSummerLabel)
 
       setSummerLabel(createSummerLabel)
       setTermLabel(createTermLabel)
@@ -394,7 +394,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         }
       }
     })
-    console.log('newUpdates', newUpdates)
+    // console.log('newUpdates', newUpdates)
 
     const sumMap = {}
 
@@ -454,7 +454,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
             : item.countScope
       }
     })
-    console.log('updatedCurriculumStructures', updatedCurriculumStructures)
+    // console.log('updatedCurriculumStructures', updatedCurriculumStructures)
     setCurriculumScopeToDisplay(updatedCurriculumStructures)
   }, [curriculumScope, stdStudyPlans])
 
@@ -494,8 +494,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const handleAddStudyPlans = async type => {
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
-      console.log('term', getTerm)
-      console.log('All Plans', stdStudyPlans)
+      // console.log('term', getTerm)
+      // console.log('All Plans', stdStudyPlans)
       if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
         const checkParentinPlan = stdStudyPlans?.find(
           cp =>
@@ -505,7 +505,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
               cp.stu_acad_rec_year === getTerm.year &&
               cp.stu_acad_rec_semester < getTerm.semester)
         )
-        console.log('checkParentinPlan', checkParentinPlan)
+        // console.log('checkParentinPlan', checkParentinPlan)
         if (!checkParentinPlan)
           return alert(
             'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
@@ -521,7 +521,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         stu_acad_rec_semester: String(getTerm.semester),
         stu_acad_rec_grade: gradeSelected
       }
-      console.log('newPostObject', newPostObject)
+      // console.log('newPostObject', newPostObject)
 
       try {
         const resData = await axios.post(AddAPI, newPostObject)
@@ -541,7 +541,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
           termLabel: currentTerm
         }
         if (stdStudyPlans) {
-          console.log('newLocalObject', newLocalObject)
+          // console.log('newLocalObject', newLocalObject)
           const updatePlan = [...stdStudyPlans, newLocalObject]
 
           setStdStudyPlans(updatePlan)
@@ -605,7 +605,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
         stu_acad_rec_grade: gradeSelected
       }
 
-      console.log('newPostObject', newPostObject)
+      // console.log('newPostObject', newPostObject)
       try {
         const resData = await axios.post(AddAPI, newPostObject)
         // console.log('resData', resData.data.data)
@@ -667,9 +667,9 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
   const handleRemoveStudyPlan = studyPlan => {
     if (!studyPlan) return
-    console.log('studyPlan', studyPlan)
+    // console.log('studyPlan', studyPlan)
     const checkChildren = stdStudyPlans?.filter(s => s.continue_subjects[0]?.parent_id === studyPlan?.subject_id)
-    console.log('checkChildren', checkChildren)
+    // console.log('checkChildren', checkChildren)
     if (checkChildren.length > 0) {
       // alert 'this subject have childrens in studyplan please remove all children before remove this subject'
       const propertyValues = checkChildren.map(obj => obj['subject_code'])
@@ -729,7 +729,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
             label: newTermLabel
           }
         ]
-        console.log('newObject', newObject)
+        // console.log('newObject', newObject)
         setTermLabel(newObject)
         setSemesterType('normal')
         setCurrentTerm(newTermLabel)
@@ -1188,7 +1188,7 @@ export async function getServerSideProps(context) {
   const { req } = context
 
   const checkIsLogin = await handleCheckLogin(req)
-  console.log('checkIsLogin', checkIsLogin)
+  // console.log('checkIsLogin', checkIsLogin)
 
   if (!checkIsLogin) {
     return {
@@ -1200,7 +1200,7 @@ export async function getServerSideProps(context) {
   }
 
   const userByToken = await handleGetUser(req)
-  console.log('checkUser', userByToken)
+  // console.log('checkUser', userByToken)
 
   const apiEndpoints = [
     `/subjects-by-curriculum/${userByToken?.curriculum_id}`,
@@ -1216,7 +1216,7 @@ export async function getServerSideProps(context) {
       const response = await axios.get(url.BASE_URL + apiEndpoints[i])
       apiData[i] = i !== 3 ? response.data.data : response.data // Assuming data is stored in a property named "data" for consistency
 
-      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+      // console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)
@@ -1238,9 +1238,9 @@ export async function getServerSideProps(context) {
   const [SubjectData, StudyPlanByStdNo, addCountScope, InterestResults] = apiData
 
   // Your logic with the retrieved data
-  console.log('Data from endpoint SubjectData:', SubjectData)
-  console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
-  console.log('Data from endpoint curriculumScope:', addCountScope)
+  // console.log('Data from endpoint SubjectData:', SubjectData)
+  // console.log('Data from endpoint StudyPlanByStdNo:', StudyPlanByStdNo)
+  // console.log('Data from endpoint curriculumScope:', addCountScope)
 
   if (InterestResults === undefined) {
     return {

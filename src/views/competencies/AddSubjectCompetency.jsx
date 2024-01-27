@@ -215,7 +215,7 @@ function AddSubjectCompetency({ open, handleClose, subject, subjects, setSubject
           const preCompetencies = CompetenciesTemp.competencies?.filter(pData => pData.competency_id !== mainId)
           const updateObj = [...preCompetencies, obj[0]]
           // console.log(obj)
-          console.log(updateObj)
+          // console.log(updateObj)
           setCompetencyTemp(pre => ({
             ...pre,
             competencies: updateObj.sort((a, b) => (a.competency_id > b.competency_id ? 1 : -1))
@@ -249,7 +249,7 @@ function AddSubjectCompetency({ open, handleClose, subject, subjects, setSubject
           const mainObj = CompetenciesTemp.competencies?.filter(m => m.competency_id !== mainRow.competency_id)
           const removeSub = tempObj.competency_sub?.filter(sub => sub.competency_sub_id !== subRow.competency_sub_id)
           tempObj.competency_sub = [...removeSub, subRow]
-          console.log(tempObj)
+          // console.log(tempObj)
           // updateComSubjects([...mainObj, tempObj])
           setSnackMassage('Insert Success!')
         }

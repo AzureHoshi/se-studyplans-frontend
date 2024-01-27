@@ -70,7 +70,7 @@ export async function getServerSideProps(context) {
   const { req } = context
 
   const checkIsLogin = await handleCheckLogin(req)
-  console.log('checkIsLogin', checkIsLogin)
+  // console.log('checkIsLogin', checkIsLogin)
 
   if (!checkIsLogin) {
     return {
@@ -82,14 +82,14 @@ export async function getServerSideProps(context) {
   }
 
   const userByToken = await handleGetUser(req)
-  console.log('checkUser', userByToken)
+  // console.log('checkUser', userByToken)
 
   const res = await axios.get(url.BASE_URL + `/interest-surveys/${userByToken?.curriculum_id}`)
 
   try {
     const checkAlreadyHaveSurvey = await axios.get(url.BASE_URL + `/interest-results/${userByToken?.col_code}`)
     // Handle the response as needed
-    console.log('Survey results:', checkAlreadyHaveSurvey.data)
+    // console.log('Survey results:', checkAlreadyHaveSurvey.data)
     return {
       redirect: {
         destination: '/pages/front-office/student-systems/dashboard/',

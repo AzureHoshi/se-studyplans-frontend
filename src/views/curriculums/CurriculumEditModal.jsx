@@ -53,14 +53,14 @@ function CurriculumEditModal({ state, open, handleClose, faculty, studentGroups,
         curriculum_year: curriculum_year,
         faculty_id: faculty_id
       }
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
-  useEffect(() => {
-    console.log(updateState)
-  }, [updateState])
+  // useEffect(() => {
+  //   console.log(updateState)
+  // }, [updateState])
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={'lg'} fullWidth>

@@ -435,12 +435,12 @@ function StudyPlanSimulatorPage() {
 
   useEffect(() => {
     handleCheckLimitCredit(value + 1)
-    console.log('simSubjects', simSubjects)
+    // console.log('simSubjects', simSubjects)
   }, [simSubjects])
 
   useEffect(() => {
     if (CurriculumStructures.length > 0) {
-      console.log(Object.values(CurriculumStructures))
+      // console.log(Object.values(CurriculumStructures))
       const getTotalCredit = CurriculumStructures.reduce((sum, currentValue) => {
         // Adding the 'value' property of each object to the accumulator
         return sum + currentValue.credit_total
@@ -450,7 +450,7 @@ function StudyPlanSimulatorPage() {
   }, [CurriculumStructures])
 
   const handleRemoveSimSubject = async subject => {
-    console.log('subject', subject)
+    // console.log('subject', subject)
     var hasChildren
     await axios
       .get(url.BASE_URL + '/continue-subjects-subject/' + subject?.subject_id)
@@ -460,7 +460,7 @@ function StudyPlanSimulatorPage() {
       })
       .catch(err => console.log('err from handle delete', err))
 
-    console.log('hasChildren', hasChildren)
+    // console.log('hasChildren', hasChildren)
     var checkButOk = true
     // Filter out the subject with the given subject_id
     if (hasChildren.length > 0) {
@@ -530,7 +530,7 @@ function StudyPlanSimulatorPage() {
             old => old.subjectGroup?.subject_group_id !== subject?.subject_structures[0]?.subject_group_id
           )
           const newUpdate = [finetoUpdateScope[0], ...tempStructure]
-          console.log('newUpdate', newUpdate)
+          // console.log('newUpdate', newUpdate)
           setCurriculumStructures(
             newUpdate.sort(
               (a, b) =>
@@ -566,7 +566,7 @@ function StudyPlanSimulatorPage() {
 
   const handleChange = (event, newValue) => {
     handleCheckLimitCredit(newValue + 1)
-    console.log('Term :', newValue + 1)
+    // console.log('Term :', newValue + 1)
     setValue(newValue)
   }
 
@@ -718,7 +718,7 @@ function StudyPlanSimulatorPage() {
           update => update.curriculum_structures_v2_id === curriculumStructuresV2Id
         )
         if (uniqueUpdate) {
-          console.log('uniq update', uniqueUpdate)
+          // console.log('uniq update', uniqueUpdate)
         }
         // Update countScope based on the difference
         return {
@@ -781,17 +781,17 @@ function StudyPlanSimulatorPage() {
         return
       } else {
         const subjectIdArray = resultSubjectList?.map(obj => obj.subject_id)
-        console.log('array subject Id', subjectIdArray)
+        // console.log('array subject Id', subjectIdArray)
         if (subjectIdArray.length === 3) {
           axios
             .post(URL_SIM_RESULT_SUBJECT, { subject_id: subjectIdArray })
             .then(res => {
               if (res.data?.data?.length > 0) {
-                console.log(res.data)
+                // console.log(res.data)
                 setJobsByResult(res.data.data)
                 setResultSelected(2)
               } else {
-                console.log('no result ')
+                // console.log('no result ')
                 setJobsByResult([])
                 setResultSelected(2)
               }
@@ -816,7 +816,7 @@ function StudyPlanSimulatorPage() {
           .post(URL_SIM_RESULT_JOB, { job_position_id: jobSelected })
           .then(res => {
             if (res.data?.data?.length > 0) {
-              console.log(res.data)
+              // console.log(res.data)
               setJobsByResult(res.data.data)
               setResultSelected(2)
             } else {
@@ -1026,7 +1026,7 @@ function StudyPlanSimulatorPage() {
   }
 
   const handleExportCSV = () => {
-    console.log('simSubjects', simSubjects)
+    // console.log('simSubjects', simSubjects)
     if (simSubjects?.length !== 0) {
       const filteredData = simSubjects.map(item => ({
         term: item.term,
@@ -1046,7 +1046,7 @@ function StudyPlanSimulatorPage() {
       link.href = URL.createObjectURL(blob)
       link.download = 'exported_data.csv'
 
-      console.log('link', link)
+      // console.log('link', link)
 
       // เพิ่มลิงก์ลงใน DOM
       document.body.appendChild(link)

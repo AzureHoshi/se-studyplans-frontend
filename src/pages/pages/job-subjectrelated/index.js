@@ -94,7 +94,7 @@ function JobSubjectRelated() {
       })
       .then(res => {
         if (res.data) {
-          console.log(res.data)
+          // console.log(res.data)
           const { job_competencies, ...rest } = job
           const jobComUpdate = job_competencies?.map(job => {
             if (job.job_com_id === res.data.data.job_com_id) return res.data.data
@@ -112,7 +112,7 @@ function JobSubjectRelated() {
     if (!job_com_id) return
     axios.delete(URL_JOB_COMPETENCIES + job_com_id).then(res => {
       if (res.data) {
-        console.log(res.data)
+        // console.log(res.data)
         const { job_competencies, ...rest } = job
         const jobComUpdate = job_competencies?.filter(job => job.job_com_id !== job_com_id)
         const stateUpdate = { ...rest, job_competencies: jobComUpdate }
@@ -132,7 +132,7 @@ function JobSubjectRelated() {
       .post(URL_JOB_COMPETENCIES, { job_position_id: job.job_position_id, job_com_description: newCompetency })
       .then(res => {
         if (res.data) {
-          console.log(res.data)
+          // console.log(res.data)
           const { job_competencies, ...rest } = job
           const updatedJobCompetencies = [...job_competencies, res.data.data]
           const updatedObject = {
@@ -179,7 +179,7 @@ function JobSubjectRelated() {
       axios
         .delete(URL_GET_JOBS + position.job_position_id)
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           reFetchJobs()
         })
         .catch(err => {
@@ -212,7 +212,7 @@ function JobSubjectRelated() {
     axios
       .post(URL_GET_JOBS, { job_position_name: newJobName })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         reFetchJobs()
         setOpenInsert(false)
         setNewJobName('')
@@ -229,7 +229,7 @@ function JobSubjectRelated() {
     axios
       .post(URL_GET_SUBJECT_RELATED, { subject_id: subjectId, job_position_id: positionId })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         reFetchSubjectRelated()
         if (subjectJobRelated?.length > 0) {
           const updateState = [...res.data.data, ...subjectJobRelated]
@@ -252,7 +252,7 @@ function JobSubjectRelated() {
     axios
       .delete(URL_GET_SUBJECT_RELATED + subjectRelateId)
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         reFetchSubjectRelated()
         setSubjectJobRelated(() => subjectJobRelated.filter(s => s.subject_job_related_id !== subjectRelateId))
       })
@@ -269,17 +269,17 @@ function JobSubjectRelated() {
     setOpenCompetencies(true)
   }
 
-  useEffect(() => {
-    if (SubjectRelated) {
-      console.log('SubjectRelated', SubjectRelated)
-    }
-  }, [SubjectRelated])
+  // useEffect(() => {
+  //   if (SubjectRelated) {
+  //     console.log('SubjectRelated', SubjectRelated)
+  //   }
+  // }, [SubjectRelated])
 
-  useEffect(() => {
-    if (job) {
-      console.log('job', job)
-    }
-  }, [job])
+  // useEffect(() => {
+  //   if (job) {
+  //     console.log('job', job)
+  //   }
+  // }, [job])
 
   const columns = [
     {
@@ -349,9 +349,9 @@ function JobSubjectRelated() {
     }
   ]
 
-  useEffect(() => {
-    console.log('subjectJobRelated', subjectJobRelated)
-  }, [subjectJobRelated])
+  // useEffect(() => {
+  //   console.log('subjectJobRelated', subjectJobRelated)
+  // }, [subjectJobRelated])
 
   // console.log('subject job related', subjectJobRelated)
 

@@ -30,9 +30,9 @@ function AddSubjectCategoriesModal({ open, handleClose, handleSubmit }) {
     return isEmpty
   }
 
-  useEffect(() => {
-    console.log(state)
-  }, [state])
+  // useEffect(() => {
+  //   console.log(state)
+  // }, [state])
 
   return (
     <Dialog open={open} onClose={() => handleClose(setState(initialsState))} maxWidth={'lg'} fullWidth>

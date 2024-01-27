@@ -63,7 +63,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
         collegian_code: String(collegianCode),
         feedback_record_answer: String(text)
       })
-      console.log('resFeedBack', resFeedBack.data)
+      // console.log('resFeedBack', resFeedBack.data)
     } catch (error) {
       // console.log('err from feedback', error)
       isError = true
