@@ -57,7 +57,7 @@ const Subjects = ({
 
   const handleChangeSubject = subject => {
     setSubjectSelected(subject)
-    console.log(subject)
+    // console.log(subject)
   }
 
   const handleCheckScreen = () => {
@@ -96,10 +96,10 @@ const Subjects = ({
   }, [data])
 
   useEffect(() => {
-    console.log('searchSubject', searchSubject)
+    // console.log('searchSubject', searchSubject)
   }, [searchSubject])
 
-  console.log('stdStudyPlans', stdStudyPlans)
+  // console.log('stdStudyPlans', stdStudyPlans)
   return (
     <Box sx={{ height: '100vh', borderRight: { xs: 'none', sm: '2px solid #e5eaef' } }}>
       {switchContent === 0 && (

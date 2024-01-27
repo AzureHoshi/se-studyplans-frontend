@@ -171,10 +171,10 @@ function AddStudyPlanRecordsModal({
       .post(URL_GET_STUDY_PLAN_RECORDS, state)
       .then(res => {
         if (res.data.status === 201) {
-          console.log(res.data.message)
+          // console.log(res.data.message)
 
           const updateRecords = allRecord !== undefined ? allRecord?.concat(res.data.data) : Array(res.data.data)
-          console.log('updateRecords ', updateRecords)
+          // console.log('updateRecords ', updateRecords)
           setAllRecord(updateRecords) // update all record
           filterSubjects(updateRecords) // update subjects for autocomplete
           setClearAutoComplete(!clearAutoComplete) // clear autocomplete

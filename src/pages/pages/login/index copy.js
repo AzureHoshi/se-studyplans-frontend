@@ -96,7 +96,7 @@ const LoginPage = () => {
         password: values.password
       })
 
-      console.log(response)
+      // console.log(response)
       // Handle the response as needed, e.g., redirect or update state
     } catch (error) {
       console.error(error)

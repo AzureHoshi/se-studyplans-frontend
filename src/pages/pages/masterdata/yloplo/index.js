@@ -88,12 +88,12 @@ function YLOPLOManagement() {
     else {
       let result = window.confirm('ต้องการลบ YLO' + ylo.ylo_year + '?')
       if (result) {
-        console.log('api endpoint', URL_GET_YLOs + ylo.ylo_id)
+        // console.log('api endpoint', URL_GET_YLOs + ylo.ylo_id)
         await axios
           .delete(URL_GET_YLOs + ylo.ylo_id)
           .then(res => {
             if (res.data) {
-              console.log(res.data)
+              // console.log(res.data)
               reFetchYLOsData()
             }
           })

@@ -12,7 +12,7 @@ export const isCookieExpired = () => {
 
   if (!cookie) {
     // Cookie not found
-    console.log(`Cookie 'token' not found.`)
+    // console.log(`Cookie 'token' not found.`)
     return true
   }
 
@@ -20,7 +20,7 @@ export const isCookieExpired = () => {
   const currentDate = new Date()
 
   // Log the expiration date for debugging purposes
-  console.log(`Cookie 'token' expiration date: ${expirationDate}`)
+  // console.log(`Cookie 'token' expiration date: ${expirationDate}`)
 
   // Compare the expiration date with the current date
   return expirationDate < currentDate
@@ -42,7 +42,7 @@ export const handleCheckLogin = async req => {
       }
     })
 
-    console.log('check-login', response)
+    // console.log('check-login', response)
     return true
     // Handle the response as needed, e.g., redirect or update state
   } catch (error) {
@@ -67,7 +67,7 @@ export const handleLogout = async () => {
       }
     )
 
-    console.log('Logout response', response)
+    // console.log('Logout response', response)
     Cookies.remove('token')
     Cookies.remove('role')
     return true

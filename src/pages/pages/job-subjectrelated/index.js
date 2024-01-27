@@ -183,7 +183,7 @@ function JobSubjectRelated() {
           reFetchJobs()
         })
         .catch(err => {
-          console.log('err from delete job position', err)
+          // console.log('err from delete job position', err)
         })
     }
   }
@@ -218,7 +218,7 @@ function JobSubjectRelated() {
         setNewJobName('')
       })
       .catch(err => {
-        console.log('err from submit new job', err)
+        // console.log('err from submit new job', err)
       })
   }
 
@@ -240,7 +240,7 @@ function JobSubjectRelated() {
         }
       })
       .catch(err => {
-        console.log('err from add new subject related', err)
+        // console.log('err from add new subject related', err)
       })
     setSubjectSelected([])
   }
@@ -257,7 +257,7 @@ function JobSubjectRelated() {
         setSubjectJobRelated(() => subjectJobRelated.filter(s => s.subject_job_related_id !== subjectRelateId))
       })
       .catch(err => {
-        console.log('err from delete  subject related', err)
+        // console.log('err from delete  subject related', err)
       })
     setSubjectSelected([])
   }

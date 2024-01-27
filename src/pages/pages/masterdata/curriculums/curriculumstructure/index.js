@@ -456,7 +456,7 @@ function Curriculumstructure() {
                     } else {
                       setRow(undefined)
                     }
-                    console.log(sjg)
+                    // console.log(sjg)
                   }}
                   key={sjg.subject_group_id}
                   value={sjg.subject_group_id}

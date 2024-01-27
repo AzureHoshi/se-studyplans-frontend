@@ -54,7 +54,7 @@ function AddSubjectCompetency({ open, handleClose, subject, subjects, setSubject
 
   useEffect(() => {
     if (!CompetenciesLoading) {
-      console.log('Competencies', Competencies)
+      // console.log('Competencies', Competencies)
       setCompetencyTemp(Competencies)
     }
   }, [CompetenciesLoading])
@@ -105,7 +105,7 @@ function AddSubjectCompetency({ open, handleClose, subject, subjects, setSubject
       .then(res => {
         obj.competency_id = res.data.data.competency_id
         const mainTemp = [...CompetenciesTemp.competencies, obj]
-        console.log(mainTemp)
+        // console.log(mainTemp)
         updateComSubjects(mainTemp)
         setCompetencyTemp(pre => ({ ...pre, competencies: [...CompetenciesTemp.competencies, obj] }))
         setSnackMassage('Insert Success!')

@@ -106,7 +106,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
 
         // setResultDisplay(true)
       } catch (err) {
-        console.log(err)
+        // console.log(err)
         setResultDisplay(false)
       }
       // setIsLoading(false)

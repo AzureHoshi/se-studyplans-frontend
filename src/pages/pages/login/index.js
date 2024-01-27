@@ -86,7 +86,7 @@ const isCookieExpired = cookieName => {
 
   if (!cookie) {
     // Cookie not found
-    console.log(`Cookie '${cookieName}' not found.`)
+    // console.log(`Cookie '${cookieName}' not found.`)
     return true
   }
 
@@ -94,7 +94,7 @@ const isCookieExpired = cookieName => {
   const currentDate = new Date()
 
   // Log the expiration date for debugging purposes
-  console.log(`Cookie '${cookieName}' expiration date: ${expirationDate}`)
+  // console.log(`Cookie '${cookieName}' expiration date: ${expirationDate}`)
 
   // Compare the expiration date with the current date
   return expirationDate < currentDate
@@ -152,7 +152,7 @@ const LoginPage = () => {
 
       const { token, role } = response.data
 
-      console.log('Login successful')
+      // console.log('Login successful')
       Cookies.set('token', token.token, { expires: new Date(token.expires_at) })
       Cookies.set('role', role)
       setUser(userInitialState)
@@ -178,7 +178,7 @@ const LoginPage = () => {
 
       try {
         const userByToken = await handleGetUser(/* pass your req object here if needed */)
-        console.log('checkUser', userByToken)
+        // console.log('checkUser', userByToken)
         setUserData(userByToken)
         router.push('/pages/front-office/student-systems/interest-survey/')
         // Uncomment the following lines if you want to update the global user data
@@ -208,7 +208,7 @@ const LoginPage = () => {
         }
       })
 
-      console.log('check-login', response)
+      // console.log('check-login', response)
       // router.push('/pages/front-office/student-systems/interest-survey/')
 
       // Handle the response as needed, e.g., redirect or update state
@@ -233,7 +233,7 @@ const LoginPage = () => {
         }
       )
 
-      console.log('Logout response', response)
+      // console.log('Logout response', response)
       Cookies.remove('token')
       setUser(userInitialState)
       // Handle the response as needed, e.g., redirect or update state
@@ -404,7 +404,7 @@ export async function getServerSideProps(context) {
   const { req } = context
 
   const checkIsLogin = await handleCheckLogin(req)
-  console.log('checkIsLogin', checkIsLogin)
+  // console.log('checkIsLogin', checkIsLogin)
 
   if (checkIsLogin) {
     return {

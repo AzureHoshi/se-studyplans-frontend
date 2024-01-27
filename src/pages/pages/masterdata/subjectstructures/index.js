@@ -182,7 +182,7 @@ function Subjectstructures() {
             setState(initialState)
             setOpen(false)
             reFetchSubjectStructures()
-            console.log(res.data)
+            // console.log(res.data)
           }
         })
         .catch(err => console.log('error from delete subject structure', err))

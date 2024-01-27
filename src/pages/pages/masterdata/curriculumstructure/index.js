@@ -216,7 +216,7 @@ function Curriculumstructure() {
             setState(initialState)
             setOpen(false)
             reFetchCurriculumStructures()
-            console.log(res.data)
+            // console.log(res.data)
           }
         })
         .catch(err => console.log('error from delete curriculum structure', err))
@@ -331,8 +331,8 @@ function Curriculumstructure() {
     'subject_type_name'
   )
 
-  console.log('UniqueCategories', UniqueCategories)
-  console.log('UniqueTypeByCategory', UniqueTypes)
+  // console.log('UniqueCategories', UniqueCategories)
+  // console.log('UniqueTypeByCategory', UniqueTypes)
 
   useEffect(() => {
     if (Curriculums.length > 0) {

@@ -33,7 +33,7 @@ function AddFacultyModal({ open, handleClose, handleSubmit }) {
   }
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

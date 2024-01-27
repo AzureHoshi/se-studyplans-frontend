@@ -9,7 +9,7 @@ function useFilter(value, columnName, setState, dataList) {
     } else {
       searchState = search
       setState(searchState)
-      console.log(searchState)
+      // console.log(searchState)
     }
   } else {
     setState(dataList)

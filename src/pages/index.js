@@ -360,7 +360,7 @@ export async function getServerSideProps(context) {
       const response = await axios.get(url.BASE_URL + apiEndpoints[i])
       apiData[i] = response.data.data || response.data // Assuming data is stored in a property named "data" for consistency
 
-      console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
+      // console.log(`Data from endpoint ${apiEndpoints[i]}:`, apiData[i])
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error(`API request ${apiEndpoints[i]} returned a 404 status code. Handling it gracefully.`)

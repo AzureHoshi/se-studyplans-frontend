@@ -31,7 +31,7 @@ function AddStudyPlanModal({ open, handleClose, curriculumId, handleSubmit }) {
   const [isDone, setIsDone] = useState(null)
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

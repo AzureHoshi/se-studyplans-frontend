@@ -44,13 +44,13 @@ function EditSubjectGroupsModal({ state, open, handleClose, handleUpdate, openCo
         subject_group_name: subject_group_name
       }
 
-      console.log('newObj :', newObj)
+      // console.log('newObj :', newObj)
       setUpdateState(newObj)
     }
   }, [open])
 
   useEffect(() => {
-    console.log(updateState)
+    // console.log(updateState)
   }, [updateState])
 
   return (

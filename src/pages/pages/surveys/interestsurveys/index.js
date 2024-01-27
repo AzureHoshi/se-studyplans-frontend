@@ -98,7 +98,7 @@ function InterestsurveysPage() {
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchInterestSurveys()
           }
         })
@@ -114,12 +114,12 @@ function InterestsurveysPage() {
 
     // console.log(interestTemp)
     setIsDone(false)
-    console.log({
-      interest_survey_id: interestTemp[0]?.interest_survey_id,
-      interest_question_title: questionInsertTitle,
-      interest_question_type: selectedQuestionType,
-      job_position_id: jobSelected
-    })
+    // console.log({
+    //   interest_survey_id: interestTemp[0]?.interest_survey_id,
+    //   interest_question_title: questionInsertTitle,
+    //   interest_question_type: selectedQuestionType,
+    //   job_position_id: jobSelected
+    // })
     setOpenInsert(false)
     axios
       .post(URL_PUT_INTEREST_QUESTION, {
@@ -132,7 +132,7 @@ function InterestsurveysPage() {
         if (res.data) {
           reFetchInterestSurveys()
           setQuestionInsertTitle('')
-          console.log(res.data)
+          // console.log(res.data)
         }
       })
       .catch(err => console.log('err from insert new Question : ', err))
@@ -251,7 +251,7 @@ function InterestsurveysPage() {
         .delete(URL_POST_INTEREST_ANSWER + anwserId)
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
 
             const updateAnswer = question.interest_answers.filter(
               q => q.interest_answer_id !== res.data.data.interest_answer_id
@@ -286,7 +286,7 @@ function InterestsurveysPage() {
             .post(URL_POST_INTEREST_ANSWER_JOB, jobState)
             .then(res => {
               if (res.data) {
-                console.log(res.data)
+                // console.log(res.data)
                 reFetchInterestSurveys()
               }
             })
@@ -307,12 +307,12 @@ function InterestsurveysPage() {
             job_position_id: job.job_position_id,
             interest_answers_job_score: null
           }
-          console.log('jobsState', jobState)
-          axios
+            // console.log('jobsState', jobState)
+            // axios
             .post(URL_POST_INTEREST_ANSWER_JOB, jobState)
             .then(res => {
               if (res.data) {
-                console.log(res.data)
+                // console.log(res.data)
                 reFetchInterestSurveys()
               }
             })
@@ -323,7 +323,7 @@ function InterestsurveysPage() {
     }
 
     const deleteJobs = removeJobs => {
-      console.log('deleteState', removeJobs)
+      // console.log('deleteState', removeJobs)
       if (removeJobs?.length > 0) {
         setIsDone(false)
         removeJobs?.map(del => {
@@ -331,7 +331,7 @@ function InterestsurveysPage() {
             .delete(URL_POST_INTEREST_ANSWER_JOB + del.interest_answer_job_id)
             .then(res => {
               if (res.data) {
-                console.log(res.data)
+                // console.log(res.data)
                 reFetchInterestSurveys()
               }
             })
@@ -376,7 +376,7 @@ function InterestsurveysPage() {
       // console.log('newJobs', newJobs2)
       // console.log('deleteState', deleteState2)
       if (jobsRelatedType2[index]?.length > jobsRelatedType2Temp[index]?.length) {
-        console.log('job have added')
+        // console.log('job have added')
         insertNewJobsType2(newJobs2)
       } else if (jobsRelatedType2[index] == jobsRelatedType2Temp[index]) {
         // console.log('nothing happened')
@@ -386,7 +386,7 @@ function InterestsurveysPage() {
         insertNewJobsType2(newJobs2)
       } else {
         deleteJobs(deleteState2)
-        console.log('job have removed')
+        // console.log('job have removed')
       }
     }
   }
@@ -707,7 +707,7 @@ function InterestsurveysPage() {
                         // getOptionSelected={(option, value) => option.job_position_id === value.job_position_id}
                         renderInput={params => <TextField {...params} label='Job Positions ' />}
                         onChange={(e, value) => {
-                          console.log(value)
+                          // console.log(value)
                           setJobsRelatedType1(value)
                         }}
                       />
@@ -802,7 +802,7 @@ function InterestsurveysPage() {
                               getOptionLabel={option => option?.jobPosition.job_position_name || ''}
                               renderInput={params => <TextField {...params} label='Jobs Related ' />}
                               onChange={(e, value) => {
-                                console.log(value)
+                                // console.log(value)
 
                                 // const tempState = question?.interest_answers.filter(
                                 //   f => f.interest_answer_id !== ans.interest_answer_id
@@ -814,10 +814,10 @@ function InterestsurveysPage() {
                                 tempState[index] = updateState
 
                                 const jobsData = tempState?.map(interestJob => interestJob.interest_answers_job)
-                                console.log(jobsData)
+                                // console.log(jobsData)
                                 if (jobsData) {
                                   setJobsRelatedType2(() => Object.values(jobsData))
-                                  console.log('tempState', tempState)
+                                  // console.log('tempState', tempState)
                                 }
                               }}
                             />

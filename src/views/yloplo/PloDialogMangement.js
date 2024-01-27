@@ -34,7 +34,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
 
   const handleOpenEditPLO = plo => {
     setPLOSelected(plo)
-    console.log(plo)
+    // console.log(plo)
     setOpenPloEdit(true)
   }
 
@@ -113,7 +113,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
             setPLOCreateForm(initialPLOForm)
@@ -131,7 +131,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
             setOpenPloEdit(false)
@@ -146,7 +146,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         .delete(URL_PLO + plo_id)
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
           }
@@ -165,13 +165,13 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
             setSubPLOCreateForm(initialSubPLOForm)
             const tempSubPlos = PLOSelected?.sub_plos
             tempSubPlos = [...tempSubPlos, res.data.data]
-            console.log('tempSubPlos', tempSubPlos)
+            // console.log('tempSubPlos', tempSubPlos)
             setPLOSelected(pre => ({ ...pre, sub_plos: tempSubPlos }))
           }
         })
@@ -188,7 +188,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             // reFetchPLOsData()
             // reFetchYLOsData()
             // setOpenPloEdit(false)
@@ -200,17 +200,17 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
 
   const handleRemoveSubPlo = sub_plo_id => {
     if (sub_plo_id) {
-      console.log('sub_plo_id', sub_plo_id)
+      // console.log('sub_plo_id', sub_plo_id)
       axios
         .delete(URL_SubPLO + sub_plo_id)
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             reFetchPLOsData()
             reFetchYLOsData()
             setSubPLOCreateForm(initialSubPLOForm)
             const tempSubPlos = PLOSelected?.sub_plos?.filter(subPlo => subPlo.sub_plo_id !== sub_plo_id)
-            console.log('tempSubPlos', tempSubPlos)
+            // console.log('tempSubPlos', tempSubPlos)
             setPLOSelected(pre => ({ ...pre, sub_plos: tempSubPlos }))
           }
         })
@@ -219,7 +219,7 @@ function PloDialogMangement({ PLOsData, open, handleClose, reFetchPLOsData, reFe
   }
 
   useEffect(() => {
-    console.log('PLOSelected', PLOSelected)
+    // console.log('PLOSelected', PLOSelected)
   }, [PLOSelected])
 
   const columns = [

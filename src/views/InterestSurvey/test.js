@@ -32,9 +32,9 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
 
   const handleInputChange = (event, index, type, answerId) => {
     if (type === 1) {
-      console.log('index: ', index)
-      console.log('answerId: ', answerId)
-      console.log('value: ', event.target.value)
+      // console.log('index: ', index)
+      // console.log('answerId: ', answerId)
+      // console.log('value: ', event.target.value)
 
       // const answerId = answerId[0].interest_answer_id
       const value = parseInt(event.target.value, 10)
@@ -90,19 +90,19 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
           }
         })
 
-        console.log(res)
+        // console.log(res)
         setResultDisplay(true)
       } catch (err) {
-        console.log(err)
+        // console.log(err)
         setResultDisplay(false)
       }
 
-      console.log(answers)
+      // console.log(answers)
     }
   }
 
   useEffect(() => {
-    console.log('answers: ', answers)
+    // console.log('answers: ', answers)
   }, [answers])
 
   if (isLoading) {

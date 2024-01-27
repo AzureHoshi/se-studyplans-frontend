@@ -96,13 +96,13 @@ function YloDialogMangement({
 
   const handleCreateYLO = () => {
     const checkDesc = descriptionArray?.find(d => d.ylo_description !== '')
-    console.log('checkDesc', checkDesc)
-    console.log('checkCurrId', curriculumSelected)
+    // console.log('checkDesc', checkDesc)
+    // console.log('checkCurrId', curriculumSelected)
     if (checkDesc && yloYear) {
       const removeEmptyStringArray = descriptionArray
         ?.filter(d => d.ylo_description !== '')
         .map(onlyString => onlyString.ylo_description)
-      console.log('removeEmptyStringArray', removeEmptyStringArray)
+      // console.log('removeEmptyStringArray', removeEmptyStringArray)
       axios
         .post(URL_YLO, {
           curriculum_id: curriculumSelected,
@@ -111,7 +111,7 @@ function YloDialogMangement({
         })
         .then(res => {
           if (res.data) {
-            console.log(res.data)
+            // console.log(res.data)
             refetchYLOs()
             handleClose()
           }
@@ -160,12 +160,12 @@ function YloDialogMangement({
   }
 
   const handleRemovePLORelated = ylo_plo_id => {
-    console.log('ylo_plo_id', ylo_plo_id)
+    // console.log('ylo_plo_id', ylo_plo_id)
     axios
       .delete(`${URL_YLO_PLO_RELATED}?ylo_plo_id=${ylo_plo_id}`)
       .then(res => {
         if (res.data) {
-          console.log(res.data)
+          // console.log(res.data)
           refetchYLOs()
           setTimeout(() => {
             handleUpdateYloSelect(yloState)
@@ -180,7 +180,7 @@ function YloDialogMangement({
       .post(URL_YLO_DESC, { ylo_id: yloState.ylo_id, ylo_description: descriptionSelected })
       .then(res => {
         if (res.data) {
-          console.log(res.data)
+          // console.log(res.data)
           const updatedUserObject = {
             ...yloState,
             ylo_description: [...yloState.ylo_description, { ...res.data.data }]
@@ -197,12 +197,12 @@ function YloDialogMangement({
 
   const handleRemoveDesc = async descId => {
     if (!descId) return
-    console.log('api endpoint', URL_YLO_DESC + descId)
+    // console.log('api endpoint', URL_YLO_DESC + descId)
     await axios
       .delete(URL_YLO_DESC + descId)
       .then(res => {
         if (res.data) {
-          console.log(res.data)
+          // console.log(res.data)
           const filterData = yloState?.ylo_description?.filter(d => d.ylo_des_id !== descId)
           // console.log(updatedUserObject)
           const updatedUserObject = {
@@ -444,14 +444,14 @@ function YloDialogMangement({
               renderInput={params => <TextField {...params} label='+Add PLO Relation' />}
               onChange={(e, value) => {
                 if (value !== null) {
-                  console.log(value)
+                  // console.log(value)
                   let result = window.confirm('ต้องการเพิ่ม ' + value.plo_name + 'ใน YLO' + yloState.ylo_year)
                   if (result) {
                     axios
                       .post(URL_YLO_PLO_RELATED, { ylo_id: yloState.ylo_id, plo_id: value.plo_id })
                       .then(res => {
                         if (res.data) {
-                          console.log(res.data)
+                          // console.log(res.data)
                           setTimeout(() => {
                             handleUpdateYloSelect(yloState)
                           }, 500)
@@ -491,7 +491,7 @@ function YloDialogMangement({
   useEffect(() => {
     if (yloState) {
       const filteredPlos = yloState?.plos?.filter(plo => plo.ylo_plos !== null)
-      console.log('yloState', yloState)
+      // console.log('yloState', yloState)
       // Create an object to store the first item for each unique plo_id
       const firstItems = {}
 
@@ -511,7 +511,7 @@ function YloDialogMangement({
   }, [yloState])
 
   useEffect(() => {
-    console.log('yloPLO', yloPLO)
+    // console.log('yloPLO', yloPLO)
   }, [yloPLO])
 
   useEffect(() => {

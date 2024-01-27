@@ -87,7 +87,7 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
   }, open)
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
 
   return (

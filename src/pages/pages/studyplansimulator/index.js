@@ -153,7 +153,7 @@ function StudyPlanSimulatorPage() {
       )
       // has parent and parent not in simulator
       if (checkParentInSim === undefined) {
-        console.log('checkParentInSim', checkParentInSim)
+        // console.log('checkParentInSim', checkParentInSim)
         setDialogStatus(1)
         setOpenDetails(true)
         setSubjectSelected(subject)
@@ -456,7 +456,7 @@ function StudyPlanSimulatorPage() {
       .get(url.BASE_URL + '/continue-subjects-subject/' + subject?.subject_id)
       .then(res => {
         hasChildren = res.data.data[0].children
-        console.log(res.data.data)
+        // console.log(res.data.data)
       })
       .catch(err => console.log('err from handle delete', err))
 
@@ -797,7 +797,7 @@ function StudyPlanSimulatorPage() {
               }
             })
             .catch(err => {
-              console.log('err from fething result type subjecrt', err)
+              // console.log('err from fething result type subjecrt', err)
             })
             .finally(() => {
               setTimeout(() => {
@@ -820,13 +820,13 @@ function StudyPlanSimulatorPage() {
               setJobsByResult(res.data.data)
               setResultSelected(2)
             } else {
-              console.log('no result ')
+              // console.log('no result ')
               setJobsByResult([])
               setResultSelected(2)
             }
           })
           .catch(err => {
-            console.log('err from fething result type job', err)
+            // console.log('err from fething result type job', err)
           })
           .finally(() => {
             setTimeout(() => {

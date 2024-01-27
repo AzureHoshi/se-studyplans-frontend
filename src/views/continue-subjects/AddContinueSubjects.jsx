@@ -161,7 +161,7 @@ function AddContinueSubjects({ open, handleClose, subject }) {
               .then(res => {
                 if (res.data.status === 201) {
                   // alert('insert children ' + res.data.data.subject_id)
-                  console.log('insert children ' + res.data.data.subject_id)
+                  // console.log('insert children ' + res.data.data.subject_id)
                   setIsDone(true)
                   setClearAutoComplete(!clearAutoComplete)
 
