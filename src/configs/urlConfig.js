@@ -3,7 +3,8 @@
 // };
 
 export const url = {
-  BASE_URL: 'http://128.199.147.134:4002/api/v1'
+  BASE_URL: 'http://128.199.147.134:4002/api/v1',
+  COLLAB_URL: { project: 'http://128.199.147.134:4003/api/project-mgt' }
   // BASE_URL: 'https://my-backend-adonis.onrender.com/api/v1'
   // BASE_URL: 'http://localhost:3001/api/v1'
 }

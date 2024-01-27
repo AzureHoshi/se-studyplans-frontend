@@ -25,7 +25,13 @@ import { CustomLayout } from 'src/views/custom-layout-student-systems'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { mdiClose } from '@mdi/js'
+import {
+  mdiClose,
+  mdiArrowTopRight,
+  mdiNewspaper,
+  mdiNewspaperVariantMultipleOutline,
+  mdiTextBoxSearchOutline
+} from '@mdi/js'
 import Icon from '@mdi/react'
 import { url } from 'src/configs/urlConfig'
 import { userProfile } from 'src/dummy'
@@ -34,6 +40,7 @@ import router, { useRouter } from 'next/router'
 import { Selection } from 'src/components'
 import { handleCheckLogin, handleGetUser } from 'src/authentication'
 import { useGlobalContext } from 'src/configs/context'
+import ModalProjectDetails from 'src/views/std-dashboard/ModalProjectDetails'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -48,10 +55,26 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   })
   const [feedback, setFeedback] = useState('')
   const [lastedSubjectSemester, setLastedSubjectsSemester] = useState([])
+  const [projectRecommended, setProjectRecommended] = useState([])
+  const [page, setPage] = useState(0)
+  const [projectId, setProjectId] = useState(0)
+  const [openProjectDetails, setOpenProjectDetails] = useState(false)
   const router = useRouter()
+
+  const handleGetProjectId = proId => {
+    setProjectId(proId)
+    setOpenProjectDetails(true)
+  }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
 
   const handleRoutetoUpdatePlan = () => {
     router.push('studyplans')
+  }
+  const handleLinkClick = path => {
+    window.open(path, '_blank')
   }
 
   const handleSubmitFeedBack = (text, collegianCode) => {
@@ -182,17 +205,17 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     }
   }
 
-  // useEffect(() => {
-  //   axios
-  //     .get(url.BASE_URL + `/interest-results/` + userProfile.std_no)
-  //     // .then(response => console.log('test', response.data))
-  //     .then(response => console.log('test', response.data))
+  useEffect(() => {
+    axios
+      .get(url.COLLAB_URL.project + `/getallprojectrecommend`)
+      // .then(response => console.log('test', response.data))
+      .then(response => setProjectRecommended(response.data?.projectlist))
 
-  //     .catch(err => {
-  //       console.log('An error occurred. Awkward.. : ', err)
-  //       alert('Status: ' + err.response.data.status + ' ' + err.response.data.message)
-  //     })
-  // }, [])
+      .catch(err => {
+        console.log('An error occurred. Awkward.. : ', err)
+      })
+  }, [])
+  // console.log('getallprojectrecommend', projectRecommended)
 
   useLayoutEffect(() => {
     if (jobRecommended && interRestResult) {
@@ -468,53 +491,27 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     rowsPerPageOptions={[]}
                     component='div'
                     size='small'
-                    count={6}
-                    rowsPerPage={5}
-                    page={1}
-                    onPageChange={() => null}
+                    count={projectRecommended?.length || 0}
+                    rowsPerPage={6}
+                    page={page}
+                    onPageChange={handleChangePage}
                   />
                 </Box>
                 <Grid container item xs={12} sx={{ mt: 2 }} spacing={6}>
-                  {Array.from({ length: 6 }, (_, index) => (
-                    <Grid key={index} item xs={12} md={6} lg={4}>
-                      <Card sx={{ height: 200, background: 'white' }}>
-                        <Box
-                          sx={{
-                            height: 30,
-                            background: 'lightgray',
-                            display: 'flex',
-                            justifyContent: 'space-between'
-                          }}
-                        ></Box>
-                        <Box
-                          // onClick={() => handleOpenDetails(value)}
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column'
-                          }}
-                        >
+                  {projectRecommended &&
+                    projectRecommended.length > 0 &&
+                    projectRecommended?.slice(page * 6, page * 6 + 6).map(project => (
+                      <Grid key={project?.project_id} item xs={12} md={6} lg={4}>
+                        <Card sx={{ height: 200, background: 'white' }}>
                           <Box
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              backgroundColor: grey[200],
-                              p: 2,
-                              pl: 1.5
+                              height: 30,
+                              background: 'lightgray',
+                              width: '100%',
+                              textAlign: 'end',
+                              pr: 2.5
                             }}
                           >
-                            <Typography
-                              variant='body2'
-                              sx={{
-                                maxWidth: 300,
-                                ml: 1.5,
-                                fontWeight: 'bold',
-                                color: 'gray',
-                                display: 'inline' // Ensure inline display
-                              }}
-                              noWrap
-                            >
-                              Project Name Project Name Project Name
-                            </Typography>
                             <Typography
                               variant='caption'
                               sx={{
@@ -523,46 +520,81 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                                 display: 'inline' // Ensure inline display
                               }}
                             >
-                              2023-07-16
+                              {new Date(project?.created_datetime).toLocaleDateString()}
                             </Typography>
                           </Box>
-                          <Box sx={{ m: 2, ml: 1.5, p: 1, display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='caption' sx={{ display: 'inline', fontWeight: 'bold' }}>
-                              ENGCEXX
-                              <Typography variant='caption' sx={{ display: 'inline', ml: 6 }} noWrap>
-                                Subject Name...........................
-                              </Typography>
-                            </Typography>
-
-                            <Typography variant='caption' sx={{ display: 'inline', fontWeight: 'bold' }}>
-                              ENGCEXX
-                              <Typography variant='caption' sx={{ display: 'inline', ml: 6 }} noWrap>
-                                Subject Name...........................
-                              </Typography>
-                            </Typography>
-                          </Box>
-                          <Button
-                            variant={'contained'}
+                          <Box
+                            // onClick={() => handleOpenDetails(value)}
                             sx={{
-                              width: '80%',
-                              mx: 'auto',
-                              mt: 2,
-                              letterSpacing: 2,
-                              fontSize: 12,
-                              backgroundColor: 'black'
+                              display: 'flex',
+                              flexDirection: 'column'
                             }}
                           >
-                            Details
-                          </Button>
-                        </Box>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                backgroundColor: grey[200],
+                                p: 2
+                              }}
+                            >
+                              <Typography
+                                variant='body2'
+                                sx={{
+                                  maxWidth: 300,
+                                  ml: 1.5,
+                                  fontWeight: 'bold',
+                                  color: 'gray',
+                                  display: 'inline' // Ensure inline display
+                                }}
+                                noWrap
+                              >
+                                {project?.project_code} {`ประเภท: ` + project?.type_name}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ m: 2, ml: 1.5, p: 1, display: 'flex', flexDirection: 'column' }}>
+                              <Typography variant='caption' sx={{ display: 'inline', fontWeight: 'bold', height: 40 }}>
+                                <Typography variant='caption' sx={{ display: 'inline' }}>
+                                  {project?.project_name_th}
+                                </Typography>
+                              </Typography>
+                            </Box>
+                            <Box sx={{ width: '100%', textAlign: 'end', pr: 4 }}>
+                              <Button
+                                // onClick={() => handleGetProjectId(project?.project_id)}
+                                variant={'contained'}
+                                sx={{
+                                  mx: 'auto',
+                                  mt: 2,
+                                  mr: 2,
+                                  backgroundColor: 'primary'
+                                }}
+                              >
+                                <Icon path={mdiArrowTopRight} size={0.7} />
+                              </Button>
+                              <Button
+                                onClick={() => handleGetProjectId(project?.project_id)}
+                                variant={'contained'}
+                                sx={{
+                                  mx: 'auto',
+                                  mt: 2,
+                                  letterSpacing: 2,
+                                  fontSize: 10,
+                                  backgroundColor: 'black'
+                                }}
+                              >
+                                Details
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </Grid>
             </Grid>
             {/* reform shortcut */}
-            <Grid item xs={12} lg={3} sx={{ px: { xs: 0, sm: 3.5 }, mt: { xs: 6, lg: 0 } }}>
+            <Grid item xs={12} lg={3} sx={{ px: { xs: 0, lg: 3.5 }, mt: { xs: 6, lg: 0 } }}>
               <Card sx={{ height: 535, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
                 <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
                   Recommend Subjects By Job
@@ -611,21 +643,89 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     ))}
                 </List>
               </Card>
-              <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
-                <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
-                  CE Reform Portal
-                </Typography>
+              <Card
+                sx={{
+                  height: 120,
+                  background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,
+                  mb: 6,
+                  textAlign: 'center',
+                  position: 'relative',
+                  ':hover': { cursor: 'pointer', opacity: 0.7 }
+                }}
+              >
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                    position: 'absolute',
+                    top: 11.5,
+                    left: -50,
+                    background: 'white',
+                    borderRadius: 2,
+                    width: 170,
+                    height: '80%',
+                    opacity: 0.8
+                  }}
+                >
+                  <Icon
+                    path={mdiNewspaperVariantMultipleOutline}
+                    size={3.2}
+                    color='gray'
+                    style={{ marginLeft: 40, marginTop: 6, opacity: 0.4 }}
+                  />
+                </Box>
+                <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
+                  <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                    CE Reform Portal
+                  </Typography>
+                </Box>
               </Card>
-              <Card sx={{ height: 120, background: grey[300], mb: 6, textAlign: 'center' }}>
-                <Typography variant='body2' color={grey[500]} sx={{ my: 12 }}>
-                  Pre-Project/Project
-                </Typography>
+              <Card
+                onClick={() => handleLinkClick('http://128.199.147.134:3003/')}
+                sx={{
+                  height: 120,
+                  background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,
+                  mb: 6,
+                  textAlign: 'center',
+                  position: 'relative',
+                  ':hover': { cursor: 'pointer', opacity: 0.7 }
+                }}
+              >
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                    position: 'absolute',
+                    top: 11.5,
+                    left: -50,
+                    background: 'white',
+                    borderRadius: 2,
+                    width: 170,
+                    height: '80%',
+                    opacity: 0.8
+                  }}
+                >
+                  <Icon
+                    path={mdiTextBoxSearchOutline}
+                    size={3.2}
+                    color='gray'
+                    style={{ marginLeft: 40, marginTop: 6, opacity: 0.4 }}
+                  />
+                </Box>
+                <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
+                  <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                    Pre-Project/Project
+                  </Typography>
+                </Box>
               </Card>
 
-              <Typography variant='caption' sx={{ textAlign: 'justify' }}>
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web
-                designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have
-                scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book. It usually
+              <Typography variant='caption'>
+                <p style={{ textAlign: 'justify' }}>
+                  มทร.ล้านนา การจัดทำโครงการระบบการจัดการสารสนเทศเพื่อการเรียน การสอน :
+                  กรณีศึกษาหลักสูตรวิศวกรรมคอมพิวเตอร์ มทร.ล้านนา เพื่อพัฒนาระบบของหลักสูตร
+                  ขึ้นมาเพื่อที่จะใช้เทคโนโลยีทางด้านวิศวกรรมมาพัฒนาระบบการศึกษาและ วิจัยร่วมระหว่าง ภาครัฐ ภาคเอกชน และ
+                  ภาคการศึกษา มาจัดการเพื่อเพิ่มประสิทธิภาพการจัดการเรียนการสอน ให้มีความ เข้าใจง่าย
+                  และเข้าถึงข้อมูลของหลักสูตรได้ เพื่อตอบสนองต่อผู้ใช้งานระบบ และผู้พัฒนาระบบ
+                  ซึ่งจะสามารถแบ่งประเด็นที่จะนำเอาเทคโนโลยีมาใช้ในการพัฒนาระบบที่ตอบสนองต่อผู้ใช้งาน
+                </p>
               </Typography>
               <Divider />
             </Grid>
@@ -708,6 +808,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
               </Grid>
             </DialogContent>
           </Dialog>
+          <ModalProjectDetails
+            open={openProjectDetails}
+            handleClose={() => setOpenProjectDetails(false)}
+            projectId={projectId}
+          />
         </Box>
       }
     />
