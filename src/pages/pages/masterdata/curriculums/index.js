@@ -1,6 +1,12 @@
 import React from 'react'
 import { Hidden, MenuItem } from '@mui/material'
-import { useFetch as UseFetch, useSubmit as UseSubmit, useUpdate as UseUpdate, useDelete as UseDelete,useSearchText as UseSearchText} from 'src/hooks'
+import {
+  useFetch as UseFetch,
+  useSubmit as UseSubmit,
+  useUpdate as UseUpdate,
+  useDelete as UseDelete,
+  useSearchText as UseSearchText
+} from 'src/hooks'
 import { useMemo, useState } from 'react'
 
 import { Btn, CircleLoading, ConfirmModal, DataGridTable, Selection, TextSearch } from 'src/components'
@@ -12,7 +18,7 @@ import { mdiPen, mdiDownload, mdiDotsHorizontal, mdiAlertRhombus, mdiFilter } fr
 import AddCurriculumModal from 'src/views/curriculums/AddCurriculumModal'
 import CurriculumEditModal from 'src/views/curriculums/CurriculumEditModal'
 import CurriculumDetailsModal from 'src/views/curriculums/CurriculumDetailsModal'
-import {useFilter as UseFilter} from 'src/hooks/useFilter'
+import { useFilter as UseFilter } from 'src/hooks/useFilter'
 import { url } from 'src/configs/urlConfig'
 
 const Curriculums = () => {
@@ -101,7 +107,7 @@ const Curriculums = () => {
       setCurriculumsTemp(Curriculums)
     } else {
     }
-  }, [CurriculumLoading,Curriculums])
+  }, [CurriculumLoading, Curriculums])
 
   const { error: FacultyError, data: Faculty, loading: FacultyLoading } = UseFetch(URL_GET_FACULTY)
 

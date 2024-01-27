@@ -16,7 +16,7 @@ export default function useSubmit(url, state, closemodal, refetch, isDone) {
       })
 
       .catch(err => {
-        // console.log('An error occurred. Awkward.. : ', err)
+        console.log('An error occurred. Awkward.. : ', err)
         alert('Status: ' + err.response.data.status + ' ' + err.response.data.message)
       })
   } else {

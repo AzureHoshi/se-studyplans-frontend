@@ -33,7 +33,7 @@ function CurriculumEditModal({ state, open, handleClose, faculty, studentGroups,
   useEffect(() => {
     if (open) {
       const {
-        collegian_group_id,
+        // collegian_group_id,
         curriculum_id,
         curriculum_name_en,
         curriculum_name_th,
@@ -44,7 +44,7 @@ function CurriculumEditModal({ state, open, handleClose, faculty, studentGroups,
       } = state
 
       const newObj = {
-        collegian_group_id: collegian_group_id,
+        // collegian_group_id: collegian_group_id,
         curriculum_id: curriculum_id,
         curriculum_name_en: curriculum_name_en,
         curriculum_name_th: curriculum_name_th,
@@ -206,7 +206,7 @@ function CurriculumEditModal({ state, open, handleClose, faculty, studentGroups,
                 ))}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={6}>
+            {/* <Grid item xs={12} sm={12} md={12} lg={6}>
               <Selection
                 width={'100%'}
                 firstItemText={'Choose Student Groups *'}
@@ -218,7 +218,7 @@ function CurriculumEditModal({ state, open, handleClose, faculty, studentGroups,
                   </MenuItem>
                 ))}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12} sm={12} md={12} lg={6}>
               <TextField

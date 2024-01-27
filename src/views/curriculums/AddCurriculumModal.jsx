@@ -21,12 +21,12 @@ import { handleChangeEN, handleChangeNumber, handleChangeTH } from 'src/hooks/us
 function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, faculty, studentGroups }) {
   const [curriculumSelection, setCurriculumSelection] = useState(0)
   const [facultySelection, setFacultySelection] = useState(0)
-  const [studentGroupsSelection, setStudentGroupsSelection] = useState(0)
+  // const [studentGroupsSelection, setStudentGroupsSelection] = useState(0)
   const [duplicateState, setDuplicateState] = useState(false)
 
   const initialsState = {
     faculty_id: 0,
-    collegian_group_id: 0,
+    // collegian_group_id: 0,
     curriculum_name_th: '',
     curriculum_name_en: '',
     curriculum_short_name_th: '',
@@ -37,7 +37,7 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
 
   const [state, setState] = useState({
     faculty_id: 0,
-    collegian_group_id: 0,
+    // collegian_group_id: 0,
     curriculum_name_th: '',
     curriculum_name_en: '',
     curriculum_short_name_th: '',
@@ -73,15 +73,15 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
     setState(pre => ({ ...pre, faculty_id: facultySelection }))
   }, [facultySelection])
 
-  useEffect(() => {
-    setState(pre => ({ ...pre, collegian_group_id: studentGroupsSelection }))
-  }, [studentGroupsSelection])
+  // useEffect(() => {
+  //   setState(pre => ({ ...pre, collegian_group_id: studentGroupsSelection }))
+  // }, [studentGroupsSelection])
 
   // reset state when open/close
   useEffect(() => {
     setState(initialsState)
     setCurriculumSelection(0)
-    setStudentGroupsSelection(0)
+    // setStudentGroupsSelection(0)
     setFacultySelection(0)
     setDuplicateState(false)
   }, open)
@@ -158,7 +158,7 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
             </DialogContent>
             <DialogContent sx={{ display: 'flex' }}>
               <Grid container spacing={6}>
-                <Grid item xs={12} sm={12} md={12} lg={6}>
+                <Grid item xs={12} sm={12} md={12} lg={12}>
                   <Selection
                     width={'100%'}
                     firstItemText={'Choose Faculty *'}
@@ -171,7 +171,7 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
                     ))}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6}>
+                {/* <Grid item xs={12} sm={12} md={12} lg={6}>
                   <Selection
                     width={'100%'}
                     firstItemText={'Choose Student Groups *'}
@@ -183,7 +183,7 @@ function AddCurriculumModal({ open, handleClose, handleSubmit, curriculums, facu
                       </MenuItem>
                     ))}
                   />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sm={12} md={12} lg={6}>
                   <TextField
