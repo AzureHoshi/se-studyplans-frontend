@@ -1044,10 +1044,16 @@ function StudyPlanSimulatorPage() {
   }
 
   const handleExportCSV = () => {
+    const convertTermToAcademicYear = term => {
+      const academicYear = Math.ceil(term / 2)
+      const semester = term % 2 === 0 ? 2 : 1
+      return `ปีการศึกษา ${academicYear}/${semester}`
+    }
+
     // console.log('simSubjects', simSubjects)
     if (simSubjects?.length !== 0) {
       const filteredData = simSubjects.map(item => ({
-        term: item.term,
+        term: convertTermToAcademicYear(item.term),
         subject_code: item.subject_code,
         subject_name_th: item.subject_name_th,
         subject_name_en: item.subject_name_en,
@@ -1063,8 +1069,6 @@ function StudyPlanSimulatorPage() {
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
       link.download = 'exported_data.csv'
-
-      // console.log('link', link)
 
       // เพิ่มลิงก์ลงใน DOM
       document.body.appendChild(link)
