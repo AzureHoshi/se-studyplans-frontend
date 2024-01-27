@@ -559,7 +559,7 @@ function StudyPlanSimulatorPage() {
     }
   }
 
-  const [tabs, setTabs] = useState(['Term 1'])
+  const [tabs, setTabs] = useState(['ปีการศึกษา 1/1'])
 
   // for current tab value
   const [value, setValue] = useState(0)
@@ -617,7 +617,11 @@ function StudyPlanSimulatorPage() {
       const newTabs = []
       for (let i = 0; i < maxTerm; i++) {
         const newTabIndex = newTabs.length + 1
-        const newTabLabel = `Term ${newTabIndex}`
+        const numerator = Math.ceil(newTabIndex / 2) // Adjust the numerator logic as needed
+        const denominator = newTabIndex % 2 === 0 ? 2 : 1
+
+        const newTabLabel = `ปีการศึกษา ${numerator}/${denominator}`
+
         newTabs.push(newTabLabel)
         handleCheckLimitCredit(newTabIndex)
       }
@@ -864,7 +868,10 @@ function StudyPlanSimulatorPage() {
 
   const handleAddTab = () => {
     const newTabIndex = tabs.length + 1
-    const newTabLabel = `Term ${newTabIndex}`
+    const numerator = Math.ceil(newTabIndex / 2) // Adjust the numerator logic as needed
+    const denominator = newTabIndex % 2 === 0 ? 2 : 1
+
+    const newTabLabel = `ปีการศึกษา ${numerator}/${denominator}`
     // console.log('newTabIndex :', newTabIndex)
     handleCheckLimitCredit(newTabIndex)
     setTabs([...tabs, newTabLabel])
@@ -1000,7 +1007,12 @@ function StudyPlanSimulatorPage() {
         const updatedTabs = tabs.filter((_, index) => index !== indexToRemove)
 
         // Rename the remaining tabs based on their new indices
-        const renamedTabs = updatedTabs.map((label, index) => `Term ${index + 1}`)
+
+        const renamedTabs = updatedTabs.map((label, index) => {
+          const numerator = Math.ceil((index + 1) / 2) // Adjust the numerator logic as needed
+          const denominator = (index + 1) % 2 === 0 ? 2 : 1
+          return `ปีการศึกษา ${numerator}/${denominator}`
+        })
 
         // Set the updated tabs and adjust the value if needed
         setTabs(renamedTabs)
@@ -1014,7 +1026,11 @@ function StudyPlanSimulatorPage() {
       const updatedTabs = tabs.filter((_, index) => index !== indexToRemove)
 
       // Rename the remaining tabs based on their new indices
-      const renamedTabs = updatedTabs.map((label, index) => `Term ${index + 1}`)
+      const renamedTabs = updatedTabs.map((label, index) => {
+        const numerator = Math.ceil((index + 1) / 2) // Adjust the numerator logic as needed
+        const denominator = (index + 1) % 2 === 0 ? 2 : 1
+        return `ปีการศึกษา ${numerator}/${denominator}`
+      })
 
       // Set the updated tabs and adjust the value if needed
       setTabs(renamedTabs)
@@ -2145,7 +2161,7 @@ function StudyPlanSimulatorPage() {
                       >
                         {/* Content for each tab */}
 
-                        <Box sx={{ m: { xs: 0, lg: 2 }, width: '100%', minHeight: 600 }}>
+                        <Box sx={{ m: { xs: 0, lg: 2 }, width: '100%', minHeight: 500 }}>
                           <Box sx={{ width: '100%', my: 2 }}>
                             <Button
                               sx={{
@@ -2258,18 +2274,6 @@ function StudyPlanSimulatorPage() {
                               ))}
                           {displayScope && (
                             <Grid item xs={12}>
-                              <Box sx={{ width: '100%', textAlign: 'end' }}>
-                                <Typography sx={{ mr: { xs: 6, sm: 6, lg: 3 } }} variant='body2'>
-                                  {simSubjects.reduce((accumulator, currentValue) => {
-                                    // Adding the 'value' property of each object to the accumulator
-                                    return accumulator + currentValue.subject_credit
-                                  }, 0) +
-                                    '/' +
-                                    totalCreditByScope +
-                                    ' '}
-                                  Total Credit
-                                </Typography>
-                              </Box>
                               <Box sx={{ width: '100%', px: 4 }}>
                                 {UniqueCategories.map(categoryHeader => (
                                   <Box key={categoryHeader} maxWidth={'100%'} sx={{ mb: 3 }}>
@@ -2454,6 +2458,18 @@ function StudyPlanSimulatorPage() {
                               </Box>
                             </Grid>
                           )}
+                        </Box>
+                        <Box sx={{ width: '100%', textAlign: 'end', mt: -16, mb: 24 }}>
+                          <Typography sx={{ mr: { xs: 6, sm: 6, lg: 3 } }} variant='h6'>
+                            {simSubjects.reduce((accumulator, currentValue) => {
+                              // Adding the 'value' property of each object to the accumulator
+                              return accumulator + currentValue.subject_credit
+                            }, 0) +
+                              '/' +
+                              totalCreditByScope +
+                              ' '}
+                          </Typography>
+                          <Typography sx={{ mr: { xs: 6, sm: 6, lg: 3 } }}> หน่วยกิตรวม</Typography>
                         </Box>
                       </Box>
                     ))}
