@@ -589,7 +589,8 @@ function StudyPlanSimulatorPage() {
           : 'ต้องการแทนที่ข้อมูลการจำลองแผนทั้งหมดด้วยตัวอย่างแผนการเรียน?'
       )
       if (result) {
-        setTabs(['Term 1'])
+        setTabs(['ปีการศึกษา 1/1'])
+        setExPlanSelected(0)
         setSimSubjects([])
         setCurriculumStructures(tempCurriculumStructures)
         // console.log('tempCurristruc', tempCurriculumStructures)
