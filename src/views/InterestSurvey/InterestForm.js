@@ -285,7 +285,7 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                   </Box>
                 </Card>
                 <Card
-                  onClick={() => handleLinkClick('http://128.199.147.134:3003/')}
+                  onClick={() => handleLinkClick(url.MGTLINK)}
                   sx={{
                     height: 120,
                     background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,

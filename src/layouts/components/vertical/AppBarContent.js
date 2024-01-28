@@ -154,7 +154,7 @@ const AppBarContent = props => {
             >
               <Icon path={mdiFlagPlus} size={1} color={grey[500]} />
               <Typography sx={{ ml: 2, textAlign: 'center', fontSize: { xs: 12, md: 14 } }}>
-                Studyplan Simulator
+                ระบบจำลองแผนการเรียน SE66
               </Typography>
             </Box>
           </Hidden>

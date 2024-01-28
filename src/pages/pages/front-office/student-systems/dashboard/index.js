@@ -583,7 +583,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                             </Box>
                             <Box sx={{ width: '100%', textAlign: 'end', pr: 4 }}>
                               <Button
-                                // onClick={() => handleGetProjectId(project?.project_id)}
+                                onClick={() => handleLinkClick(url.MGTLINK)}
                                 variant={'contained'}
                                 sx={{
                                   mx: 'auto',
@@ -702,7 +702,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                 </Box>
               </Card>
               <Card
-                onClick={() => handleLinkClick('http://128.199.147.134:3003/')}
+                onClick={() => handleLinkClick(url.MGTLINK)}
                 sx={{
                   height: 120,
                   background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,
