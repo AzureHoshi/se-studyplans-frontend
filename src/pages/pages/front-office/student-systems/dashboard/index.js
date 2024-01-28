@@ -279,7 +279,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [window.innerWidth])
+  }, [])
 
   useEffect(() => {
     // console.log('InterestResult', InterestResult)
@@ -519,7 +519,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     onPageChange={handleChangePage}
                   />
                 </Box>
-                <Grid container item xs={12} sx={{ mt: 2, height: 500 }} spacing={6}>
+                <Grid container item xs={12} sx={{ mt: 2, minHeight: 500 }} spacing={6}>
                   {projectRecommended &&
                     projectRecommended.length > 0 &&
                     projectRecommended?.slice(page * rowPerpage, page * rowPerpage + rowPerpage).map(project => (
