@@ -1294,7 +1294,7 @@ const Roadmap = ({
                           </Box>
                           <Box sx={{ width: '100%', textAlign: 'end', pr: 4 }}>
                             <Button
-                              // onClick={() => handleGetProjectId(project?.project_id)}
+                              onClick={() => window.open(url.MGTLINK, '_blank')}
                               variant={'contained'}
                               sx={{
                                 mx: 'auto',

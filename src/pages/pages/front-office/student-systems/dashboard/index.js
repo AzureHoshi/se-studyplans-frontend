@@ -62,6 +62,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
   const [rowPerpage, setRowPerPage] = useState(6)
   const router = useRouter()
 
+  // console.log('state?.userData', state?.userData)
   const handleGetProjectId = proId => {
     setProjectId(proId)
     setOpenProjectDetails(true)
@@ -324,7 +325,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
               <Grid item xs={12} sm={5} lg={5}>
                 {interRestResult?.labels?.length > 0 ? (
                   <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
-                    <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
+                    <Typography sx={{ color: 'black' }}>ผลลัพธ์จากแบบประเมินความสนใจ</Typography>
                     <Box
                       sx={{
                         width: '100%',
@@ -381,7 +382,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   </Card>
                 ) : (
                   <Card sx={{ height: 420, p: 6, pt: 4, minWidth: 260 }}>
-                    <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }}>Interested Result</Typography>
+                    <Typography sx={{ color: 'black' }}> ผลลัพธ์จากแบบประเมินความสนใจ</Typography>
                     <Box
                       sx={{
                         width: '100%',
@@ -399,12 +400,13 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
               <Grid item xs={12} sm={7} lg={7}>
                 <Card sx={{ height: 420, p: 6, pt: 4 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-                      <Typography sx={{ color: 'black', fontFamily: 'Segoe UI' }} noWrap>
-                        Study Plan
+                    <Box>
+                      <Typography variant='caption' sx={{ color: 'black', mr: 1 }} noWrap>
+                        แผนการเรียน
                       </Typography>
-                      <Typography sx={{ ml: { xs: 0, md: 2.5 }, color: 'gray' }} noWrap>
-                        Curriculum SE.66
+                      <Typography variant='caption' sx={{ color: 'gray' }} noWrap>
+                        {state?.userData?.curriculumData?.curriculum_short_name_th +
+                          state?.userData?.curriculumData?.curriculum_year}
                       </Typography>
                     </Box>
 
@@ -429,10 +431,10 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   <Box sx={{ width: '100%', mt: 6 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant='body2' sx={{ mb: 2 }}>
-                        {calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope)}% inprocess
+                        {calculatePercentage(totalCurrentSubjectCredit, totalCreditByScope)}% ความคืบหน้า
                       </Typography>
                       <Typography variant='body2' sx={{ mb: 2 }}>
-                        {totalCurrentSubjectCredit + '/' + totalCreditByScope + ' TotalCredit'}
+                        {totalCurrentSubjectCredit + '/' + totalCreditByScope + ' หน่วยกิตรวม'}
                       </Typography>
                     </Box>
                     <LinearProgress
@@ -619,7 +621,7 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
             <Grid item xs={12} lg={3} sx={{ px: { xs: 0, lg: 3.5 }, mt: { xs: 6, lg: 0 } }}>
               <Card sx={{ height: 535, background: 'white', mb: 6, textAlign: 'start', p: 4, pt: 0 }}>
                 <Typography variant='body2' color={grey[500]} sx={{ mb: 2, mt: 6 }}>
-                  Recommend Subjects By Job
+                  แนะนำวิชาจากตำแหน่งงาน
                 </Typography>
 
                 <Selection
@@ -700,6 +702,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                     CE Reform Portal
                   </Typography>
                 </Box>
+                <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
+                  <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                    เว็บไซต์คณะวิศวกรรมคอมพิวเตอร์
+                  </Typography>
+                </Box>
               </Card>
               <Card
                 onClick={() => handleLinkClick(url.MGTLINK)}
@@ -735,6 +742,11 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                 <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
                   <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
                     Pre-Project/Project
+                  </Typography>
+                </Box>
+                <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
+                  <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                    ระบบจัดการพรีโปรเจค/โปรเจค
                   </Typography>
                 </Box>
               </Card>

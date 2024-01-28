@@ -55,7 +55,7 @@ const App = props => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`StudyPlan CE Reform`}</title>
+        <title>{`ระบบแนะนำแผนการเรียน RMUTL`}</title>
         {/* <meta
           name='description'
           content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}

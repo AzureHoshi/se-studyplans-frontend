@@ -320,6 +320,11 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
                       Pre-Project/Project
                     </Typography>
                   </Box>
+                  <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      ระบบจัดการพรีโปรเจค/โปรเจค
+                    </Typography>
+                  </Box>
                 </Card>
 
                 <Typography variant='caption'>
