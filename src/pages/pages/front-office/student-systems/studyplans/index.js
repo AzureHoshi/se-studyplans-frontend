@@ -38,7 +38,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { CustomLayout } from 'src/views/custom-layout-student-systems'
 import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
-import { grey } from '@mui/material/colors'
+import { green, grey } from '@mui/material/colors'
 import { userProfile } from 'src/dummy'
 import { Selection } from 'src/components'
 import { useGlobalContext } from 'src/configs/context'
@@ -1084,7 +1084,21 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                                     <Typography variant='body2'>
                                       {case1Result.subjectType?.subject_type_name}
                                     </Typography>
-                                    <Box>
+                                    <Typography
+                                      variant='body2'
+                                      display='inline'
+                                      sx={{
+                                        color:
+                                          case1Result.countScope !== 0 &&
+                                          case1Result.countScope < case1Result?.credit_total
+                                            ? 'orange'
+                                            : case1Result.countScope === case1Result.credit_total
+                                            ? green[400]
+                                            : case1Result.countScope > case1Result?.credit_total
+                                            ? 'red'
+                                            : null
+                                      }}
+                                    >
                                       {case1Result.countScope > case1Result.credit_total && (
                                         <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
                                           (overflow)
@@ -1094,14 +1108,28 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                                       {case1Result.countScope
                                         ? case1Result.countScope + ' of ' + case1Result?.credit_total
                                         : '0 of ' + case1Result?.credit_total}
-                                    </Box>
+                                    </Typography>
                                   </Box>
                                 ) : (
                                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
                                     <Typography variant='body2'>
                                       {case1Result.subjectGroup?.subject_group_name}
                                     </Typography>
-                                    <Box>
+                                    <Typography
+                                      variant='body2'
+                                      display='inline'
+                                      sx={{
+                                        color:
+                                          case1Result.countScope !== 0 &&
+                                          case1Result.countScope < case1Result?.credit_total
+                                            ? 'orange'
+                                            : case1Result.countScope === case1Result.credit_total
+                                            ? green[400]
+                                            : case1Result.countScope > case1Result?.credit_total
+                                            ? 'red'
+                                            : null
+                                      }}
+                                    >
                                       {case1Result.countScope > case1Result.credit_total && (
                                         <Typography variant='body2' color={'error'} sx={{ display: 'inline', mr: 2 }}>
                                           (overflow)
@@ -1111,7 +1139,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                                       {case1Result.countScope
                                         ? case1Result.countScope + ' of ' + case1Result?.credit_total
                                         : '0 of ' + case1Result?.credit_total}
-                                    </Box>
+                                    </Typography>
                                   </Box>
                                 )}
                               </Box>
