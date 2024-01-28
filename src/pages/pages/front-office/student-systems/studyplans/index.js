@@ -46,6 +46,7 @@ import { handleCheckLogin, handleGetUser } from 'src/authentication'
 
 const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const { state, setUserData } = useGlobalContext()
+  const [localState, setLocalState] = useState([])
   const [switchContent, setSwitchContent] = useState(0) // for switch between search bar and display current term
   const [filterState, setFilterState] = useState(0) // 0 unfilter, 1 general, 2 specific
   const [openAlertStatus, setOpenAlertStatus] = useState(false) // hide | show alert
@@ -61,6 +62,8 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
   const [stdStudyPlans, setStdStudyPlans] = useState(StudyPlanByStdNo === null ? [] : StudyPlanByStdNo)
   const [curriculumScopeToDisplay, setCurriculumScopeToDisplay] = useState(curriculumScope)
+
+  console.log('StudyPlanByStdNo', StudyPlanByStdNo)
 
   const gradeItems = ['A+', 'A', 'A−', 'B+', 'B', 'B−', 'C+', 'C', 'C−', 'D+', 'D', 'D−']
 
@@ -184,9 +187,12 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
   const handleUndefined = totalCurrentSubjectCredit === undefined ? 0 : totalCurrentSubjectCredit
 
-  useLayoutEffect(() => {
-    if (!state.userData) return
-    if (StudyPlanByStdNo) {
+  useEffect(() => {
+    if (state) setLocalState(state)
+  }, [state])
+
+  useEffect(() => {
+    if (StudyPlanByStdNo && state) {
       // create academic year item from year/semester rage from studyplan
       var storeLabel = termLabel
       StudyPlanByStdNo?.forEach(studentObject => {
@@ -356,7 +362,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     setStdStudyPlans(createTermLabelStd)
     // setTermLabel(createTermLabel)
     // console.log('createTermLabel', createTermLabel)
-  }, [StudyPlanByStdNo])
+  }, [state, StudyPlanByStdNo])
 
   // updatescope
   useEffect(() => {
@@ -667,6 +673,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
 
   const handleRemoveStudyPlan = studyPlan => {
     if (!studyPlan) return
+
     // console.log('studyPlan', studyPlan)
     const checkChildren = stdStudyPlans?.filter(s => s.continue_subjects[0]?.parent_id === studyPlan?.subject_id)
     // console.log('checkChildren', checkChildren)
@@ -682,15 +689,9 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
       // remove studyplan
       try {
         axios.delete(AddAPI + studyPlan.stu_acad_rec_id)
-        const removeSubject = stdStudyPlans?.filter(s => s.subject_id !== subjectSelected.subject_id)
+        const removeSubject = stdStudyPlans?.filter(s => s.subject_id !== studyPlan.subject_id)
         setStdStudyPlans(removeSubject)
-        handleShowAlert(
-          'ได้ลบวิชา' +
-            subjectSelected.subject_code +
-            ' ' +
-            subjectSelected.subject_name_th +
-            ' ออกจากแผนการเรียนปัจจุบัน'
-        )
+        handleShowAlert('ได้ลบวิชา' + studyPlan.subject_code + ' ออกจากแผนการเรียนปัจจุบัน')
       } catch (error) {
         if (error.response && error.response.status === 404) {
           // Handle 404 error (Not Found) here
@@ -1009,9 +1010,15 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                   <Box sx={{ m: 6, ml: 0 }}>
                     <Grid container sx={{ width: '100%', px: 4 }}>
                       <Grid item xs={12} sx={{ pb: 6 }}>
-                        <Typography variant='body2'>
+                        <Typography variant='h6'>
                           {' '}
-                          {'current total credit : ' + handleUndefined + '/' + totalCreditByScope}
+                          {'หน่วยกิตรวมทั้งหมด : ' +
+                            handleUndefined +
+                            '/' +
+                            totalCreditByScope +
+                            ' (' +
+                            parseInt((handleUndefined / totalCreditByScope) * 100) +
+                            '%)'}
                         </Typography>
                       </Grid>
                       {UniqueCategories.map(categoryHeader => (

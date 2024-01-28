@@ -54,6 +54,7 @@ const Subjects = ({
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
   const [searchSubject, setSearchSubject] = useState([])
   const [customSubjects, setCustomSubjects] = useState([])
+  const [stdStudyPlanRecord, setStdStudyPlanRecord] = useState([])
 
   const handleChangeSubject = subject => {
     setSubjectSelected(subject)
@@ -98,6 +99,16 @@ const Subjects = ({
   useEffect(() => {
     // console.log('searchSubject', searchSubject)
   }, [searchSubject])
+
+  useEffect(() => {
+    if (stdStudyPlans) {
+      // console.log('stdStudyPlans', stdStudyPlans)
+      setStdStudyPlanRecord(stdStudyPlans)
+    } else {
+      setStdStudyPlanRecord([])
+    }
+    // console.log('termLabel', termLabel)
+  }, [stdStudyPlans])
 
   // console.log('stdStudyPlans', stdStudyPlans)
   return (
@@ -275,7 +286,7 @@ const Subjects = ({
       {switchContent === 1 && (
         <Box sx={{ maxHeight: 800, overflow: 'auto', mx: 6, mt: 12 }}>
           <Grid container>
-            {stdStudyPlans
+            {stdStudyPlanRecord
               ?.filter(s => s.termLabel === currentTerm)
               .map(stdp => (
                 <Grid
@@ -284,24 +295,46 @@ const Subjects = ({
                   item
                   xs={12}
                   sx={{
+                    position: 'relative',
                     mb: 2.5,
                     display: 'flex',
                     justifyContent: 'space-between',
                     background: grey[50],
                     px: 4,
-                    py: 2,
+
                     borderRadius: 2
                   }}
                 >
-                  <Grid item xs={6}>
-                    <Typography variant='caption'>{stdp.subject?.subject_code}</Typography>
+                  <Grid item xs={10} sx={{ py: 2 }}>
+                    <Typography variant='caption'>
+                      {stdp.subject?.subject_code +
+                        '(' +
+                        stdp.stu_acad_rec_grade +
+                        ' ,' +
+                        stdp.subject?.subject_credit +
+                        ' Credit)'}
+                    </Typography>
                     <Typography variant='body2' noWrap>
                       {stdp.subject?.subject_name_th}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} sx={{ p: 2.5, textAlign: 'end' }}>
-                    {stdp.stu_acad_rec_grade + '(' + stdp.subject?.subject_credit + ' Credit)'}
-                  </Grid>
+
+                  <Button
+                    onClick={() => handleRemoveStudyPlan(stdp)}
+                    sx={{
+                      position: 'absolute',
+                      right: 0,
+                      background: 'red',
+                      width: 70,
+                      height: '100%',
+                      textAlign: 'center',
+                      ':hover': { background: red[800] }
+                    }}
+                  >
+                    <Typography color={'white'} sx={{ fontWeight: 'bold' }}>
+                      ลบ
+                    </Typography>
+                  </Button>
                 </Grid>
               ))}
           </Grid>
