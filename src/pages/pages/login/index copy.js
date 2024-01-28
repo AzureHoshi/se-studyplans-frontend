@@ -65,12 +65,16 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
 
 const LoginPage = () => {
   // ** State
+  // const [values, setValues] = useState({
+  //   email: 'user@example.com',
+  //   password: 'password',
+  //   showPassword: false
+  // })
   const [values, setValues] = useState({
-    email: 'user@example.com',
-    password: 'password',
+    email: '',
+    password: '',
     showPassword: false
   })
-
   // ** Hook
   const theme = useTheme()
   const router = useRouter()

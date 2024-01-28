@@ -115,12 +115,16 @@ const userInitialState = {
 
 const LoginPage = () => {
   // ** State
+  // const [values, setValues] = useState({
+  //   email: 'user@example.com',
+  //   password: 'password',
+  //   showPassword: false
+  // })
   const [values, setValues] = useState({
-    email: 'user@example.com',
-    password: 'password',
+    email: '',
+    password: '',
     showPassword: false
   })
-
   const [user, setUser] = useState(userInitialState)
   const [LoginSuccess, setLoginSuccess] = useState(false)
   const { state, setUserData } = useGlobalContext()

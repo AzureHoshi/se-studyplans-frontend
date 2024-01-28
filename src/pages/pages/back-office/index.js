@@ -61,9 +61,14 @@ const BackOffice = () => {
     event.preventDefault()
   }
 
+  // const [values, setValues] = useState({
+  //   email: 'admin@example.com',
+  //   password: 'password',
+  //   showPassword: false
+  // })
   const [values, setValues] = useState({
-    email: 'admin@example.com',
-    password: 'password',
+    email: '',
+    password: '',
     showPassword: false
   })
 
