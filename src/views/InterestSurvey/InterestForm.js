@@ -14,7 +14,8 @@ import {
   CircularProgress,
   Grid,
   CardContent,
-  Hidden
+  Hidden,
+  Divider
 } from '@mui/material'
 
 // ** axios
@@ -22,6 +23,9 @@ import axios from 'axios'
 import { url } from 'src/configs/urlConfig'
 import { useRouter } from 'next/router'
 import { userProfile } from 'src/dummy'
+import { grey } from '@mui/material/colors'
+import { mdiNewspaperVariantMultipleOutline, mdiTextBoxSearchOutline } from '@mdi/js'
+import Icon from '@mdi/react'
 
 const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisplay, user }) => {
   const router = useRouter()
@@ -35,6 +39,10 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
       interest_question_score: null
     }))
   )
+
+  const handleLinkClick = path => {
+    window.open(path, '_blank')
+  }
 
   const handleInputChange = (event, index, type, answerId) => {
     if (type === 1) {
@@ -235,71 +243,105 @@ const InterestForm = ({ dataSurvey, collegianCode, setAlertAnswer, setResultDisp
             </Grid>
             <Hidden lgDown>
               <Grid item xs={12} lg={4}>
-                <Card>
-                  <CardContent>
-                    <Box>
-                      <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                        Information describe interest survey
-                      </Typography>
-                      <Typography variant='body2'>
-                        <p style={{ textAlign: 'justify' }}>
-                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-                          alteration in some form, by injected humour, or randomised words which don't look even
-                          slightly believable.
-                        </p>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ marginTop: 4 }}>
-                      <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                        Information describe study plan system
-                      </Typography>
-                      <Typography variant='body2'>
-                        <p style={{ textAlign: 'justify' }}>
-                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-                          alteration in some form, by injected humour, or randomised words which don't look even
-                          slightly believable.
-                        </p>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ marginTop: 4 }}>
-                      <Card
-                        sx={{
-                          backgroundColor: '#EBEBEB',
-                          height: '140px',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          color: '#7A7A7A'
-                        }}
-                      >
-                        Shortcut CE.Reform
-                      </Card>
-                    </Box>
-                    <Box sx={{ marginTop: 4 }}>
-                      <Card
-                        sx={{
-                          backgroundColor: '#EBEBEB',
-                          height: '140px',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          color: '#7A7A7A'
-                        }}
-                      >
-                        Shortcut CE.Reform
-                      </Card>
-                    </Box>
-                  </CardContent>
+                <Card
+                  sx={{
+                    height: 120,
+                    background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,
+                    mb: 6,
+                    textAlign: 'center',
+                    position: 'relative',
+                    ':hover': { cursor: 'pointer', opacity: 0.7 }
+                  }}
+                >
+                  <Box
+                    sx={{
+                      overflow: 'hidden',
+                      position: 'absolute',
+                      top: 11.5,
+                      left: -50,
+                      background: 'white',
+                      borderRadius: 2,
+                      width: 170,
+                      height: '80%',
+                      opacity: 0.8
+                    }}
+                  >
+                    <Icon
+                      path={mdiNewspaperVariantMultipleOutline}
+                      // size={3.2}
+                      color='gray'
+                      style={{ marginLeft: 40, marginTop: 6, opacity: 0.4, width: 85 }}
+                    />
+                  </Box>
+                  <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
+                    <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      CE Reform Portal
+                    </Typography>
+                  </Box>
+                  <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      เว็บไซต์คณะวิศวกรรมคอมพิวเตอร์
+                    </Typography>
+                  </Box>
                 </Card>
+                <Card
+                  onClick={() => handleLinkClick('http://128.199.147.134:3003/')}
+                  sx={{
+                    height: 120,
+                    background: `linear-gradient(to top right, ${grey[300]} 50%, transparent 80%)`,
+                    mb: 6,
+                    textAlign: 'center',
+                    position: 'relative',
+                    ':hover': { cursor: 'pointer', opacity: 0.7 }
+                  }}
+                >
+                  <Box
+                    sx={{
+                      overflow: 'hidden',
+                      position: 'absolute',
+                      top: 11.5,
+                      left: -50,
+                      background: 'white',
+                      borderRadius: 2,
+                      width: 170,
+                      height: '80%',
+                      opacity: 0.8
+                    }}
+                  >
+                    <Icon
+                      path={mdiTextBoxSearchOutline}
+                      // size={3.2}
+                      color='gray'
+                      style={{ marginLeft: 40, marginTop: 6, opacity: 0.4, width: 85 }}
+                    />
+                  </Box>
+                  <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
+                    <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      Pre-Project/Project
+                    </Typography>
+                  </Box>
+                </Card>
+
+                <Typography variant='caption'>
+                  <p style={{ textAlign: 'justify' }}>
+                    มทร.ล้านนา การจัดทำโครงการระบบการจัดการสารสนเทศเพื่อการเรียน การสอน :
+                    กรณีศึกษาหลักสูตรวิศวกรรมคอมพิวเตอร์ มทร.ล้านนา เพื่อพัฒนาระบบของหลักสูตร
+                    ขึ้นมาเพื่อที่จะใช้เทคโนโลยีทางด้านวิศวกรรมมาพัฒนาระบบการศึกษาและ วิจัยร่วมระหว่าง ภาครัฐ ภาคเอกชน
+                    และ ภาคการศึกษา มาจัดการเพื่อเพิ่มประสิทธิภาพการจัดการเรียนการสอน ให้มีความ เข้าใจง่าย
+                    และเข้าถึงข้อมูลของหลักสูตรได้ เพื่อตอบสนองต่อผู้ใช้งานระบบ และผู้พัฒนาระบบ
+                    ซึ่งจะสามารถแบ่งประเด็นที่จะนำเอาเทคโนโลยีมาใช้ในการพัฒนาระบบที่ตอบสนองต่อผู้ใช้งาน
+                  </p>
+                </Typography>
+                <Divider />
               </Grid>
             </Hidden>
           </Grid>
         </Grid>
         <Grid item xs={12} sx={{ py: 8 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginY: 4 }}>
-            <Button variant='text' size='large' sx={{ width: 160, marginRight: 4, color: '#AAA' }}>
+            {/* <Button variant='text' size='large' sx={{ width: 160, marginRight: 4, color: '#AAA' }}>
               Reset
-            </Button>
+            </Button> */}
             <Button
               onClick={handleSubmit}
               variant='contained'
