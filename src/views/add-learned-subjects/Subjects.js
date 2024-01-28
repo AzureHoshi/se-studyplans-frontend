@@ -48,7 +48,8 @@ const Subjects = ({
   stdStudyPlans,
   setStdStudyPlans,
   handleRemoveStudyPlan,
-  handleShowScope
+  handleShowScope,
+  calculateSumByTermLabel
 }) => {
   const [open, setOpen] = useState(false)
   const [openSubjectDetails, setOpenSubjectDetails] = useState(false)
@@ -67,23 +68,6 @@ const Subjects = ({
     } else {
       setOpenSubjectDetails(true)
     }
-  }
-
-  const calculateSumByTermLabel = (data, targetTermLabel) => {
-    // Calculate the sum of subject_credit for each termLabel
-    const sumByTermLabel = data.reduce((acc, curr) => {
-      const { termLabel } = curr
-      acc[termLabel] = (acc[termLabel] || 0) + curr.subject?.subject_credit
-      return acc
-    }, {})
-
-    // If a specific targetTermLabel is provided, return its sum
-    if (targetTermLabel) {
-      return sumByTermLabel[targetTermLabel] || 0
-    }
-
-    // Otherwise, return the entire sumByTermLabel object
-    return sumByTermLabel
   }
 
   useLayoutEffect(() => {
@@ -346,6 +330,7 @@ const Subjects = ({
             Back
           </Button>
           <SubjectDetails
+            calculateSumByTermLabel={calculateSumByTermLabel}
             subjectSelected={subjectSelected}
             handleShowAlert={handleShowAlert}
             handleOpenAddDialog={handleOpenAddDialog}

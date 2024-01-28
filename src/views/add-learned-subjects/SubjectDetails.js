@@ -10,7 +10,8 @@ const SubjectDetails = ({
   handleShowAlert,
   handleOpenAddDialog,
   stdStudyPlans,
-  handleRemoveStudyPlan
+  handleRemoveStudyPlan,
+  calculateSumByTermLabel
 }) => {
   return (
     <Box>

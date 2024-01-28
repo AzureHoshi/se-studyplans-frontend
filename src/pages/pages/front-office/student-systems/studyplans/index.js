@@ -85,6 +85,22 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
     { i: 4, year: 4, semester: 3, label: '' }
   ])
 
+  const calculateSumByTermLabel = (data, targetTermLabel) => {
+    // Calculate the sum of subject_credit for each termLabel
+    const sumByTermLabel = data.reduce((acc, curr) => {
+      const { termLabel } = curr
+      acc[termLabel] = (acc[termLabel] || 0) + curr.subject?.subject_credit
+      return acc
+    }, {})
+
+    // If a specific targetTermLabel is provided, return its sum
+    if (targetTermLabel) {
+      return sumByTermLabel[targetTermLabel] || 0
+    }
+
+    // Otherwise, return the entire sumByTermLabel object
+    return sumByTermLabel
+  }
   function getUniqueValues(arr, propertyPath) {
     const uniqueValuesSet = new Set()
 
@@ -500,173 +516,181 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
   const handleAddStudyPlans = async type => {
     if (type === 'normal') {
       const getTerm = termLabel?.find(t => t.label === currentTerm)
-      // console.log('term', getTerm)
-      // console.log('All Plans', stdStudyPlans)
-      if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
-        const checkParentinPlan = stdStudyPlans?.find(
-          cp =>
-            (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
-              cp.stu_acad_rec_year < getTerm.year) ||
-            (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
-              cp.stu_acad_rec_year === getTerm.year &&
-              cp.stu_acad_rec_semester < getTerm.semester)
-        )
-        // console.log('checkParentinPlan', checkParentinPlan)
-        if (!checkParentinPlan)
-          return alert(
-            'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
-              subjectSelected?.continue_subjects[0]?.parent?.subject_code
+      if (subjectSelected.subject_credit + parseInt(calculateSumByTermLabel(stdStudyPlans, currentTerm)) <= 25) {
+        if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+          // console.log('term', getTerm)
+          // console.log('All Plans', stdStudyPlans)
+          const checkParentinPlan = stdStudyPlans?.find(
+            cp =>
+              (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+                cp.stu_acad_rec_year < getTerm.year) ||
+              (cp.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+                cp.stu_acad_rec_year === getTerm.year &&
+                cp.stu_acad_rec_semester < getTerm.semester)
           )
-      }
-      // console.log('subjectSelected', subjectSelected)
-
-      const newPostObject = {
-        collegian_code: String(state?.userData?.col_code),
-        subject_id: String(subjectSelected.subject_id),
-        stu_acad_rec_year: String(getTerm.year),
-        stu_acad_rec_semester: String(getTerm.semester),
-        stu_acad_rec_grade: gradeSelected
-      }
-      // console.log('newPostObject', newPostObject)
-
-      try {
-        const resData = await axios.post(AddAPI, newPostObject)
-        // console.log('resData', resData.data.data)
-        const newLocalObject = {
-          stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
-          subject: {
-            ...subjectSelected
-          },
-          subject_code: subjectSelected.subject_code,
-          subject_id: subjectSelected.subject_id,
-          stu_acad_rec_year: getTerm.year,
-          stu_acad_rec_semester: getTerm.semester,
-          stu_acad_rec_grade: gradeSelected,
-          continue_subjects: [...subjectSelected.continue_subjects],
-          subject_structure: subjectSelected.subject_structures[0],
-          termLabel: currentTerm
+          // console.log('checkParentinPlan', checkParentinPlan)
+          if (!checkParentinPlan)
+            return alert(
+              'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
+                subjectSelected?.continue_subjects[0]?.parent?.subject_code
+            )
         }
-        if (stdStudyPlans) {
-          // console.log('newLocalObject', newLocalObject)
-          const updatePlan = [...stdStudyPlans, newLocalObject]
+        // console.log('subjectSelected', subjectSelected)
 
-          setStdStudyPlans(updatePlan)
-          setOpenAddDialog(false)
-          handleShowAlert(
-            'ได้เพิ่มวิชา' +
-              subjectSelected.subject_code +
-              ' ' +
-              subjectSelected.subject_name_th +
-              ' ' +
-              'ในปีการศึกษา ' +
-              currentTerm
-          )
-          setGradeSelected('A+')
-        } else {
-          setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
-          setOpenAddDialog(false)
-          handleShowAlert(
-            'ได้เพิ่มวิชา' +
-              subjectSelected.subject_code +
-              ' ' +
-              subjectSelected.subject_name_th +
-              ' ' +
-              'ในปีการศึกษา ' +
-              currentTerm
-          )
-          setGradeSelected('A+')
+        const newPostObject = {
+          collegian_code: String(state?.userData?.col_code),
+          subject_id: String(subjectSelected.subject_id),
+          stu_acad_rec_year: String(getTerm.year),
+          stu_acad_rec_semester: String(getTerm.semester),
+          stu_acad_rec_grade: gradeSelected
         }
-        // Handle the successful response here
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          // Handle 404 error (Not Found) here
-          console.error('Resource not found')
-          // You can redirect to a custom 404 page or do any other necessary actions
-        } else {
-          // Handle other errors
-          console.error('An error occurred:', error.message)
+        // console.log('newPostObject', newPostObject)
+
+        try {
+          const resData = await axios.post(AddAPI, newPostObject)
+          // console.log('resData', resData.data.data)
+          const newLocalObject = {
+            stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
+            subject: {
+              ...subjectSelected
+            },
+            subject_code: subjectSelected.subject_code,
+            subject_id: subjectSelected.subject_id,
+            stu_acad_rec_year: getTerm.year,
+            stu_acad_rec_semester: getTerm.semester,
+            stu_acad_rec_grade: gradeSelected,
+            continue_subjects: [...subjectSelected.continue_subjects],
+            subject_structure: subjectSelected.subject_structures[0],
+            termLabel: currentTerm
+          }
+          if (stdStudyPlans) {
+            // console.log('newLocalObject', newLocalObject)
+            const updatePlan = [...stdStudyPlans, newLocalObject]
+
+            setStdStudyPlans(updatePlan)
+            setOpenAddDialog(false)
+            handleShowAlert(
+              'ได้เพิ่มวิชา' +
+                subjectSelected.subject_code +
+                ' ' +
+                subjectSelected.subject_name_th +
+                ' ' +
+                'ในปีการศึกษา ' +
+                currentTerm
+            )
+            setGradeSelected('A+')
+          } else {
+            setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
+            setOpenAddDialog(false)
+            handleShowAlert(
+              'ได้เพิ่มวิชา' +
+                subjectSelected.subject_code +
+                ' ' +
+                subjectSelected.subject_name_th +
+                ' ' +
+                'ในปีการศึกษา ' +
+                currentTerm
+            )
+            setGradeSelected('A+')
+          }
+          // Handle the successful response here
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            // Handle 404 error (Not Found) here
+            console.error('Resource not found')
+            // You can redirect to a custom 404 page or do any other necessary actions
+          } else {
+            // Handle other errors
+            console.error('An error occurred:', error.message)
+          }
         }
+      } else {
+        alert('หน่วยกิตรวมต่อเทอมต้องไม่เกิน 25 หน่วยกิต')
       }
     } else if (type === 'summer') {
       const getTerm = summerLabel?.find(t => t.label === currentTerm)
       // console.log(getTerm)
-      if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
-        const checkParentinPlan = stdStudyPlans?.find(
-          cp =>
-            cp.subject.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
-            cp.stu_acad_rec_year < getTerm.year
-        )
-        if (!checkParentinPlan)
-          return alert(
-            'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
-              subjectSelected?.continue_subjects[0]?.parent?.subject_code
+      if (subjectSelected.subject_credit + parseInt(calculateSumByTermLabel(stdStudyPlans, currentTerm)) <= 25) {
+        if (stdStudyPlans && subjectSelected?.continue_subjects[0]?.parent_id !== null) {
+          const checkParentinPlan = stdStudyPlans?.find(
+            cp =>
+              cp.subject.subject_id === subjectSelected?.continue_subjects[0]?.parent_id &&
+              cp.stu_acad_rec_year < getTerm.year
           )
-      }
-
-      const newPostObject = {
-        collegian_code: String(state?.userData?.col_code),
-        subject_id: String(subjectSelected.subject_id),
-        stu_acad_rec_year: String(getTerm.year),
-        stu_acad_rec_semester: String(getTerm.semester),
-        stu_acad_rec_grade: gradeSelected
-      }
-
-      // console.log('newPostObject', newPostObject)
-      try {
-        const resData = await axios.post(AddAPI, newPostObject)
-        // console.log('resData', resData.data.data)
-        const newLocalObject = {
-          stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
-          subject: {
-            ...subjectSelected
-          },
-          subject_code: subjectSelected.subject_code,
-          subject_id: subjectSelected.subject_id,
-          stu_acad_rec_year: getTerm.year,
-          stu_acad_rec_semester: getTerm.semester,
-          stu_acad_rec_grade: gradeSelected,
-          continue_subjects: [...subjectSelected.continue_subjects],
-          subject_structure: subjectSelected.subject_structures[0],
-          termLabel: currentTerm
+          if (!checkParentinPlan)
+            return alert(
+              'วิชานี้มีวิชาก่อนหน้ากรุณาเลือกลงให้ถูกลำดับ, วิชาก่อนหน้า :' +
+                subjectSelected?.continue_subjects[0]?.parent?.subject_code
+            )
         }
-        if (stdStudyPlans) {
-          const updatePlan = [...stdStudyPlans, newLocalObject]
 
-          setStdStudyPlans(updatePlan)
-          setOpenAddDialog(false)
-          handleShowAlert(
-            'ได้เพิ่มวิชา' +
-              subjectSelected.subject_code +
-              ' ' +
-              subjectSelected.subject_name_th +
-              ' ' +
-              'ในปีการศึกษา ' +
-              currentTerm
-          )
-          setGradeSelected('A+')
-        } else {
-          setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
-          setOpenAddDialog(false)
-          handleShowAlert(
-            'ได้เพิ่มวิชา' +
-              subjectSelected.subject_code +
-              ' ' +
-              subjectSelected.subject_name_th +
-              ' ' +
-              'ในปีการศึกษา ' +
-              currentTerm
-          )
-          setGradeSelected('A+')
+        const newPostObject = {
+          collegian_code: String(state?.userData?.col_code),
+          subject_id: String(subjectSelected.subject_id),
+          stu_acad_rec_year: String(getTerm.year),
+          stu_acad_rec_semester: String(getTerm.semester),
+          stu_acad_rec_grade: gradeSelected
         }
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          // Handle 404 error (Not Found) here
-          console.error('Resource not found')
-          // You can redirect to a custom 404 page or do any other necessary actions
-        } else {
-          // Handle other errors
-          console.error('An error occurred:', error.message)
+
+        // console.log('newPostObject', newPostObject)
+        try {
+          const resData = await axios.post(AddAPI, newPostObject)
+          // console.log('resData', resData.data.data)
+          const newLocalObject = {
+            stu_acad_rec_id: resData.data.data.stu_acad_rec_id,
+            subject: {
+              ...subjectSelected
+            },
+            subject_code: subjectSelected.subject_code,
+            subject_id: subjectSelected.subject_id,
+            stu_acad_rec_year: getTerm.year,
+            stu_acad_rec_semester: getTerm.semester,
+            stu_acad_rec_grade: gradeSelected,
+            continue_subjects: [...subjectSelected.continue_subjects],
+            subject_structure: subjectSelected.subject_structures[0],
+            termLabel: currentTerm
+          }
+          if (stdStudyPlans) {
+            const updatePlan = [...stdStudyPlans, newLocalObject]
+
+            setStdStudyPlans(updatePlan)
+            setOpenAddDialog(false)
+            handleShowAlert(
+              'ได้เพิ่มวิชา' +
+                subjectSelected.subject_code +
+                ' ' +
+                subjectSelected.subject_name_th +
+                ' ' +
+                'ในปีการศึกษา ' +
+                currentTerm
+            )
+            setGradeSelected('A+')
+          } else {
+            setStdStudyPlans(pre => ({ ...pre, ...updatePlan }))
+            setOpenAddDialog(false)
+            handleShowAlert(
+              'ได้เพิ่มวิชา' +
+                subjectSelected.subject_code +
+                ' ' +
+                subjectSelected.subject_name_th +
+                ' ' +
+                'ในปีการศึกษา ' +
+                currentTerm
+            )
+            setGradeSelected('A+')
+          }
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            // Handle 404 error (Not Found) here
+            console.error('Resource not found')
+            // You can redirect to a custom 404 page or do any other necessary actions
+          } else {
+            // Handle other errors
+            console.error('An error occurred:', error.message)
+          }
         }
+      } else {
+        alert('หน่วยกิตรวมต่อเทอมต้องไม่เกิน 25 หน่วยกิต')
       }
     }
   }
@@ -955,6 +979,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
               <Grid container>
                 <Grid item xs={12} sm={6} lg={5}>
                   <Subjects
+                    calculateSumByTermLabel={calculateSumByTermLabel}
                     data={SubjectData}
                     switchContent={switchContent}
                     setSwitchContent={setSwitchContent}
@@ -978,6 +1003,7 @@ const Studyplans = ({ SubjectData, StudyPlanByStdNo, curriculumScope }) => {
                   <Hidden smDown>
                     <Grid item sm={6} lg={7}>
                       <SubjectDetails
+                        calculateSumByTermLabel={calculateSumByTermLabel}
                         subjectSelected={subjectSelected}
                         handleShowAlert={handleShowAlert}
                         handleOpenAddDialog={handleOpenAddDialog}
