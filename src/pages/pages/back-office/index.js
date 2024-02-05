@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Typography, Grid, Box } from '@mui/material'
 import {
-  Card,
   CardContent,
   FormControl,
   OutlinedInput,
@@ -13,7 +12,7 @@ import {
   Divider
 } from '@mui/material'
 import { styled, useTheme } from '@mui/material/styles'
-import { Card as MuiCard } from '@mui/material'
+import MuiCard from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import Link from 'next/link'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
@@ -49,17 +48,18 @@ const userInitialState = {
   birthDate: '',
   token: ''
 }
+// ** Styled Components
+const Card = styled(MuiCard)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: { width: '28rem' }
+}))
+
+const api = axios.create({
+  baseURL: url.BASE_URL
+  // withCredentials: true // Include credentials (cookies) with cross-origin requests
+})
 
 const BackOffice = () => {
   const router = useRouter()
-  const api = axios.create({
-    baseURL: url.BASE_URL
-    // withCredentials: true // Include credentials (cookies) with cross-origin requests
-  })
-
-  const handleMouseDownPassword = async event => {
-    event.preventDefault()
-  }
 
   // const [values, setValues] = useState({
   //   email: 'admin@example.com',
@@ -82,6 +82,9 @@ const BackOffice = () => {
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
+  }
+  const handleMouseDownPassword = async event => {
+    event.preventDefault()
   }
 
   const handleLogin = async e => {
@@ -115,11 +118,6 @@ const BackOffice = () => {
     }
   }
 
-  // ** Styled Components
-  const Card = styled(MuiCard)(({ theme }) => ({
-    [theme.breakpoints.up('sm')]: { width: '28rem' }
-  }))
-
   const AdminLogin = (
     <Box className='content-center'>
       <Card sx={{ zIndex: 1 }}>
@@ -136,14 +134,14 @@ const BackOffice = () => {
               id='email'
               label='Email'
               sx={{ marginBottom: 4 }}
-              value={values.email}
+              value={values.email || ''}
               onChange={handleChange('email')}
             />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
-              <OutlinedInput
+              <TextField
                 label='Password'
-                value={values.password}
+                value={values.password || ''}
                 id='auth-login-password'
                 onChange={handleChange('password')}
                 type={values.showPassword ? 'text' : 'password'}

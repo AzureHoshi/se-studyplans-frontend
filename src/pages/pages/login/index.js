@@ -363,40 +363,6 @@ const LoginPage = () => {
         </CardContent>
       </Card>
 
-      {/* <Card sx={{ m: 5, p: 5 }}>
-        <CardContent sx={{ padding: theme => `${theme.spacing(2, 9)} !important` }}>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            Token: {user.token}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            login status: {user.status}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            name: {user.prefix} {user.first_name} {user.last_name}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            email: {user.email}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            CollegianCode: {user.CollegianCode}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            curriculum: {user.curriculum}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            section: {user.section}
-          </Typography>
-          <Typography variant='body2' sx={{ textAlign: 'center' }}>
-            birthDate: {user.birthDate}
-          </Typography>
-
-          <Button onClick={handleCheckLogin}>check-login</Button>
-
-          <Button onClick={handleLogout}>logout</Button>
-
-          <Button onClick={handleGetUser}>get-user</Button>
-        </CardContent>
-      </Card> */}
       <FooterIllustrationsV1 />
     </Box>
   )
