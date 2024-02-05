@@ -138,7 +138,6 @@ const BackOffice = () => {
               onChange={handleChange('email')}
             />
             <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
               <TextField
                 label='Password'
                 value={values.password || ''}
