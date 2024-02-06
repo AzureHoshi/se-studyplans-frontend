@@ -35,6 +35,7 @@ import { useGlobalContext } from 'src/configs/context'
 import { url } from 'src/configs/urlConfig'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { handleCheckLogin } from 'src/authentication'
 
 const userInitialState = {
   prefix: '',
@@ -58,7 +59,7 @@ const api = axios.create({
   // withCredentials: true // Include credentials (cookies) with cross-origin requests
 })
 
-const BackOffice = () => {
+const BackOffice = ({ isLogin }) => {
   const router = useRouter()
 
   // const [values, setValues] = useState({
@@ -118,6 +119,7 @@ const BackOffice = () => {
     }
   }
 
+  console.log('isLogin', isLogin)
   const AdminLogin = (
     <Box className='content-center'>
       <Card sx={{ zIndex: 1 }}>
@@ -250,8 +252,18 @@ const BackOffice = () => {
     </Box>
   )
 
-  return LoginSuccess ? BackOfficeMenu : AdminLogin
+  return LoginSuccess || isLogin ? BackOfficeMenu : AdminLogin
 }
 BackOffice.getLayout = page => <BlankLayout>{page}</BlankLayout>
+// ssr
+export async function getServerSideProps(context) {
+  const { req } = context
 
+  const checkIsLogin = await handleCheckLogin(req)
+  // console.log('checkIsLogin', checkIsLogin)
+
+  return {
+    props: { isLogin: checkIsLogin }
+  }
+}
 export default BackOffice
