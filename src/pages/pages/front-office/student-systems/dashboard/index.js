@@ -681,31 +681,35 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   sx={{
                     overflow: 'hidden',
                     position: 'absolute',
-                    top: 11.5,
+                    top: 13,
                     left: -50,
-                    background: 'white',
+                    // background: 'white',
                     borderRadius: 2,
-                    width: 170,
+                    width: 150,
                     height: '80%',
                     opacity: 0.8
                   }}
                 >
                   <Icon
                     path={mdiNewspaperVariantMultipleOutline}
-                    size={3.2}
+                    size={2}
                     color='gray'
-                    style={{ marginLeft: 40, marginTop: 6, opacity: 0.4 }}
+                    style={{ marginLeft: 40, marginTop: 18, opacity: 0.4 }}
                   />
                 </Box>
-                <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
-                  <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
-                    CE Reform Portal
-                  </Typography>
-                </Box>
-                <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
-                  <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
-                    เว็บไซต์คณะวิศวกรรมคอมพิวเตอร์
-                  </Typography>
+                <Box sx={{ width: 40, height: 30 }} />
+                <Box sx={{ textAlign: 'start', position: 'absolute', left: 90 }}>
+                  <Box>
+                    {/* <Box sx={{ position: 'absolute', top: 45, left: 150 }}> */}
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      CE Reform Portal
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mt: -2 }}>
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5, fontSize: 11 }}>
+                      เว็บคณะวิศวกรรมคอมพิวเตอร์
+                    </Typography>
+                  </Box>
                 </Box>
               </Card>
               <Card
@@ -723,31 +727,34 @@ function StudentSystems({ InterestResult, curriculumScope, StudyPlanByStdNo, job
                   sx={{
                     overflow: 'hidden',
                     position: 'absolute',
-                    top: 11.5,
+                    top: 13,
                     left: -50,
-                    background: 'white',
+                    // background: 'white',
                     borderRadius: 2,
-                    width: 170,
+                    width: 150,
                     height: '80%',
                     opacity: 0.8
                   }}
                 >
                   <Icon
                     path={mdiTextBoxSearchOutline}
-                    size={3.2}
+                    size={2}
                     color='gray'
-                    style={{ marginLeft: 40, marginTop: 6, opacity: 0.4 }}
+                    style={{ marginLeft: 40, marginTop: 18, opacity: 0.4 }}
                   />
                 </Box>
-                <Box sx={{ position: 'absolute', top: 0, left: 150 }}>
-                  <Typography variant='body2' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
-                    Pre-Project/Project
-                  </Typography>
-                </Box>
-                <Box sx={{ position: 'absolute', top: 65, left: 150 }}>
-                  <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
-                    ระบบจัดการพรีโปรเจค/โปรเจค
-                  </Typography>
+                <Box sx={{ width: 40, height: 30 }} />
+                <Box sx={{ textAlign: 'start', position: 'absolute', left: 90 }}>
+                  <Box>
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                      Pre-Project/Project
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mt: -2 }}>
+                    <Typography variant='caption' sx={{ my: 12, fontWeight: 'bold', letterSpacing: 0.5, fontSize: 11 }}>
+                      จัดการพรีโปรเจค/โปรเจค
+                    </Typography>
+                  </Box>
                 </Box>
               </Card>
 
