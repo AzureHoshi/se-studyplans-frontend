@@ -31,6 +31,7 @@ const Subjects = () => {
   const [subjectSelection, setSubjectSelection] = useState([])
   const [subjectGroupSelection, setSubjectGroupSelection] = useState(0)
   const [editState, setEditState] = useState([])
+  const [curriculumData, setCurriculumData] = useState()
   const router = useRouter()
 
   const URL_GET_SUBJECTS = `${url.BASE_URL}/subjects-by-curriculum/${router.query.curriculum_id}`
@@ -149,11 +150,14 @@ const Subjects = () => {
 
   useEffect(() => {
     if (router.query.curriculum_id) {
-      return
+      const selectedCurriculum = Curriculums?.find(
+        curriculum => curriculum.curriculum_id === parseInt(router.query.curriculum_id)
+      )
+      return setCurriculumData(selectedCurriculum)
     } else {
       router.push('/pages/masterdata/curriculums')
     }
-  }, [])
+  }, [Curriculums])
 
   useMemo(() => {
     if (Subjects) console.log(Subjects)
@@ -228,6 +232,9 @@ const Subjects = () => {
       {/* // header */}
       <Box display={'flex'} flexDirection={'row'}>
         <Typography variant='h6'>Subjects</Typography>
+        <Typography variant='h6' sx={{ ml: 1 }}>
+          {curriculumData?.curriculum_name_th + '(' + curriculumData?.curriculum_year + ')'}
+        </Typography>
       </Box>
       <Grid container spacing={6} sx={{ mt: 5 }}>
         <Grid item xs={12} sm={12} md={8} lg={6}>
