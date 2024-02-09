@@ -2179,11 +2179,14 @@ function StudyPlanSimulatorPage() {
                         hidden={value !== index}
                         id={`tabpanel-${index}`}
                         aria-labelledby={`tab-${index}`}
-                        sx={{ width: '100%', display: value === index ? 'block' : 'none' }}
+                        sx={{
+                          width: '100%',
+                          display: value === index ? 'block' : 'none'
+                        }}
                       >
                         {/* Content for each tab */}
 
-                        <Box sx={{ m: { xs: 0, lg: 2 }, width: '100%', minHeight: 500 }}>
+                        <Box sx={{ m: { xs: 0, lg: 2 }, width: '100%' }}>
                           <Box sx={{ width: '100%', my: 2 }}>
                             <Button
                               sx={{
@@ -2220,80 +2223,82 @@ function StudyPlanSimulatorPage() {
                               </Typography>
                             </div>
                           )}
-
-                          {displaySubjects &&
-                            simSubjects
-                              .filter(s => s.term === value + 1)
-                              .map((subjectInterm, index) => (
-                                <Box
-                                  key={subjectInterm.subject_id}
-                                  onMouseEnter={() => handleMouseEnter(index)}
-                                  onMouseLeave={() => handleMouseLeave(index)}
-                                  sx={{
-                                    width: '100%',
-                                    height: { xs: 100, sm: 60 },
-                                    display: 'flex',
-                                    p: { xs: 2, sm: 3.5 },
-                                    pt: { xs: 8, sm: 3.5 },
-                                    mt: 2,
-                                    mr: 3.5,
-                                    borderRadius: 2,
-                                    background: 'white',
-                                    position: 'relative' // Add relative positioning
-                                  }}
-                                >
-                                  <Typography variant='caption' sx={{ m: 2, maxWidth: 30, color: 'lightgray' }}>
-                                    {index + 1}.
-                                  </Typography>
-
-                                  <Typography
-                                    variant='caption'
-                                    sx={{ width: { xs: 60, sm: 60, md: 60, lg: 100 }, m: 2, fontWeight: 'bold' }}
-                                  >
-                                    {subjectInterm.subject_code}
-                                  </Typography>
-
-                                  <Typography
-                                    variant='caption'
-                                    sx={{ maxWidth: { xs: 300, sm: 600, md: 200, lg: 300 }, m: 2 }}
-                                    noWrap
-                                  >
-                                    {subjectInterm.subject_name_th}
-                                  </Typography>
-                                  <Typography
+                          {displaySubjects && (
+                            <Box sx={{ height: 500, overflow: 'auto' }}>
+                              {simSubjects
+                                .filter(s => s.term === value + 1)
+                                .map((subjectInterm, index) => (
+                                  <Box
+                                    key={subjectInterm.subject_id}
+                                    onMouseEnter={() => handleMouseEnter(index)}
+                                    onMouseLeave={() => handleMouseLeave(index)}
                                     sx={{
-                                      position: 'absolute',
-                                      right: 0,
-                                      m: 2,
-                                      mr: { sm: 12, md: 12, lg: 6 },
-                                      fontWeight: 'bold',
-                                      minWidth: 20
+                                      width: '100%',
+                                      height: { xs: 100, sm: 60 },
+                                      display: 'flex',
+                                      p: { xs: 2, sm: 3.5 },
+                                      pt: { xs: 8, sm: 3.5 },
+                                      mt: 2,
+                                      // mr: 3.5,
+                                      borderRadius: 2,
+                                      background: 'white',
+                                      position: 'relative' // Add relative positioning
                                     }}
-                                    variant='caption'
                                   >
-                                    {subjectInterm.subject_credit}
-                                  </Typography>
+                                    <Typography variant='caption' sx={{ m: 2, maxWidth: 30, color: 'lightgray' }}>
+                                      {index + 1}.
+                                    </Typography>
 
-                                  <IconButton
-                                    size='small'
-                                    color='error'
-                                    sx={{
-                                      position: 'absolute',
-                                      top: 6,
-                                      right: 8,
-                                      zIndex: 1,
-                                      opacity: isHovered[index] ? 0.9 : 0, // Show or hide based on hover state
-                                      transition: 'opacity 0.3s ease'
-                                    }}
-                                    onClick={() => {
-                                      // Add your remove logic here
-                                      handleRemoveSimSubject(subjectInterm)
-                                    }}
-                                  >
-                                    <Icon path={mdiTrashCan} size={0.7} />
-                                  </IconButton>
-                                </Box>
-                              ))}
+                                    <Typography
+                                      variant='caption'
+                                      sx={{ width: { xs: 60, sm: 60, md: 60, lg: 100 }, m: 2, fontWeight: 'bold' }}
+                                    >
+                                      {subjectInterm.subject_code}
+                                    </Typography>
+
+                                    <Typography
+                                      variant='caption'
+                                      sx={{ maxWidth: { xs: 300, sm: 600, md: 200, lg: 300 }, m: 2 }}
+                                      noWrap
+                                    >
+                                      {subjectInterm.subject_name_th}
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        position: 'absolute',
+                                        right: 0,
+                                        m: 2,
+                                        mr: { sm: 12, md: 12, lg: 6 },
+                                        fontWeight: 'bold',
+                                        minWidth: 20
+                                      }}
+                                      variant='caption'
+                                    >
+                                      {subjectInterm.subject_credit}
+                                    </Typography>
+
+                                    <IconButton
+                                      size='small'
+                                      color='error'
+                                      sx={{
+                                        position: 'absolute',
+                                        top: 6,
+                                        right: 8,
+                                        zIndex: 1,
+                                        opacity: isHovered[index] ? 0.9 : 0, // Show or hide based on hover state
+                                        transition: 'opacity 0.3s ease'
+                                      }}
+                                      onClick={() => {
+                                        // Add your remove logic here
+                                        handleRemoveSimSubject(subjectInterm)
+                                      }}
+                                    >
+                                      <Icon path={mdiTrashCan} size={0.7} />
+                                    </IconButton>
+                                  </Box>
+                                ))}
+                            </Box>
+                          )}
                           {displayScope && (
                             <Grid item xs={12}>
                               <Box sx={{ width: '100%', px: 4 }}>
@@ -2481,7 +2486,7 @@ function StudyPlanSimulatorPage() {
                             </Grid>
                           )}
                         </Box>
-                        <Box sx={{ width: '100%', textAlign: 'end', mt: -16, mb: 24 }}>
+                        <Box sx={{ width: '100%', textAlign: 'end', mb: 6 }}>
                           <Typography sx={{ mr: { xs: 6, sm: 6, lg: 3 } }} variant='h6'>
                             {simSubjects.reduce((accumulator, currentValue) => {
                               // Adding the 'value' property of each object to the accumulator
