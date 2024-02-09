@@ -18,7 +18,7 @@ import { mdiPen, mdiDownload, mdiDotsHorizontal, mdiAlertRhombus, mdiFilter } fr
 import AddCurriculumModal from 'src/views/curriculums/AddCurriculumModal'
 import CurriculumEditModal from 'src/views/curriculums/CurriculumEditModal'
 import CurriculumDetailsModal from 'src/views/curriculums/CurriculumDetailsModal'
-import { useFilter as UseFilter } from 'src/hooks/useFilter'
+import useFilter from 'src/hooks/useFilter'
 import { url } from 'src/configs/urlConfig'
 
 const Curriculums = () => {
@@ -97,17 +97,19 @@ const Curriculums = () => {
     UseSearchText(text, setCurriculums, setSearchText, curriculumsTemp, columnsCurriculum)
   }
 
-  const handleChangeFilter = value => {
-    setFacultySelection(value)
-    UseFilter(value, 'faculty_id', setCurriculums, curriculumsTemp)
-  }
+  // const handleChangeFilter = value => {
+  //   setFacultySelection(value)
+  //   useFilter(value, 'faculty_id', setCurriculums, curriculumsTemp)
+  // }
 
   useMemo(() => {
     if (!CurriculumLoading) {
       setCurriculumsTemp(Curriculums)
     } else {
     }
-  }, [CurriculumLoading, Curriculums])
+  }, [CurriculumLoading])
+
+  console.log('curriculumsTemp', curriculumsTemp)
 
   const { error: FacultyError, data: Faculty, loading: FacultyLoading } = UseFetch(URL_GET_FACULTY)
 
@@ -197,12 +199,12 @@ const Curriculums = () => {
         <Grid item xs={12} sm={12} md={8} lg={4}>
           <Box display={'flex'} flexDirection={'row'}>
             <TextSearch onChange={e => handleChangeSearch(e.target.value)} />
-            <Hidden only={'xs'}>
+            {/* <Hidden only={'xs'}>
               <Box sx={{ m: 2 }}>
                 <Icon path={mdiFilter} size={1} />
               </Box>
-            </Hidden>
-            <Selection
+            </Hidden> */}
+            {/* <Selection
               label={'Faculty'}
               height={40}
               width={'100%'}
@@ -214,7 +216,7 @@ const Curriculums = () => {
                   {fac.faculty_name_th}
                 </MenuItem>
               ))}
-            />
+            /> */}
           </Box>
         </Grid>
         <Grid item xs={12} sm={4} md={4} lg={2}>

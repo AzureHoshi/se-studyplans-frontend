@@ -1,5 +1,11 @@
 import React from 'react'
-import { useFetch as UseFetch, useSubmit as UseSubmit, useUpdate as UseUpdate, useDelete as UseDelete,useSearchText as UseSearchText} from 'src/hooks'
+import {
+  useFetch as UseFetch,
+  useSubmit as UseSubmit,
+  useUpdate as UseUpdate,
+  useDelete as UseDelete,
+  useSearchText as UseSearchText
+} from 'src/hooks'
 import { useMemo, useState } from 'react'
 
 import { Btn, CircleLoading, ConfirmModal, DataGridTable, TextSearch } from 'src/components'
@@ -88,7 +94,7 @@ const Faculty = () => {
       setFACULTYTemp(FACULTY)
     } else {
     }
-  }, [FacultyLoading,FACULTY])
+  }, [FacultyLoading])
 
   const handleSubmit = submitState => {
     UseSubmit(URL_INSERT, submitState, () => setOpen(false), reFetchFACULTY)
