@@ -20,6 +20,7 @@ import CurriculumEditModal from 'src/views/curriculums/CurriculumEditModal'
 import CurriculumDetailsModal from 'src/views/curriculums/CurriculumDetailsModal'
 import useFilter from 'src/hooks/useFilter'
 import { url } from 'src/configs/urlConfig'
+import { useRouter } from 'next/router'
 
 const Curriculums = () => {
   const [open, setOpen] = useState(false)
@@ -119,8 +120,17 @@ const Curriculums = () => {
     loading: StudentGroupsLoading
   } = UseFetch(URL_GET_STUDENT_GROUPS)
 
+  const router = useRouter()
+
   const handleSubmit = (submitState, isDone) => {
-    UseSubmit(URL_INSERT, submitState, () => setOpen(false), reFetchCurriculums, isDone)
+    const checkRef = { ...submitState }
+
+    if (checkRef?.ref_curriculum_id === 0) {
+      checkRef.ref_curriculum_id = undefined
+    }
+    console.log('checkRef', checkRef)
+    UseSubmit(URL_INSERT, checkRef, () => setOpen(false), reFetchCurriculums, isDone)
+    router.reload()
   }
 
   const handleUpdate = updateState => {
