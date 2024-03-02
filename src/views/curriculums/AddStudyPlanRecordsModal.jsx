@@ -81,20 +81,20 @@ function AddStudyPlanRecordsModal({
     study_plan_record_year: 1
   }
 
-  const refSubjectState = {
+  var refSubjectState = {
     study_plan_id: studyPlan?.study_plan_id,
     subject_id: 0,
     study_plan_record_elective_course: null,
-    study_plan_record_semester: 1,
-    study_plan_record_year: 1
+    study_plan_record_semester: semesterSelected,
+    study_plan_record_year: yearSelected
   }
 
-  const noRefState = {
+  var noRefState = {
     study_plan_id: studyPlan?.study_plan_id,
     subject_id: null,
     study_plan_record_elective_course: '',
-    study_plan_record_semester: 1,
-    study_plan_record_year: 1
+    study_plan_record_semester: semesterSelected,
+    study_plan_record_year: yearSelected
   }
 
   const [state, setState] = useState(initialsState)
